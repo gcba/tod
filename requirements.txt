@@ -1,0 +1,6 @@
+pyredatam
+nose
+pyshp
+rtree
+shapely
+pandas
