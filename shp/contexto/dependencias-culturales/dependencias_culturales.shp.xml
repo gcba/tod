@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<!--<!DOCTYPE metadata SYSTEM "http://www.esri.com/metadata/esriprof80.dtd">-->
+<metadata xml:lang="es"><Esri><CreaDate>20140311</CreaDate><CreaTime>15140200</CreaTime><SyncOnce>FALSE</SyncOnce><SyncDate>20140826</SyncDate><SyncTime>11243400</SyncTime><ModDate>20140826</ModDate><ModTime>11313300</ModTime><MetaID>{5309914A-2674-4B0D-91CF-9E3334D842EF}</MetaID><DataProperties><lineage><Process ToolSource="C:\Program Files (x86)\ArcGIS\ArcToolbox\Toolboxes\Data Management Tools.tbx\JoinField" Date="20140826" Time="110533">JoinField dependencias_culturales ID dependencias_culturales_i ID ACTIVIDADE dependencias_culturales</Process></lineage></DataProperties></Esri><idinfo><native Sync="TRUE">Microsoft Windows Vista Version 6.1 (Build 7601) Service Pack 1; ESRI ArcCatalog 9.3.0.1770</native><descript><langdata Sync="TRUE">es</langdata><abstract>REQUIRED: A brief narrative summary of the data set.</abstract><purpose>REQUIRED: A summary of the intentions with which the data set was developed.</purpose></descript><citation><citeinfo><origin>REQUIRED: The name of an organization or individual that developed the data set.</origin><pubdate>REQUIRED: The date when the data set is published or otherwise made available for release.</pubdate><title Sync="TRUE">dependencias_culturales</title><ftname Sync="TRUE">dependencias_culturales</ftname><geoform Sync="TRUE">vector digital data</geoform><onlink Sync="TRUE">\\LAURA-THIN\C$\00Laura\00Trabajo Laura\Buenos Aires Data\Actualizacion\Dependencias Culturales para Buenos Aires data\dependencias_culturales.shp</onlink></citeinfo></citation><timeperd><current>REQUIRED: The basis on which the time period of content information is determined.</current><timeinfo><sngdate><caldate>REQUIRED: The year (and optionally month, or month and day) for which the data set corresponds to the ground.</caldate></sngdate></timeinfo></timeperd><status><progress>REQUIRED: The state of the data set.</progress><update>REQUIRED: The frequency with which changes and additions are made to the data set after the initial data set is completed.</update></status><spdom><bounding><westbc Sync="TRUE">-58.529338</westbc><eastbc Sync="TRUE">-58.354388</eastbc><northbc Sync="TRUE">-34.537420</northbc><southbc Sync="TRUE">-34.688750</southbc></bounding><lboundng><leftbc Sync="TRUE">93893.542121</leftbc><rightbc Sync="TRUE">109925.334177</rightbc><bottombc Sync="TRUE">93451.002291</bottombc><topbc Sync="TRUE">110233.658554</topbc></lboundng></spdom><keywords><theme><themekt>REQUIRED: Reference to a formally registered thesaurus or a similar authoritative source of theme keywords.</themekt><themekey>REQUIRED: Common-use word or phrase used to describe the subject of the data set.</themekey></theme></keywords><accconst>REQUIRED: Restrictions and legal prerequisites for accessing the data set.</accconst><useconst>REQUIRED: Restrictions and legal prerequisites for using the data set after access is granted.</useconst><natvform Sync="TRUE">Shapefile</natvform></idinfo><dataIdInfo><envirDesc Sync="TRUE">Microsoft Windows Vista Version 6.1 (Build 7601) Service Pack 1; ESRI ArcCatalog 9.3.0.1770</envirDesc><dataLang><languageCode Sync="TRUE" value="es"></languageCode></dataLang><idCitation><resTitle>Dependencias Culturales</resTitle><presForm><PresFormCd Sync="TRUE" value="005"></PresFormCd></presForm><resEdDate>201403</resEdDate><resRefDate><refDate>201209</refDate><refDateType><DateTypCd value="001"></DateTypCd></refDateType></resRefDate><citRespParty><rpIndName>Maria Eugenia Santar - Paula Salvochea</rpIndName><rpOrgName>Subsecretaría de Patrimonio Cultural - Ministerio de Cultura</rpOrgName><role><RoleCd value="008"></RoleCd></role><rpCntInfo><cntAddress><delPoint>Av. de Mayo 575 Piso 2 Of: 201</delPoint><city>Ciudad Autónoma de Buenos Aires</city><eMailAdd>msantar@buenosaires.gob.ar</eMailAdd><country>ar</country><adminArea>Ciudad Autónoma de Buenos Aires</adminArea><postCode>C1042ABC</postCode></cntAddress><cntPhone><voiceNum>11 1553259814</voiceNum></cntPhone></rpCntInfo></citRespParty><resRefDate><refDate>201403</refDate><refDateType><DateTypCd value="003"></DateTypCd></refDateType></resRefDate><resRefDate><refDate>201403</refDate><refDateType><DateTypCd value="002"></DateTypCd></refDateType></resRefDate><citRespParty><rpIndName>Unidad de Sistemas de Información Geográfica</rpIndName><rpOrgName>Dirección General de Gobierno Electrónico - Agencia de Sistemas de Información</rpOrgName><role><RoleCd value="006"></RoleCd></role><rpCntInfo><cntAddress><delPoint>Bernardo de Irigoyen 272 6º piso</delPoint><city>Ciudad Autónoma de Buenos Aires</city><eMailAdd>usig_info@buenosaires.gob.ar</eMailAdd><country>ar</country></cntAddress><cntPhone><voiceNum>011 4323-9300 (8120198-199)</voiceNum></cntPhone></rpCntInfo></citRespParty><resAltTitle>dependencias_culturales.shp</resAltTitle></idCitation><spatRpType><SpatRepTypCd Sync="TRUE" value="001"></SpatRepTypCd></spatRpType><dataExt><geoEle><GeoBndBox esriExtentType="native"><westBL Sync="TRUE">93893.542121</westBL><eastBL Sync="TRUE">109925.334177</eastBL><northBL Sync="TRUE">110233.658554</northBL><southBL Sync="TRUE">93451.002291</southBL><exTypeCode Sync="TRUE">1</exTypeCode></GeoBndBox></geoEle></dataExt><geoBox esriExtentType="decdegrees"><westBL Sync="TRUE">-58.529338</westBL><eastBL Sync="TRUE">-58.354388</eastBL><northBL Sync="TRUE">-34.53742</northBL><southBL Sync="TRUE">-34.68875</southBL><exTypeCode Sync="TRUE">1</exTypeCode></geoBox><idAbs>El shape contiene la localización de las dependencias culturales existentes en la ciudad dependientes tanto del municipio, como de nación y también del sector privado.
+Esta información es aportada y actualziada por el Ministerio de Cultura de la C.A.B.A.</idAbs><tpCat><TopicCatCd value="016"></TopicCatCd></tpCat><resMaint><maintFreq><MaintFreqCd value="001"></MaintFreqCd></maintFreq></resMaint><resConst><Consts><useLimit>La información deberá ser utilizada de acuerdo con los usos que marca la Ley, respetando la fuente de los datos originales.
+
+La información suministrada en formato digital es para uso personal e intransferible. Queda estrictamente prohibido cualquier aprovechamiento o explotación del diseño y los Contenidos -por cualquier medio-, con fines comerciales. Sin perjuicio de ello, la información presentada podrá ser utilizada con fines informativos e ilustrativos en el contexto de un proyecto educacional o de divulgación científica, y siempre que se aclare la fuente. La utilización de los Contenidos de una forma que infrinja estas las disposiciones de uso, faculta al GCBA a ejercer las acciones legales que correspondan.</useLimit></Consts><LegConsts><accessConsts><RestrictCd value="006"></RestrictCd></accessConsts><useConsts><RestrictCd value="006"></RestrictCd></useConsts></LegConsts></resConst><descKeys KeyTypCd="005"><keyTyp><KeyTypCd value="005"></KeyTypCd></keyTyp><keyword>Cultura</keyword><keyword>Educación</keyword><keyword>Actividades Culturales</keyword><keyword>Centros Culturales</keyword><keyword>Teatros</keyword><keyword>Expresión artística</keyword><keyword>Discográficas</keyword><keyword>Editoriales</keyword><keyword>Bibliotecas</keyword><keyword>Museos</keyword></descKeys><descKeys KeyTypCd="002"><keyTyp><KeyTypCd value="002"></KeyTypCd></keyTyp><keyword>Ciudad Autónoma de Buenos Aires</keyword></descKeys><descKeys KeyTypCd="001"><keyTyp><KeyTypCd value="001"></KeyTypCd></keyTyp><keyword>Artes visuales</keyword><keyword>Artes plásticas</keyword><keyword>Música</keyword><keyword>Teatro</keyword><keyword>Educación</keyword></descKeys></dataIdInfo><metainfo><langmeta Sync="TRUE">es</langmeta><metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn><metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv><mettc Sync="TRUE">local time</mettc><metc><cntinfo><cntorgp><cntper>REQUIRED: The person responsible for the metadata information.</cntper><cntorg>REQUIRED: The organization responsible for the metadata information.</cntorg></cntorgp><cntaddr><addrtype>REQUIRED: The mailing and/or physical address for the organization or individual.</addrtype><city>REQUIRED: The city of the address.</city><state>REQUIRED: The state or province of the address.</state><postal>REQUIRED: The ZIP or other postal code of the address.</postal></cntaddr><cntvoice>REQUIRED: The telephone number by which individuals can speak to the organization or individual.</cntvoice></cntinfo></metc><metd Sync="TRUE">20140826</metd><metextns><onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink><metprof Sync="TRUE">ESRI Metadata Profile</metprof></metextns></metainfo><mdLang><languageCode Sync="TRUE" value="es"></languageCode></mdLang><mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName><mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer><mdChar><CharSetCd Sync="TRUE" value="004"></CharSetCd></mdChar><mdHrLv><ScopeCd Sync="TRUE" value="005"></ScopeCd></mdHrLv><mdHrLvName Sync="TRUE">dataset</mdHrLvName><distinfo><resdesc Sync="TRUE">Downloadable Data</resdesc><stdorder><digform><digtinfo><transize Sync="TRUE">0,056</transize><dssize Sync="TRUE">0,056</dssize></digtinfo></digform></stdorder></distinfo><distInfo><distributor><distorTran><onLineSrc><orDesc>001</orDesc><linkage>http://mapa.buenosaires.gob.ar/ http://mapas.usig.buenosaires.gob.ar</linkage><protocol Sync="TRUE">Local Area Network</protocol><orFunct><OnFunctCd value="002"></OnFunctCd></orFunct></onLineSrc><transSize Sync="TRUE">0,056</transSize></distorTran><distorFormat><formatName Sync="TRUE">Shapefile</formatName><formatVer>ArcGis 9.3</formatVer></distorFormat><distorCont><rpIndName>Unidad de Sistemas de Información Geográfica</rpIndName><rpOrgName>Dirección General de Gobierno Electrónico - Agencia de Sistemas de Información</rpOrgName><rpCntInfo><cntAddress><delPoint>Bernardo de Irigoyen 272 6º piso</delPoint><city>Ciudad Autónoma de Buenos Aires</city><eMailAdd>usig_info@buenosaires.gob.ar</eMailAdd><country>ar</country></cntAddress><cntPhone><voiceNum>011 4323-9300 (8120198-199)</voiceNum></cntPhone></rpCntInfo><role><RoleCd value="005"></RoleCd></role></distorCont><distorOrdPrc><ordInstr>La información no está a la venta</ordInstr></distorOrdPrc></distributor></distInfo><spdoinfo><direct Sync="TRUE">Vector</direct><ptvctinf><esriterm Name="dependencias_culturales"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom Sync="TRUE">Point</efeageom><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">2094</efeacnt><spindex Sync="TRUE">TRUE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm><sdtsterm Name="dependencias_culturales"><sdtstype Sync="TRUE">Entity point</sdtstype><ptvctcnt Sync="TRUE">2094</ptvctcnt></sdtsterm></ptvctinf></spdoinfo><spref><horizsys><cordsysn><geogcsn Sync="TRUE">GCS_Campo_Inchauspe</geogcsn><projcsn Sync="TRUE">Argentina_GKBsAs</projcsn></cordsysn><planar><planci><plance Sync="TRUE">coordinate pair</plance><plandu Sync="TRUE">meters</plandu><coordrep><absres Sync="TRUE">0.000000</absres><ordres Sync="TRUE">0.000000</ordres></coordrep></planci><mapproj><mapprojn Sync="TRUE">Transverse Mercator</mapprojn><transmer><sfctrmer Sync="TRUE">0.999998</sfctrmer><longcm Sync="TRUE">-58.462700</longcm><latprjo Sync="TRUE">-34.629717</latprjo><feast Sync="TRUE">100000.000000</feast><fnorth Sync="TRUE">100000.000000</fnorth></transmer></mapproj></planar><geodetic><horizdn Sync="TRUE">D_Campo_Inchauspe</horizdn><ellips Sync="TRUE">International_1924</ellips><semiaxis Sync="TRUE">6378388.000000</semiaxis><denflat Sync="TRUE">297.000000</denflat></geodetic></horizsys></spref><refSysInfo><RefSystem><refSysID><identCode Sync="TRUE">Argentina_GKBsAs</identCode></refSysID></RefSystem></refSysInfo><spatRepInfo><VectSpatRep><topLvl><TopoLevCd Sync="TRUE" value="001"></TopoLevCd></topLvl><geometObjs Name="dependencias_culturales"><geoObjTyp><GeoObjTypCd Sync="TRUE" value="004"></GeoObjTypCd></geoObjTyp><geoObjCnt Sync="TRUE">2094</geoObjCnt></geometObjs></VectSpatRep></spatRepInfo><eainfo><detailed Name="dependencias_culturales"><enttyp><enttypl Sync="TRUE">dependencias_culturales</enttypl><enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">2094</enttypc></enttyp><attr><attrlabl Sync="TRUE">FID</attrlabl><attalias Sync="TRUE">FID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale><attrdef Sync="TRUE">Internal feature number.</attrdef><attrdefs Sync="TRUE">ESRI</attrdefs><attrdomv><udom Sync="TRUE">Sequential unique whole numbers that are automatically generated.</udom></attrdomv></attr><attr><attrlabl Sync="TRUE">Shape</attrlabl><attalias Sync="TRUE">Shape</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale><attrdef Sync="TRUE">Feature geometry.</attrdef><attrdefs Sync="TRUE">ESRI</attrdefs><attrdomv><udom Sync="TRUE">Coordinates defining the features.</udom></attrdomv></attr><attr><attrlabl Sync="TRUE">ID</attrlabl><attalias Sync="TRUE">ID</attalias><attrtype Sync="TRUE">Number</attrtype><attwidth Sync="TRUE">11</attwidth></attr><attr><attrlabl Sync="TRUE">NOMBRE</attrlabl><attalias Sync="TRUE">NOMBRE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">254</attwidth></attr><attr><attrlabl Sync="TRUE">PISO</attrlabl><attalias Sync="TRUE">PISO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth></attr><attr><attrlabl Sync="TRUE">DEPTO</attrlabl><attalias Sync="TRUE">DEPTO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth></attr><attr><attrlabl Sync="TRUE">CODIGO_POS</attrlabl><attalias Sync="TRUE">CODIGO_POS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth></attr><attr><attrlabl Sync="TRUE">DIRECCION</attrlabl><attalias Sync="TRUE">DIRECCION</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">BARRIO</attrlabl><attalias Sync="TRUE">BARRIO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth></attr><attr><attrlabl Sync="TRUE">COMUNA</attrlabl><attalias Sync="TRUE">COMUNA</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">50</attwidth></attr><attr><attrlabl Sync="TRUE">DIAS_Y_HOR</attrlabl><attalias Sync="TRUE">DIAS_Y_HOR</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">254</attwidth></attr><attr><attrlabl Sync="TRUE">TELEFONOS</attrlabl><attalias Sync="TRUE">TELEFONOS</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">EMAIL</attrlabl><attalias Sync="TRUE">EMAIL</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">70</attwidth></attr><attr><attrlabl Sync="TRUE">PAGINA_WEB</attrlabl><attalias Sync="TRUE">PAGINA_WEB</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">ACTIVID_01</attrlabl><attalias Sync="TRUE">ACTIVID_01</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">DEPENDE_01</attrlabl><attalias Sync="TRUE">DEPENDE_01</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">120</attwidth></attr><attr><attrlabl Sync="TRUE">PUBLICO</attrlabl><attalias Sync="TRUE">PUBLICO</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">SECTOR</attrlabl><attalias Sync="TRUE">SECTOR</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">100</attwidth></attr><attr><attrlabl Sync="TRUE">ACTIVIDADE</attrlabl><attalias Sync="TRUE">ACTIVIDADE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">170</attwidth></attr></detailed></eainfo><mdDateSt Sync="TRUE">20140826</mdDateSt><mdContact><rpIndName>Unidad de Sistemas de Información Geográfica</rpIndName><rpOrgName>Dirección General de Gobierno Electrónico - Agencia de Sistemas de Información</rpOrgName><rpCntInfo><cntAddress><delPoint>Bernardo de Irigoyen 272 6º piso</delPoint><city>Ciudad Autónoma de Buenos Aires</city><eMailAdd>usig_info@buenosaires.gob.ar</eMailAdd><country>ar</country></cntAddress><cntPhone><voiceNum>011 4323-9300 (8120198-199)</voiceNum></cntPhone></rpCntInfo><role><RoleCd value="006"></RoleCd></role></mdContact><dqInfo><dataLineage><statement>El shape proviene de la información ingresada en un cargador (ABM) generado para tal fin a la  Subsecretaría de Patrimonio Cultural, perteneciente al Ministerio de Cultura. Esta dependencia es la responsable de administrar los datos allí cargados concernientes a la totalidad de las dependencias en las que se realiza alguna actividad cultural.
+
+El listado comprende tanto establecimientos dependientes del Ministerio de Cultura de la Ciudad como de otros niveles tanto estatales como privados. También abarca todo tipo de actividades culturales, para poder diferenciar por categoría de actividad proncipal se generó un campo en el cual se presenta esta actividad que es la que permite clasificar el establecimiento dentro de un rango que abarca:
+Archivo
+Bar Cultural
+Bar Notable
+Bar Elemento
+Bar Identificado
+Biblioteca
+Calesita
+Centro Cultural
+Cine
+Circo
+Desquería
+Editorial
+Espacio Escénico (Teatro, Música y Danza)
+Espacio de Formación (Carreras, Seminarios y Talleres)
+Galería de Arte
+Librería
+Milonga y/o Tanguería
+Museo
+Peña
+Planetario
+Productora Audiovisual
+Radio Local (AM y FM)
+Sala de Exposición
+Sello Discográfico
+Televisión Local
+
+
+Esta información se actualiza permanentemente y es la que se disponibiliza en el Mapa Interactivo de Buenos Aires.
+
+El presente shape se encuentra actualizado a Marzo del 2014.
+
+
+
+DESCRIPCIÓN DE CAMPOS DE LA BASE
+
+ID
+TIPO: Numérico (11)
+DESCRIPCION: Código único para cada registro 
+
+NOMBRE
+TIPO: Texto (254)
+DESCRIPCION: Nombre de la dependencia
+
+PISO
+TIPO: Texto (50)
+DESCRIPCION: Piso en el que funciona la dependencia
+
+DEPTO
+TIPO: Texto (50)
+DESCRIPCION: Departamento en el que funciona la dependencia
+
+CODIGO_POS
+TIPO: Texto (50)
+DESCRIPCION: Código postal de la dependencia
+
+DIRECCION
+TIPO: Texto (100)
+DESCRIPCION: Domicilio de la dependencia
+
+BARRIO
+TIPO: Texto (50)
+DESCRIPCION: Barrio de pertenencia
+
+COMUNA
+TIPO: Numérico (50)
+DESCRIPCION: Comuna de pertenencia
+
+DIAS_Y_HOR
+TIPO: Numérico (254)
+DESCRIPCION: Días y horarios en que se recibe al público
+
+TELEFONOS
+TIPO: Texto (100)
+DESCRIPCION: Teléfono de la dependencia
+
+EMAIL
+TIPO: Texto (70)
+DESCRIPCION: Dirección de corero electrónico de la dependencia
+
+PAGINA_WEB
+TIPO: Texto (100)
+DESCRIPCION: Página web de la dependencia
+
+ACTIVID_01
+TIPO: Texto (100)
+DESCRIPCION: Actividad principal de la dependencia
+
+DEPENDE_01
+TIPO: Texto (120)
+DESCRIPCION: Organismo del que depende la institución
+
+PUBLICO
+TIPO: Texto (100)
+DESCRIPCION: Tipo de público al que apunta la dependencia
+
+SECTOR
+TIPO: Texto (100)
+DESCRIPCION: Tipo de gestión del establecimiento
+
+ACTIVIDAD
+TIPO: Numérico (170)
+DESCRIPCION: Actividades secundarias de la dependencia
+</statement></dataLineage><dqScope><scpLvl><ScopeCd value="005"></ScopeCd></scpLvl></dqScope></dqInfo><dataqual><lineage><procstep><procdesc Sync="TRUE">Dataset copied.</procdesc><srcused Sync="TRUE">C:\1_MARIANA\BACKUP_MARIANA_DISCO_E\Mariana\Ministerio de Cultura\2014\dependencias_culturales</srcused><procdate Sync="TRUE">20140311</procdate><proctime Sync="TRUE">15140200</proctime></procstep></lineage></dataqual></metadata>
