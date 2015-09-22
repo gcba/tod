@@ -56,3 +56,4 @@ docs/_build/
 # PyBuilder
 target/
 shp/contexto/rus-ciudad-2010-2011
+*.zip
