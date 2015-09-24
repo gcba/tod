@@ -15,7 +15,6 @@ import sys
 import zipfile
 import shapefile
 import glob
-from shapely.geometry import Polygon, Point, LineString
 
 from path_finders import find_shp_path
 import geo_utils
@@ -77,7 +76,7 @@ def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
         utils.copy_prj(shp_path, buffer_shp_path)
 
 
-def main(directory=BASE_DIR, skip=None, recalculate=False):
+def main(directory=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
     skip = skip or []
 
     # unzip any zipped shapefiles
@@ -97,7 +96,7 @@ def main(directory=BASE_DIR, skip=None, recalculate=False):
             print("\n", shp_dir)
             sys.stdout.flush()
 
-            for distance in BUFFERS:
+            for distance in buffers:
                 print("buffering", shp_dir, "with distance", distance)
                 sys.stdout.flush()
 

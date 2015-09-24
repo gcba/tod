@@ -24,8 +24,12 @@ def get_buffer_indicators_path(shp_name):
     return os.path.join(get_project_dir(), buffer_indic_path)
 
 
-def get_data_path(area_level, variable):
-    data_path = os.path.join("data", area_level + "_" + variable + ".csv")
+def get_data_path(area_level, variable, subcategory=None):
+    filename = area_level + "_" + variable + ".csv"
+    if subcategory:
+        data_path = os.path.join("data", subcategory, filename)
+    else:
+        data_path = os.path.join("data", filename)
     return os.path.join(get_project_dir(), data_path)
 
 
@@ -47,9 +51,13 @@ def get_division_dir(division, divisions_dir=None):
     return os.path.join(get_project_dir(), division_dir)
 
 
-def get_indicators_path(area_level):
+def get_division_path(division):
+    return find_shp_path(get_division_dir(division))
+
+
+def get_indicators_path(area_level, format_file=".csv"):
     indicators_path = os.path.join(
-        "indicadores", "indicadores_" + area_level + ".csv")
+        "indicadores", "indicadores_" + area_level + format_file)
     return os.path.join(get_project_dir(), indicators_path)
 
 

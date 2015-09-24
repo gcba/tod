@@ -21,7 +21,9 @@ from path_finders import get_buffer_indicators_path
 from data_loaders import get_indicators, get_weights
 import utils
 import geo_utils
+from geo_utils import calculate_area
 
+POPULATION = "hab"
 OMIT_FIELDS = ["Código", "CO_FRACC", "CO_FRAC_RA"]
 IDS_GCBA = {"FRAC": "CO_FRACC",
             "RADIO": "CO_FRAC_RA"}
@@ -32,17 +34,20 @@ def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
     return list(df_indicators.columns.difference(omit))
 
 
+def _calc_total_poulation(weights, population, skip):
+    divisions = weights.keys()
+    return sum([(population[division] * weights[division]["division"])
+                for division in divisions if division not in skip])
+
+
 def _calc_indicator(series, weights, population, skip=None):
     """Calculate weighted average indicator."""
     skip = skip or []
     indicator_value = 0.0
 
-    divisions = weights.keys()
-    total_population = sum([(population[division] *
-                             weights[division]["division"])
-                            for division in divisions if division not in skip])
+    total_population = _calc_total_poulation(weights, population, skip)
 
-    for division in divisions:
+    for division in weights.keys():
         if division not in skip:
             division_population = (population[division] *
                                    weights[division]["division"])
@@ -60,17 +65,16 @@ def _calc_indicators(indicators, df_indicators, weights, area_level,
 
     calculated_indicators = []
     for indicator in indicators:
-        series = df_indicators.set_index(IDS_GCBA[area_level])[indicator]
-        pop = df_indicators.set_index(IDS_GCBA[area_level])["habitantes"]
-        calculated_indicators.append(
-            _calc_indicator(series, weights, pop, skip))
+        if indicator != POPULATION:
+            series = df_indicators.set_index(IDS_GCBA[area_level])[indicator]
+            pop = df_indicators.set_index(IDS_GCBA[area_level])[POPULATION]
+            calculated_indicators.append(
+                _calc_indicator(series, weights, pop, skip))
+        else:
+            calculated_indicators.append(
+                _calc_total_poulation(weights, pop, skip))
 
     return calculated_indicators
-
-
-def _calculate_area(shape):
-    area = geo_utils.get_shapely_shape(shape).area
-    return area
 
 
 def calculate_buffer_shp_indicators(buffer_dir, area_level, skip=None):
@@ -107,10 +111,10 @@ def calculate_buffer_shp_indicators(buffer_dir, area_level, skip=None):
                                                  skip)
         record.extend(calculated_indicators)
 
-        area = _calculate_area(shape) / 1000000
+        area = calculate_area(shape) / 1000000
         record.append(area)
 
-        population = calculated_indicators[indicators.index("habitantes")]
+        population = calculated_indicators[indicators.index(POPULATION)]
         pop_density = population / area
         record.append(pop_density)
 
