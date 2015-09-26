@@ -25,8 +25,7 @@ from geo_utils import calculate_area
 
 POPULATION = "hab"
 OMIT_FIELDS = ["Código", "CO_FRACC", "CO_FRAC_RA"]
-IDS_GCBA = {"FRAC": "CO_FRACC",
-            "RADIO": "CO_FRAC_RA"}
+IDS_GCBA = {"FRAC": "CO_FRACC", "RADIO": "CO_FRAC_RA"}
 
 
 def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
@@ -36,6 +35,10 @@ def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
 
 def _calc_total_poulation(weights, population, skip):
     divisions = weights.keys()
+
+    msg = "\n".join([divisions[0], "not in", repr(population)])
+    assert divisions[0] in population, msg
+
     return sum([(population[division] * weights[division]["division"])
                 for division in divisions if division not in skip])
 
@@ -77,10 +80,11 @@ def _calc_indicators(indicators, df_indicators, weights, area_level,
     return calculated_indicators
 
 
-def calculate_buffer_shp_indicators(buffer_dir, area_level, skip=None):
+def recalculate_indicators(new_shp_dir, area_level, skip=None,
+                           subcategory=None):
     skip = skip or []
 
-    buffer_shp_path = find_shp_path(buffer_dir)
+    buffer_shp_path = find_shp_path(new_shp_dir)
     shp_name = os.path.basename(buffer_shp_path)
 
     sf = shapefile.Reader(buffer_shp_path)
@@ -102,7 +106,8 @@ def calculate_buffer_shp_indicators(buffer_dir, area_level, skip=None):
         record = record_shape.record
         shape = record_shape.shape
 
-        id_record = unicode(record[0])
+        # print(record[0])
+        id_record = unicode(record[0].decode("utf-8"))
 
         calculated_indicators = _calc_indicators(indicators,
                                                  df_indicators,
@@ -122,7 +127,7 @@ def calculate_buffer_shp_indicators(buffer_dir, area_level, skip=None):
 
         w.poly(shapeType=shapefile.POLYGON, parts=[shape.points])
 
-    path = get_buffer_indicators_path(shp_name)
+    path = get_buffer_indicators_path(shp_name, subcategory)
     w.save(path)
 
     utils.copy_prj(buffer_shp_path.decode("utf-8"), path)
@@ -138,7 +143,7 @@ def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO"):
         buffer_indic_path = get_buffer_indicators_path(
             os.path.basename(buffer_dir))
         if not os.path.isfile(buffer_indic_path + ".shp") or recalculate:
-            calculate_buffer_shp_indicators(buffer_dir, area_level, skip)
+            recalculate_indicators(buffer_dir, area_level, skip)
 
 if __name__ == '__main__':
     main()

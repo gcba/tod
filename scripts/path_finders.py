@@ -18,9 +18,12 @@ DIVISIONS_DIR = os.path.join("shp", "divisiones")
 WEIGHTS_DIR = "intersection_weights"
 
 
-def get_buffer_indicators_path(shp_name):
-    buffer_indic_path = os.path.join("indicadores", "buffers",
-                                     shp_name, shp_name)
+def get_buffer_indicators_path(shp_name, subcategory=None):
+    if subcategory:
+        buffer_indic_path = os.path.join("indicadores", subcategory,
+                                         shp_name, shp_name)
+    else:
+        buffer_indic_path = os.path.join("indicadores", shp_name, shp_name)
     return os.path.join(get_project_dir(), buffer_indic_path)
 
 

@@ -125,7 +125,9 @@ def iter_shp_as_shapely(shp_path):
         tuple: Ids and shapes in the shapely format (id_shape, shapely_shape)
     """
 
-    sf_est = shapefile.Reader(shp_path)
+    sf = shapefile.Reader(shp_path)
 
-    for record, shape in zip(sf_est.iterRecords(), sf_est.iterShapes()):
+    for shape_record in sf.iterShapeRecords():
+        shape = shape_record.shape
+        record = shape_record.record
         yield (record[0], get_shapely_shape(shape))

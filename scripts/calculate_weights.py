@@ -54,6 +54,9 @@ def create_spatial_index(shapes):
 
 def find_intersections(shape, shapes, shapes_idx):
     """Find the shapes that intersect shape."""
+    # correct any topological errors of self-intersection
+    shape = shape.buffer(0)
+
     bound_intersects_gen = (shapes[pos] for pos in
                             shapes_idx.intersection(shape.bounds))
 
@@ -77,10 +80,11 @@ def remove_intersections(shape, remove_shapes, remove_idx):
 
 def calc_area(shape, empty_shapes, empty_idx):
     """Calculate area of a shape subtracting empty shapes."""
+    shape = shape.buffer(0)
     intersect_generator = find_intersections(shape, empty_shapes, empty_idx)
     area = shape.area
     for id_empty, empty_shape in intersect_generator:
-        area -= shape.intersection(empty_shape).area
+        area -= shape.intersection(empty_shape.buffer(0)).area
 
     return area
 
@@ -139,6 +143,7 @@ def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
 
     weighted_intersections = {}
     for id_buffer, buffer_shp in geo_utils.iter_shp_as_shapely(buffer_path):
+        buffer_shp = buffer_shp.buffer(0)
         weighted_intersections[id_buffer] = {}
 
         if empty_dirs:
@@ -151,6 +156,8 @@ def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
                                                  divisions_idx)
 
         for id_division, division_shp in intersect_generator:
+            division_shp = division_shp.buffer(0)
+
             if empty_dirs:
                 division_area = calc_area(division_shp, empty_shps, empty_idx)
             else:
@@ -169,8 +176,8 @@ def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
                 print(inst, "\n")
 
             weighted_intersections[id_buffer][id_division] = {
-                "division": intersect_area / division_area,
-                "buffer": intersect_area / buffer_area
+                "division": round(intersect_area / division_area, 10),
+                "buffer": round(intersect_area / buffer_area, 10)
             }
 
     return weighted_intersections
