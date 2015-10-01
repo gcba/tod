@@ -176,8 +176,8 @@ def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
                 print(inst, "\n")
 
             weighted_intersections[id_buffer][id_division] = {
-                "division": round(intersect_area / division_area, 10),
-                "buffer": round(intersect_area / buffer_area, 10)
+                "division": round(intersect_area / division_area, 30),
+                "buffer": round(intersect_area / buffer_area, 30)
             }
 
     return weighted_intersections

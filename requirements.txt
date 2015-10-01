@@ -4,3 +4,4 @@ pyshp
 rtree
 shapely
 pandas
+lxml

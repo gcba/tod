@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-create_buffer.py
+create_buffers.py
 
 Create a derivated shapefile buffering an original one.
 """
@@ -22,7 +22,7 @@ import utils
 
 BASE_DIR = os.path.join("shp", "transporte")
 BUFFER_DIR = "buffers"
-BUFFERS = [500, 1000, 1500, 2000]
+BUFFERS = [500, 750, 1000, 1500, 2000]
 
 
 def _create_shp_name(shp_dir, distance):
@@ -76,18 +76,18 @@ def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
         utils.copy_prj(shp_path, buffer_shp_path)
 
 
-def main(directory=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
+def main(input_dir=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
     skip = skip or []
 
     # unzip any zipped shapefiles
-    for zipped_shp in glob.glob(os.path.join(directory, "*.zip")):
+    for zipped_shp in glob.glob(os.path.join(input_dir, "*.zip")):
         if not os.path.isdir(zipped_shp[:-4]):
             zfile = zipfile.ZipFile(zipped_shp)
             zfile.extractall(zipped_shp[:-4])
 
     # list shapefile folders
-    shp_dirs = (shp for shp in os.listdir(directory)
-                if os.path.isdir(os.path.join(directory, shp)))
+    shp_dirs = (shp for shp in os.listdir(input_dir)
+                if os.path.isdir(os.path.join(input_dir, shp)))
 
     print("Calculating buffers...")
     for shp_dir in shp_dirs:
@@ -101,7 +101,7 @@ def main(directory=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
                 sys.stdout.flush()
 
                 try:
-                    create_buffered_shp(os.path.join(directory, shp_dir),
+                    create_buffered_shp(os.path.join(input_dir, shp_dir),
                                         distance, BUFFER_DIR,
                                         recalculate=recalculate)
                 except Exception as inst:

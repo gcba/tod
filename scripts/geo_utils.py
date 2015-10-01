@@ -75,10 +75,10 @@ def join_df_with_shp(shp_path, df, output_dir, create_pop_density=True):
                 record.append(population / area)
         else:
             for col in df.columns:
-                record.append(None)
+                record.append(0.0)
             if create_pop_density:
-                record.append(None)
-                record.append(None)
+                record.append(0.0)
+                record.append(0.0)
         # print("\n", record)
         w.record(*record)
 

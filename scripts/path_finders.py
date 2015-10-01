@@ -15,10 +15,16 @@ import sys
 
 BUFFERS_DIR = os.path.join("shp", "transporte", "buffers")
 DIVISIONS_DIR = os.path.join("shp", "divisiones")
+TRANSPORT_DIR = os.path.join("shp", "transporte")
 WEIGHTS_DIR = "intersection_weights"
 
 
-def get_buffer_indicators_path(shp_name, subcategory=None):
+def get_transport_shp_path(shp_name):
+    transport_dir = os.path.join(get_project_dir(), TRANSPORT_DIR)
+    return find_shp_path(os.path.join(transport_dir, shp_name))
+
+
+def get_indicators_shp_path(shp_name, subcategory=None):
     if subcategory:
         buffer_indic_path = os.path.join("indicadores", subcategory,
                                          shp_name, shp_name)
@@ -27,12 +33,17 @@ def get_buffer_indicators_path(shp_name, subcategory=None):
     return os.path.join(get_project_dir(), buffer_indic_path)
 
 
-def get_data_path(area_level, variable, subcategory=None):
-    filename = area_level + "_" + variable + ".csv"
+def get_data_path(area_level, variable, subcategory=None, tag=None):
+    if tag:
+        filename = area_level + "_" + variable + "_" + tag + ".csv"
+    else:
+        filename = area_level + "_" + variable + ".csv"
+
     if subcategory:
         data_path = os.path.join("data", subcategory, filename)
     else:
         data_path = os.path.join("data", filename)
+
     return os.path.join(get_project_dir(), data_path)
 
 

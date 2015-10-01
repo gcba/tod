@@ -17,7 +17,7 @@ import sys
 import shapefile
 
 from path_finders import find_shp_path, iter_buffer_dirs
-from path_finders import get_buffer_indicators_path
+from path_finders import get_indicators_shp_path
 from data_loaders import get_indicators, get_weights
 import utils
 import geo_utils
@@ -35,6 +35,7 @@ def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
 
 def _calc_total_poulation(weights, population, skip):
     divisions = weights.keys()
+    # print(len(divisions))
 
     msg = "\n".join([divisions[0], "not in", repr(population)])
     assert divisions[0] in population, msg
@@ -127,23 +128,26 @@ def recalculate_indicators(new_shp_dir, area_level, skip=None,
 
         w.poly(shapeType=shapefile.POLYGON, parts=[shape.points])
 
-    path = get_buffer_indicators_path(shp_name, subcategory)
+    path = get_indicators_shp_path(shp_name, subcategory)
     w.save(path)
 
     utils.copy_prj(buffer_shp_path.decode("utf-8"), path)
 
 
-def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO"):
+def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO",
+         subcategory=None):
     skip = skip or []
 
     for buffer_dir in iter_buffer_dirs(buffers_dir):
         print("Calculating", os.path.basename(buffer_dir), "indicators")
         sys.stdout.flush()
 
-        buffer_indic_path = get_buffer_indicators_path(
-            os.path.basename(buffer_dir))
+        buffer_indic_path = get_indicators_shp_path(
+            os.path.basename(buffer_dir), "buffers")
+        # print(buffer_indic_path + ".shp")
         if not os.path.isfile(buffer_indic_path + ".shp") or recalculate:
-            recalculate_indicators(buffer_dir, area_level, skip)
+            recalculate_indicators(buffer_dir, area_level, skip,
+                                   subcategory=subcategory)
 
 if __name__ == '__main__':
     main()
