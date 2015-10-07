@@ -11,13 +11,14 @@ from __future__ import unicode_literals
 from __future__ import print_function
 from __future__ import with_statement
 import os
-from shapely.geometry import Polygon, Point, LineString
 import shapefile
 import shutil
 import pycrs
-import distutils
+import cartopy
 import cartopy.crs as ccrs
-
+from shapely.geometry import LineString, Point, Polygon
+from scripts.path_finders import get_transport_shp_path, get_division_path
+from scripts.reachability import *
 from path_finders import get_project_dir, find_shp_path
 
 POPULATION = "hab"
@@ -25,7 +26,43 @@ POPULATION = "hab"
 GKBA_PROJ = ccrs.TransverseMercator(central_longitude=-58.4627,
                                     central_latitude=-34.6297166,
                                     false_easting=100000.0,
-                                    false_northing=100000.0)
+                                    false_northing=100000.0,
+                                    scale_factor=50.0)
+
+
+class GKBA_Proj(cartopy.crs.Projection):
+
+    def __init__(self):
+
+        crs = prj_to_proj4(get_division_path("radios_censo_2010"))
+        proj4_params = {i.split("=")[0].strip(): i.split("=")[1].strip() for
+                        i in crs.to_proj4().split("+")[1:-1]}
+
+        proj4_params['no_defs'] = ''
+
+        super(GKBA_Proj, self).__init__(proj4_params)
+
+    @property
+    def boundary(self):
+        coords = ((self.x_limits[0], self.y_limits[0]),
+                  (self.x_limits[1], self.y_limits[0]),
+                  (self.x_limits[1], self.y_limits[1]),
+                  (self.x_limits[0], self.y_limits[1]),
+                  (self.x_limits[0], self.y_limits[0]))
+
+        return cartopy.crs.sgeom.Polygon(coords).exterior
+
+    @property
+    def threshold(self):
+        return 1e5
+
+    @property
+    def x_limits(self):
+        return (-900000, 900000)
+
+    @property
+    def y_limits(self):
+        return (-900000, 900000)
 
 
 def calculate_area(shape):
