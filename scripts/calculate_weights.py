@@ -57,6 +57,7 @@ def find_intersections(shape, shapes, shapes_idx):
     # correct any topological errors of self-intersection
     shape = shape.buffer(0)
 
+    # print(shapes)
     bound_intersects_gen = (shapes[pos] for pos in
                             shapes_idx.intersection(shape.bounds))
 

@@ -5,3 +5,7 @@ rtree
 shapely
 pandas
 lxml
+pyproj
+pycrs
+statsmodels
+descartes

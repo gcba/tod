@@ -47,6 +47,15 @@ def get_data_path(area_level, variable, subcategory=None, tag=None):
     return os.path.join(get_project_dir(), data_path)
 
 
+def get_data_dir(subcategory=None):
+    if subcategory:
+        data_dir = os.path.join("data", subcategory)
+    else:
+        data_dir = os.path.join("data")
+
+    return os.path.join(get_project_dir(), data_dir)
+
+
 def iter_buffer_dirs(buffers_dir=None):
     buffers_dir = buffers_dir or BUFFERS_DIR
     return iter_subdirectories(os.path.join(get_project_dir(), buffers_dir))

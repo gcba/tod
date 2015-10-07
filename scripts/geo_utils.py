@@ -14,16 +14,33 @@ import os
 from shapely.geometry import Polygon, Point, LineString
 import shapefile
 import shutil
+import pycrs
 import distutils
+import cartopy.crs as ccrs
 
-from path_finders import get_project_dir
+from path_finders import get_project_dir, find_shp_path
 
 POPULATION = "hab"
 
+GKBA_PROJ = ccrs.TransverseMercator(central_longitude=-58.4627,
+                                    central_latitude=-34.6297166,
+                                    false_easting=100000.0,
+                                    false_northing=100000.0)
+
 
 def calculate_area(shape):
-    area = get_shapely_shape(shape).area
-    return area
+    return get_shapely_shape(shape).area
+
+
+def prj_to_proj4(prj_or_shp_path):
+    if prj_or_shp_path[-4:] == ".prj":
+        prj_path = prj_or_shp_path
+    else:
+        prj_path = find_shp_path(prj_or_shp_path) + ".prj"
+
+    crs = pycrs.loader.from_file(prj_path)
+    return crs
+    # return crs.to_proj4()
 
 
 def join_df_with_shp(shp_path, df, output_dir, create_pop_density=True):
@@ -112,7 +129,7 @@ def get_shapely_shape(shape):
     elif shape.shapeType == shapefile.POLYLINE:
         return LineString(shape.points)
 
-    raise Exception("Can't handle shape type " + unicode(sf_est.shapeType))
+    raise Exception("Can't handle shape type " + unicode(shape.shapeType))
 
 
 def iter_shp_as_shapely(shp_path):
@@ -124,7 +141,7 @@ def iter_shp_as_shapely(shp_path):
     Yield:
         tuple: Ids and shapes in the shapely format (id_shape, shapely_shape)
     """
-
+    # print(shp_path)
     sf = shapefile.Reader(shp_path)
 
     for shape_record in sf.iterShapeRecords():

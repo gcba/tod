@@ -20,11 +20,13 @@ from path_finders import get_data_path, get_indicators_path
 AREAS_LENIDS = {"PROV": 2, "DPTO": 5, "FRAC": 7, "RADIO": 9}
 
 
-def get_or_create_indicators_df(area_level, df_example):
+def get_or_create_indicators_df(area_level, df_example=None):
     df = get_indicators_df(area_level, AREAS_LENIDS[area_level])
     if df is not None:
         return df
     else:
+        if not df_example:
+            raise Exception("Can't create a df without an example with index.")
         df = pd.DataFrame(data={"Código": df_example.index})
         return replace_index(df, AREAS_LENIDS[area_level])
 
