@@ -13,6 +13,7 @@ from __future__ import with_statement
 import os
 import contextlib
 import shutil
+import sys
 
 
 @contextlib.contextmanager

@@ -224,7 +224,7 @@ def get_indicators_df(area_level="RADIO"):
     indicators_df = get_or_create_indicators_df(area_level)
     old_index = indicators_df.index.copy()
     indicators_df = indicators_df.set_index(IDS_GCBA[area_level])
-    return indicators_df, old_index
+    return indicators_df, old_index, indicators_df.index
 
 
 def save_indicators_df(indicators_df, old_index, area_level="RADIO"):
@@ -234,9 +234,9 @@ def save_indicators_df(indicators_df, old_index, area_level="RADIO"):
     indicators_df.to_csv(get_indicators_path(area_level), encoding="utf-8")
 
 
-def main(area_level="RADIO", limit=30, field_name="reach_area",
+def main(area_level="RADIO", limit=10000, field_name="reach_area",
          transport_shp_name="recorrido-colectivos"):
-    df, old_index = get_indicators_df(area_level)
+    df, old_index, new_index = get_indicators_df(area_level)
     already_done = list(df[pd.notnull(df[field_name])].index)
 
     # get bus lines
@@ -255,34 +255,38 @@ def main(area_level="RADIO", limit=30, field_name="reach_area",
     # iterate division shapes calculating the indicator
     start = time.time()
     total_shapes = len(area_level_shapes)
+    progress_status = "Nothing done."
     for i, (id_shape, shape) in enumerate(area_level_shapes.iteritems(), 1):
-        try:
-            lines_intersect = intersecting_lines(shape, lines)
-            surface = calc_reachable_surface_and_people(shape, lines_intersect)
-
-            # only add new value if the shape is in the index
-            if id_shape in old_index:
+        # only add new value if the shape is in the index
+        if id_shape in new_index:
+            try:
+                lines_intersect = intersecting_lines(shape, lines)
+                surface = calc_reachable_surface_and_people(shape,
+                                                            lines_intersect)
                 add_value(id_shape, surface, df)
 
-            elapsed = (time.time() - start) / 60.0
-            average = elapsed / i
-            prediction = (total_shapes - i) * average
+                elapsed = (time.time() - start) / 60.0
+                average = elapsed / i
+                prediction = (total_shapes - i) * average
 
-            progress_status = """
-            {} {}/{} in {:.2f} mins. Average: {:.2f} Prediction: {:.2f}
-            """.format(id_shape.ljust(10), i, total_shapes, elapsed, average,
-                       prediction).strip()
-            print(progress_status, end="\r" * len(progress_status))
+                progress_status = """
+                {} {}/{} in {:.2f} mins. Average: {:.2f} Time to end: {:.2f}
+                """.format(id_shape.ljust(10), i, total_shapes, elapsed,
+                           average, prediction).strip()
+                print(progress_status, end="\r" * len(progress_status))
 
-            if i >= limit:
-                print("Limit of", limit, "shapes reached.")
+                if i >= limit:
+                    print(progress_status)
+                    print("Limit of", limit, "shapes reached.")
+                    break
+            except KeyboardInterrupt:
+                print(progress_status)
+                print("Interrupted!")
                 break
-        except KeyboardInterrupt:
-            print("Interrupted!")
-            break
 
-    print("Saving indicators...")
+    print("Saving values...", end=" ")
     save_indicators_df(df, old_index)
+    print("Done.")
 
 
 if __name__ == '__main__':
