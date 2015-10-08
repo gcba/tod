@@ -34,7 +34,7 @@ def _create_shp_path(directory, shp_name, buffer_dir):
                         shp_name, shp_name)
 
 
-def _write_shapefile(sf_est, shapely_shapes, shp_path):
+def write_shapefile(sf_est, shapely_shapes, shp_path):
 
     # creating a new shapefile for buffers
     w = shapefile.Writer(shapefile.POLYGON)
@@ -72,7 +72,7 @@ def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
         buffer_shapes = [shape.buffer(distance, resolution)
                          for shape in geo_utils.get_shapely_shapes(sf_est)]
 
-        _write_shapefile(sf_est, buffer_shapes, buffer_shp_path)
+        write_shapefile(sf_est, buffer_shapes, buffer_shp_path)
         utils.copy_prj(shp_path, buffer_shp_path)
 
 

@@ -17,8 +17,8 @@ import pycrs
 import cartopy
 import cartopy.crs as ccrs
 from shapely.geometry import LineString, Point, Polygon
-from scripts.path_finders import get_transport_shp_path, get_division_path
-from scripts.reachability import *
+from path_finders import get_transport_shp_path, get_division_path
+from reachability import *
 from path_finders import get_project_dir, find_shp_path
 
 POPULATION = "hab"

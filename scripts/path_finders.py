@@ -19,6 +19,10 @@ TRANSPORT_DIR = os.path.join("shp", "transporte")
 WEIGHTS_DIR = "intersection_weights"
 
 
+def get_indicators_dir():
+    return os.path.join(get_project_dir(), "indicadores")
+
+
 def get_transport_shp_path(shp_name):
     transport_dir = os.path.join(get_project_dir(), TRANSPORT_DIR)
     return find_shp_path(os.path.join(transport_dir, shp_name))
