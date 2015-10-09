@@ -62,50 +62,6 @@ def create_spatial_index(points, tolerance):
     return points_idx
 
 
-def split_line_alt(line, points, tolerance=30):
-    if type(points) != list:
-        points = [points]
-
-    coords = list(line.coords)
-    coords_idx = create_spatial_index(coords, tolerance)
-
-    split_positions = []
-    for point in points:
-        point_bounds = point.buffer(tolerance).bounds
-        intersects = list(coords_idx.intersection(point_bounds))
-        intersects.sort()
-        split_positions.append(intersects[0])
-    split_positions.sort()
-
-    lines = []
-    last_i = 0
-    for i in split_positions:
-        lines.append(LineString(coords[last_i:i + 1]))
-        last_i = i
-
-    lines.append(LineString(coords[last_i:]))
-
-    assert len(lines) == len(split_positions) + 1, "Wrong lines number."
-    return lines
-
-
-def split_line_old(line, points, tolerance=30):
-    if type(points) != list:
-        points = [points]
-    lines = []
-
-    coords = list(line.coords)
-    last_i = 0
-    for i, p in enumerate(coords):
-        for point in points:
-            if Point(p).buffer(tolerance).intersects(point):
-                lines.append(LineString(coords[last_i:i + 1]))
-                last_i = i
-
-    lines.append(LineString(coords[last_i:]))
-    return lines
-
-
 def split_line(line, shape, tolerance=30):
     splitted_line = line.difference(shape.boundary)
     buffered_shape = shape.buffer(tolerance)

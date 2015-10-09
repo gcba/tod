@@ -12,6 +12,8 @@ from __future__ import print_function
 from __future__ import with_statement
 import os
 import shapefile
+
+from path_finders import find_shp_path
 from utils import copy_prj
 
 
@@ -35,8 +37,29 @@ def write_fields(w, shp_paths, merging_field):
                 w.field(*old_field)
 
 
+def create_shp_paths_dict(shps_dir, replacements=None):
+    """Create a dict with paths to shps inside shps_dir directory."""
+
+    shp_paths_dict = {}
+    abs_shp_dirs = [os.path.join(shps_dir, shp_dir) for shp_dir in
+                    os.listdir(shps_dir)]
+    for shp_dir in (i for i in abs_shp_dirs if
+                    os.path.isdir(i) and i[0] != "."):
+        buffer_tag = shp_dir.split("-")[-1]
+
+        shp_name = os.path.basename(shp_dir).replace("-" + buffer_tag, "")
+        if replacements and shp_name in replacements:
+            shp_name = replacements[shp_name]
+
+        shp_path = find_shp_path(os.path.join(shps_dir, shp_dir))
+        shp_paths_dict[shp_name + "-" + buffer_tag] = shp_path
+
+    return shp_paths_dict
+
+
 # MAIN
-def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf"):
+def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
+                     replacements=None):
     """Merge shapefiles in a single shapefile.
 
     There is a merging_field retaining the name of the original field taken
@@ -44,10 +67,17 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf"):
     a None value.
 
     Args:
-        shp_paths (dict): Shps to merge {"RADIO": path_to_radio_indicators_shp}
+        shp_paths (dict or str):
+            If dict, paths to shps to merge as  {"RADIO": "radio_indic_path"}
+            If str, dir where all the subdirs are shps to be merged.
         output_path (str): Path of the merged shapefile.
         merging_field (str): Name of the field retaining name of original shps.
+        replacements (dict): Only if shp_paths is str. Replace long names with
+            short ones, to put in the merging_field. {"long_name": "short"}
     """
+
+    if type(shp_paths) == str or type(shp_paths) == unicode:
+        shp_paths = create_shp_paths_dict(shp_paths, replacements)
 
     sf_first = shapefile.Reader(shp_paths.values()[0])
     w = shapefile.Writer(sf_first.shapeType)
@@ -59,11 +89,11 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf"):
     # now write shapes and records
     new_fields = [new_field[0] for new_field in w.fields]
     for id_sf, sf_path in shp_paths.iteritems():
-        print("Merging", id_sf, sf_path)
+        print("Merging", id_sf.ljust(15), os.path.basename(sf_path))
         sf = shapefile.Reader(sf_path)
         orig_fields = [f[0] for f in sf.fields if f[0] != "DeletionFlag"]
 
-        for sr in sf.shapeRecords():
+        for sr in sf.iterShapeRecords():
             record = sr.record
             shape = sr.shape
             w.poly(shapeType=sf.shapeType, parts=[shape.points])

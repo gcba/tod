@@ -56,7 +56,6 @@ docs/_build/
 # PyBuilder
 target/
 shp/contexto/rus-ciudad-2010-2011
-*.zip
 shp/contexto/censo-arbolado-2011
 shp/contexto/arbolado-espacios-verdes
 test_split_lines_shps
