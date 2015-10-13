@@ -16,6 +16,9 @@ import shutil
 import pycrs
 import cartopy
 import cartopy.crs as ccrs
+from functools import partial
+from shapely.ops import transform
+import pyproj
 from shapely.geometry import LineString, Point, Polygon
 from path_finders import get_transport_shp_path, get_division_path
 from path_finders import get_project_dir, find_shp_path
@@ -27,6 +30,25 @@ GKBA_PROJ = ccrs.TransverseMercator(central_longitude=-58.4627,
                                     false_easting=100000.0,
                                     false_northing=100000.0,
                                     scale_factor=50.0)
+
+
+def reproject_point(lat, lon, shp_path):
+    point_wgs84 = Point(lat, lon)
+
+    wgs84_prj = os.path.join(get_project_dir(), "shp", "4326.prj")
+    fromcrs = pycrs.loader.from_file(wgs84_prj)
+    fromcrs_proj4 = fromcrs.to_proj4()
+
+    tocrs = pycrs.loader.from_file(shp_path + ".prj")
+    tocrs_proj4 = tocrs.to_proj4()
+
+    # print(fromcrs_proj4)
+    project = partial(
+        pyproj.transform,
+        pyproj.Proj(fromcrs_proj4),
+        pyproj.Proj(tocrs_proj4))
+
+    return transform(project, point_wgs84)
 
 
 class GKBA_Proj(cartopy.crs.Projection):
@@ -112,6 +134,9 @@ def join_df_with_shp(shp_path, df, output_dir, create_pop_density=True):
         w.field(*[str("area_km2"), str("N"), 20, 18])
         w.field(*[str("hab_km2"), str("N"), 20, 18])
     # print(w.fields)
+
+    # put df index in unicode
+    df.index = [unicode(i) for i in df.index]
 
     # creating records
     for record_shape in sf.iterShapeRecords():

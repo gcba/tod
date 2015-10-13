@@ -16,6 +16,7 @@ import pandas as pd
 import pyredatam
 from pyredatam import cpv2010arg
 from path_finders import get_data_path, get_indicators_path
+from global_vars import IDS_GCBA
 
 AREAS_LENIDS = {"PROV": 2, "DPTO": 5, "FRAC": 7, "RADIO": 9}
 
@@ -25,7 +26,7 @@ def get_or_create_indicators_df(area_level, df_example=None):
     if df is not None:
         return df
     else:
-        if not df_example:
+        if df_example is None:
             raise Exception("Can't create a df without an example with index.")
         df = pd.DataFrame(data={"Código": df_example.index})
         return replace_index(df, AREAS_LENIDS[area_level])
@@ -114,8 +115,9 @@ def replace_index(df, id_len=7):
     return df.set_index(df[code_kw]).drop(code_kw, 1)
 
 
-def main():
-    pass
+def add_indicator(area_level, indic_name, indicator):
+    indicators = get_or_create_indicators_df(area_level)
+    indicators[indic_name] = indicators[IDS_GCBA[area_level]].map(indicator)
+    indicators.to_csv(get_indicators_path(area_level), encoding="utf-8")
 
-if __name__ == '__main__':
-    main()
+    return indicators

@@ -22,7 +22,7 @@ import utils
 
 BASE_DIR = os.path.join("shp", "transporte")
 BUFFER_DIR = "buffers"
-BUFFERS = [500, 750, 1000, 1500, 2000]
+BUFFERS = [300, 500, 750, 1000, 1500, 2000]
 
 
 def _create_shp_name(shp_dir, distance):

@@ -22,10 +22,10 @@ from data_loaders import get_indicators, get_weights
 import utils
 import geo_utils
 from geo_utils import calculate_area
+from global_vars import IDS_GCBA
 
 POPULATION = "hab"
 OMIT_FIELDS = ["Código", "CO_FRACC", "CO_FRAC_RA"]
-IDS_GCBA = {"FRAC": "CO_FRACC", "RADIO": "CO_FRAC_RA"}
 
 
 def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
@@ -35,7 +35,6 @@ def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
 
 def _calc_total_poulation(weights, population, skip):
     divisions = weights.keys()
-    # print(len(divisions))
 
     msg = "\n".join([divisions[0], "not in", repr(population)])
     assert divisions[0] in population, msg
@@ -82,8 +81,13 @@ def _calc_indicators(indicators, df_indicators, weights, area_level,
 
 
 def recalculate_indicators(new_shp_dir, area_level, skip=None,
-                           subcategory=None):
+                           subcategory=None, omit_fields=None):
     skip = skip or []
+    if omit_fields:
+        if not type(omit_fields) == list:
+            omit_fields = [omit_fields]
+        omit_fields = OMIT_FIELDS
+        omit_fields.extend(omit_fields)
 
     buffer_shp_path = find_shp_path(new_shp_dir)
     shp_name = os.path.basename(buffer_shp_path)
@@ -108,25 +112,29 @@ def recalculate_indicators(new_shp_dir, area_level, skip=None,
         shape = record_shape.shape
 
         # print(record[0])
-        id_record = unicode(record[0].decode("utf-8"))
+        if type(record[0]) == int:
+            id_record = unicode(record[0])
+        else:
+            id_record = unicode(record[0].decode("utf-8"))
 
-        calculated_indicators = _calc_indicators(indicators,
-                                                 df_indicators,
-                                                 weights[id_record],
-                                                 area_level,
-                                                 skip)
-        record.extend(calculated_indicators)
+        if len(weights[id_record]) > 0:
+            calculated_indicators = _calc_indicators(indicators,
+                                                     df_indicators,
+                                                     weights[id_record],
+                                                     area_level,
+                                                     skip)
+            record.extend(calculated_indicators)
 
-        area = calculate_area(shape) / 1000000
-        record.append(area)
+            area = calculate_area(shape) / 1000000
+            record.append(area)
 
-        population = calculated_indicators[indicators.index(POPULATION)]
-        pop_density = population / area
-        record.append(pop_density)
+            population = calculated_indicators[indicators.index(POPULATION)]
+            pop_density = population / area
+            record.append(pop_density)
 
-        w.record(*record)
+            w.record(*record)
 
-        w.poly(shapeType=shapefile.POLYGON, parts=[shape.points])
+            w.poly(shapeType=shapefile.POLYGON, parts=[shape.points])
 
     path = get_indicators_shp_path(shp_name, subcategory)
     w.save(path)
@@ -135,7 +143,7 @@ def recalculate_indicators(new_shp_dir, area_level, skip=None,
 
 
 def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO",
-         subcategory=None):
+         subcategory=None, omit_fields=None):
     skip = skip or []
 
     for buffer_dir in iter_buffer_dirs(buffers_dir):
@@ -147,7 +155,8 @@ def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO",
         # print(buffer_indic_path + ".shp")
         if not os.path.isfile(buffer_indic_path + ".shp") or recalculate:
             recalculate_indicators(buffer_dir, area_level, skip,
-                                   subcategory=subcategory)
+                                   subcategory=subcategory,
+                                   omit_fields=omit_fields)
 
 if __name__ == '__main__':
     main()

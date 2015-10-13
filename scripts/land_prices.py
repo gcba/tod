@@ -22,6 +22,7 @@ import numpy as np
 
 from path_finders import get_division_path
 import geo_utils
+from geo_utils import reproject_point
 from calculate_weights import find_intersections, create_spatial_index
 from scripts.path_finders import get_division_path, get_data_dir
 
@@ -72,25 +73,7 @@ def keep_useful_columns(df, useful_cols=None):
     return df[useful_cols]
 
 
-def reproject_point(lat, lon, shp_path):
-    point_wgs84 = Point(lat, lon)
-
-    fromcrs = pycrs.loader.from_file(os.path.join("shp", "4326.prj"))
-    fromcrs_proj4 = fromcrs.to_proj4()
-
-    tocrs = pycrs.loader.from_file(shp_path + ".prj")
-    tocrs_proj4 = tocrs.to_proj4()
-
-    # print(fromcrs_proj4)
-    project = partial(
-        pyproj.transform,
-        pyproj.Proj(fromcrs_proj4),
-        pyproj.Proj(tocrs_proj4))
-
-    return transform(project, point_wgs84)
-
-
-def find_id_intersecting_shape(lat, lon, shapes, shp_idx, shp_path):
+def find_id_intersecting_shape(lat, lon, shapes, shp_path):
     """Return id of shape containing the lat-lon point."""
     point = reproject_point(lon, lat, shp_path)
 
@@ -119,7 +102,7 @@ def intersect_data_with_shps(df, shp_path, lat_field="LAT", lon_field="LON"):
     #     return inner
 
     shapes = list(geo_utils.iter_shp_as_shapely(shp_path))
-    shp_idx = create_spatial_index(shapes)
+    # shp_idx = create_spatial_index(shapes)
 
     # func_get_id = wrapper(
     #     find_id_intersecting_shape, shapes, shp_idx, shp_path)
@@ -127,7 +110,7 @@ def intersect_data_with_shps(df, shp_path, lat_field="LAT", lon_field="LON"):
 
     def func(x):
         return find_id_intersecting_shape(x["LAT"], x["LON"],
-                                          shapes, shp_idx, shp_path)
+                                          shapes, shp_path)
     df[id_field_name] = df.apply(func, axis=1)
 
     return df

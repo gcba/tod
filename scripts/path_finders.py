@@ -16,7 +16,13 @@ import sys
 BUFFERS_DIR = os.path.join("shp", "transporte", "buffers")
 DIVISIONS_DIR = os.path.join("shp", "divisiones")
 TRANSPORT_DIR = os.path.join("shp", "transporte")
+CONTEXT_DIR = os.path.join("shp", "contexto")
 WEIGHTS_DIR = "intersection_weights"
+
+
+def get_context_shp_path(shp_name):
+    context_dir = os.path.join(get_project_dir(), CONTEXT_DIR)
+    return find_shp_path(os.path.join(context_dir, shp_name))
 
 
 def get_indicators_dir():

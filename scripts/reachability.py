@@ -26,16 +26,10 @@ from path_finders import get_transport_shp_path, get_division_path
 from geo_utils import iter_shp_as_shapely, get_shapely_shapes
 from shapely.geometry import LineString, Point, Polygon, MultiPolygon, MultiPoint
 
+from global_vars import IDS_GCBA, AREA_LEVEL_SHP_NAME
+
 SHP_INDIC_RADIO = find_shp_path(os.path.join("indicadores",
                                              "radios_censo_2010"))
-
-IDS_GCBA = {"FRAC": "CO_FRACC", "RADIO": "CO_FRAC_RA"}
-AREA_LEVEL_SHP_NAME = {
-    "RADIO": "radios_censo_2010",
-    "BARRIO": "barrios_censo_2010",
-    "DPTO": "comunas_caba_censo_2010",
-    "FRAC": "fracciones_caba_censo_2010"
-}
 
 
 # AUXILIARY
@@ -191,7 +185,7 @@ def save_indicators_df(indicators_df, old_index, area_level="RADIO"):
 
 
 def main(area_level="RADIO", limit=10000, field_name="reach_area",
-         transport_shp_name="recorrido-colectivos"):
+         transport_shp_name="recorridos_de_colectivos"):
     df, old_index, new_index = get_indicators_df(area_level)
     already_done = list(df[pd.notnull(df[field_name])].index)
 
