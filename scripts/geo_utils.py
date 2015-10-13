@@ -22,6 +22,7 @@ import pyproj
 from shapely.geometry import LineString, Point, Polygon
 from path_finders import get_transport_shp_path, get_division_path
 from path_finders import get_project_dir, find_shp_path
+from global_vars import IDS_GCBA
 
 POPULATION = "hab"
 
@@ -129,7 +130,11 @@ def join_df_with_shp(shp_path, df, output_dir, create_pop_density=True):
     for field in sf.fields:
         w.field(*field)
     for indicator in df.columns:
-        w.field(*[str(indicator), str("N"), 20, 18])
+        # print(indicator, str(indicator) in IDS_GCBA.keys(), IDS_GCBA.keys())
+        if str(indicator) in IDS_GCBA.values():
+            w.field(*[str(indicator), str("C"), 40, 0])
+        else:
+            w.field(*[str(indicator), str("N"), 20, 18])
     if create_pop_density:
         w.field(*[str("area_km2"), str("N"), 20, 18])
         w.field(*[str("hab_km2"), str("N"), 20, 18])

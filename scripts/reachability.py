@@ -121,7 +121,11 @@ def gen_grid_points(polygon, distance=50):
             point = Point(x, y)
             if polygon.contains(point):
                 points.append(point)
-    return points
+
+    if len(points) > 0:
+        return points
+    else:
+        return gen_grid_points(polygon, distance / 2)
 
 
 # MAIN
