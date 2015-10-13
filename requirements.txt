@@ -9,3 +9,8 @@ pyproj
 pycrs
 statsmodels
 descartes
+simpledbf
+openpyxl
+xlrd
+dataset
+psycopg2
