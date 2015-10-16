@@ -117,7 +117,13 @@ def replace_index(df, id_len=7):
 
 def add_indicator(area_level, indic_name, indicator):
     indicators = get_or_create_indicators_df(area_level)
-    indicators[indic_name] = indicators[IDS_GCBA[area_level]].map(indicator)
+    if type(indicator) == pd.core.series.Series:
+        indicators[indic_name] = indicator
+    elif type(indicator) == dict:
+        indicators[indic_name] = indicators[
+            IDS_GCBA[area_level]].map(indicator)
+    else:
+        raise Exception("Indicator must be dict or ")
     indicators.to_csv(get_indicators_path(area_level), encoding="utf-8")
 
     return indicators

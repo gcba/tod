@@ -182,9 +182,9 @@ def get_indicators_df(area_level="RADIO"):
 
 
 def save_indicators_df(indicators_df, old_index, area_level="RADIO"):
-    fracc_index = indicators_df.index.copy()
+    area_index = indicators_df.index.copy()
     indicators_df = indicators_df.set_index(old_index)
-    indicators_df[IDS_GCBA[area_level]] = fracc_index
+    indicators_df[IDS_GCBA[area_level]] = area_index
     indicators_df.to_csv(get_indicators_path(area_level), encoding="utf-8")
 
 
