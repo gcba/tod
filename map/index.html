@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TOD | Transport Oriented Development</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    <!-- CartoDB css -->
+    <link rel="stylesheet" href="http://libs.cartocdn.com/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <!-- Own css style -->
+    <link rel="stylesheet" type="text/css" href="css/todMap.css" />
+    <!-- https://silviomoreto.github.io/bootstrap-select/ for select -->
+    <link rel="stylesheet" type="text/css" href="dist/css/bootstrap-select.min.css" />
+</head>
+
+<body>
+    <div id="map"></div>
+    <div id="panel-transporte" class="dropup clearfix">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuTransporte" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Capas transporte <span class="caret"></span>
+        </button>
+        <ul id="capas-transporte" class="checked-list-box dropdown-menu" aria-labelledby="dropdownMenuTransporte">
+        </ul>
+    </div>
+    <div id="leyendas">
+    </div>
+    <div id="change-basemap">
+    </div>
+    <div id="main-panel" class="well">
+        <div id="panel-filtros">
+        	<div id="divisiones">
+        		Divisiones: <select id="selector-divisiones"></select>
+        	</div>
+        </div>
+        <div id="control-filtros">
+        </div>
+        <div id="panel-indicadores">
+        </div>
+        <div id="control-indicadores">
+        </div>
+    </div>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <!-- include cartodb.js library -->
+    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    <!-- include main .js of this map -->
+    <script src="js/todMap.js"></script>
+    <!-- include main .js of this map -->
+    <script src="dist/js/bootstrap-select.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,23 @@
+html,
+body,
+#map {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#panel-transporte {
+    position: fixed;
+    bottom: 40px;
+    left: 0;
+}
+
+#capas-transporte {
+    width: 220px;
+}
+
+#main-panel {
+    position: fixed;
+    top: 100px;
+    right: 0;
+}
