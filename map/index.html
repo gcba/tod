@@ -15,7 +15,11 @@
     <!-- Own css style -->
     <link rel="stylesheet" type="text/css" href="css/todMap.css" />
     <!-- https://silviomoreto.github.io/bootstrap-select/ for select -->
-    <link rel="stylesheet" type="text/css" href="dist/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" type="text/css" href="bootstrap-select/dist/css/bootstrap-select.min.css" />
+    <!-- include bootstrap tags css files -->
+    <link rel="stylesheet" type="text/css" href="bootstrap-tags/dist/css/bootstrap-tags.css" />
+    <!-- include main .js of this map -->
+    <script src="js/todMap.js"></script>
 </head>
 
 <body>
@@ -32,9 +36,13 @@
     </div>
     <div id="main-panel" class="well">
         <div id="panel-filtros">
-        	<div id="divisiones">
-        		Divisiones: <select id="selector-divisiones"></select>
-        	</div>
+            <div id="divisiones" class="dropdown clearfix">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones   <span class="caret"></span>
+                </button>
+                <ul id="selector-divisiones" class="dropdown-menu" aria-labelledby="dropdownMenuDivisiones">
+                </ul>
+            </div>
+            <div id="tag-list-divisiones" class="tag-list"></div>
         </div>
         <div id="control-filtros">
         </div>
@@ -49,10 +57,10 @@
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <!-- include cartodb.js library -->
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
-    <!-- include main .js of this map -->
-    <script src="js/todMap.js"></script>
-    <!-- include main .js of this map -->
-    <script src="dist/js/bootstrap-select.min.js"></script>
+    <!-- include a custom select -->
+    <script src="bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <!-- include bootstrap tags js file -->
+	<script src='bootstrap-tags/dist/js/bootstrap-tags.min.js'></script>
 </body>
 
 </html>

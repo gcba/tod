@@ -23,6 +23,7 @@ function main() {
             // map.panTo([50.5, 30.5]);
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
+            create_divs_filter(layers[1])
         })
         .error(function(err) {
             console.log(err);
@@ -74,9 +75,9 @@ function make_transport_query(names, layer) {
         var nameType = name.split("_")[0]
 
         if (nameType == "est") {
-            queryEstaciones = update_query(name, queryEstaciones, "estaciones")
+            queryEstaciones = update_trans_query(name, queryEstaciones, "estaciones")
         } else if (nameType == "lin") {
-            queryLineas = update_query(name, queryLineas, "lineas")
+            queryLineas = update_trans_query(name, queryLineas, "lineas")
         } else {
             console.log(nameType + " from " + name + " not recognized.")
         }
@@ -96,7 +97,7 @@ function do_cartodb_query (sublayer, query) {
     };
 }
 
-function update_query (name, query, table) {
+function update_trans_query (name, query, table) {
     if (query == "") {
         query = get_initial_query(table, name)
     } else {
@@ -115,13 +116,11 @@ function add_orig_sf (query, name) {
 
 
 // panel principal
-// filtros
-// divisiones
+// subpanel de filtros
+// selección de divisiones
 function create_divs_selector (layer) {
-    $("#selector-divisiones").change(function() {
-        var value = $("#selector-divisiones option:selected").val();
-        var query = get_initial_query("divisiones", value)
-        do_cartodb_query(layer.getSubLayer(0), query)
+    $("#divisiones").click(function() {
+        $(this).toggleClass("open")
     })
     var divisiones = {
         "None": "Ninguna",
@@ -131,11 +130,59 @@ function create_divs_selector (layer) {
         "DPTO": "Comunas"
     }
     $.each(divisiones, function (key, val) {
-        add_div_option("selector-divisiones", val, key)
+        add_divisions_li("selector-divisiones", val, key, layer)
     })
 }
 
-function add_div_option(idSelector, text, value) {
-    var option = $('<option>').attr("value", value).text(text)
-    $("#" + idSelector).append(option)
+function add_divisions_li(idSelector, text, name, layer) {
+    var a = $('<a>').text(text).attr("href", "#").attr("name", name)
+    a.click(function () {
+        var query = get_initial_query("divisiones", this.name)
+        $("#dropdownMenuDivisiones").text(this.text + "   ")
+        $("#dropdownMenuDivisiones").attr("value", this.name)
+        $("#dropdownMenuDivisiones").append($("<span class='caret'></span>"))
+        do_cartodb_query(layer.getSubLayer(0), query)
+    })
+    $("#" + idSelector).append($('<li>').append(a))
 }
+
+// filtros de divisiones
+function create_divs_filter (layer) {
+    var divisiones = {
+        "DPTO": "comunas"
+    }
+
+    // If using Bootstrap 2, be sure to include:
+    // Tags.bootstrapVersion = "2";
+    $('#tag-list-divisiones').tags({
+        tagData:[],
+        suggestions:["1", "2", "3", "4", "5"],
+        excludeList:[],
+        tagSize: "sm",
+        caseInsensitive: true,
+        restrictTo:["1", "2", "3", "4", "5"],
+        promptText: "Filtrar por divisiones...",
+        afterAddingTag: make_filter_divisions_query,
+        afterDeletingTag: make_filter_divisions_query
+    });
+
+    function make_filter_divisions_query (newTag) {
+        var tags = this.getTags()
+        var nameDivs = $("#dropdownMenuDivisiones").attr("value")
+        var query = get_initial_query("divisiones", nameDivs)
+
+        if (tags.length == 1) {
+            query += " AND " + divisiones[nameDivs] + " = " + tags[0]
+        } else if (tags.length > 1) {
+            query += " AND (" + divisiones[nameDivs] + " = " + tags[0]
+            tags.slice(1).forEach(function(tag) {
+                query += " OR " + divisiones[nameDivs] + " = " + tag
+            })
+            query += ")"
+        }
+
+        console.debug(query)
+        do_cartodb_query(layer.getSubLayer(0), query)
+    }
+};
+
