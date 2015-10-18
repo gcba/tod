@@ -21,8 +21,16 @@ function main() {
             // now, perform any operations you need
             // map.setZoom(3);
             // map.panTo([50.5, 30.5]);
+
+            // set the map empty
+            do_cartodb_query(layers[1].getSubLayer(0), "")
+            do_cartodb_query(layers[1].getSubLayer(1), "")
+            do_cartodb_query(layers[1].getSubLayer(2), "")
+            do_cartodb_query(layers[1].getSubLayer(3), "")
+
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
+            create_buffers_selector(layers[1])
         })
         .error(function(err) {
             console.log(err);
@@ -32,6 +40,16 @@ window.onload = main;
 
 
 // panel de capas de transporte
+PANEL_TRANSPORTE = {
+    "est_subte": "Estaciones de Subte",
+    "lin_subte": "Lineas de Subte",
+    "est_ffcc": "Estaciones de Ferrocarril",
+    "lin_ffcc": "Lineas de Ferrocarril",
+    "est_metrobus": "Estaciones de Metrobus",
+    "lin_metrobus": "Lineas de Metrobus",
+    "lin_colectivos": "Lineas de Colectivos"
+}
+
 function create_trans_list(layer) {
     $("#panel-transporte").click(function() {
         $(this).toggleClass("open")
@@ -42,16 +60,7 @@ function create_trans_list(layer) {
         }).get();
         make_transport_query(names, layer)
     })
-    var panelTransporte = {
-        "est_subte": "Estaciones de Subte",
-        "lin_subte": "Lineas de Subte",
-        "est_ffcc": "Estaciones de Ferrocarril",
-        "lin_ffcc": "Lineas de Ferrocarril",
-        "est_metrobus": "Estaciones de Metrobus",
-        "lin_metrobus": "Lineas de Metrobus",
-        "lin_colectivos": "Lineas de Colectivos"
-    }
-    $.each(panelTransporte, function(key, val) {
+    $.each(PANEL_TRANSPORTE, function(key, val) {
         add_trans_li("capas-transporte", val, key)
     })
 }
@@ -117,28 +126,30 @@ function add_orig_sf(query, name) {
 // panel principal
 // subpanel de filtros
 // selección de divisiones
+DIVS_NAME = {
+    "None": "Ninguna",
+    "RADIO": "Radios",
+    "FRAC": "Fracciones",
+    "BARRIO": "Barrios",
+    "DPTO": "Comunas"
+}
+
 function create_divs_selector(layer) {
     $("#divisiones").click(function() {
         $(this).toggleClass("open")
     })
-    var divisiones = {
-        "None": "Ninguna",
-        "RADIO": "Radios",
-        "FRAC": "Fracciones",
-        "BARRIO": "Barrios",
-        "DPTO": "Comunas"
-    }
-    $.each(divisiones, function(key, val) {
-        add_divisions_li("selector-divisiones", val, key, layer)
+    $.each(DIVS_NAME, function(key, val) {
+        add_divisions_li("selector-divisiones", "dropdownMenuDivisiones",
+            val, key, layer)
     })
 }
 
-function add_divisions_li(idSelector, text, name, layer) {
+function add_divisions_li(idItems, idButton, text, name, layer) {
     var a = $('<a>').text(text).attr("href", "#").attr("name", name)
     a.click(function() {
         var query = get_initial_query("divisiones", this.name)
-        $("#dropdownMenuDivisiones").text(this.text + "   ")
-        $("#dropdownMenuDivisiones").append($("<span class='caret'></span>"))
+        $("#" + idButton).text(this.text + "   ")
+        $("#" + idButton).append($("<span class='caret'></span>"))
 
         $("#tag-list-divisiones").empty()
         if (this.name != "None") {
@@ -147,12 +158,12 @@ function add_divisions_li(idSelector, text, name, layer) {
 
         do_cartodb_query(layer.getSubLayer(0), query)
     })
-    $("#" + idSelector).append($('<li>').append(a))
+    $("#" + idItems).append($('<li>').append(a))
 }
 
 
 // filtros de divisiones
-DIVISIONES = {
+DIVS_ID_FIELD = {
     "RADIO": "co_frac_ra",
     "FRAC": "co_fracc",
     "BARRIO": "barrios",
@@ -160,7 +171,7 @@ DIVISIONES = {
 }
 
 function get_filter_divs(layer, nameDivs) {
-    var divField = DIVISIONES[nameDivs]
+    var divField = DIVS_ID_FIELD[nameDivs]
     if (divField) {
         var sql = new cartodb.SQL({
             user: 'agustinbenassi'
@@ -206,11 +217,11 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
         var query = get_initial_query("divisiones", nameDivs)
 
         if (tags.length == 1) {
-            query += " AND " + DIVISIONES[nameDivs] + " = '" + tags[0] + "'"
+            query += " AND " + DIVS_ID_FIELD[nameDivs] + " = '" + tags[0] + "'"
         } else if (tags.length > 1) {
-            query += " AND (" + DIVISIONES[nameDivs] + " = '" + tags[0] + "'"
+            query += " AND (" + DIVS_ID_FIELD[nameDivs] + " = '" + tags[0] + "'"
             tags.slice(1).forEach(function(tag) {
-                query += " OR " + DIVISIONES[nameDivs] + " = '" + tag + "'"
+                query += " OR " + DIVS_ID_FIELD[nameDivs] + " = '" + tag + "'"
             })
             query += ")"
         }
@@ -218,5 +229,137 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
         console.log(query)
         do_cartodb_query(layer.getSubLayer(0), query)
     }
+};
 
+// selector de buffers
+BUFFERS_SIZE = [300, 500, 750, 1000, 1500, 2000]
+BUFFERS_TAGS = {
+    "Subte": "est_subte",
+    "FFCC": "est_ffcc",
+    "Metrobus": "est_metrobus",
+}
+
+function create_buffers_selector(layer) {
+    // agrega botones cuyo click cambia el attr name de la lista
+    $("#buffer-modo-transporte").click(function() {
+        $(this).toggleClass("open")
+    })
+    $.each(BUFFERS_TAGS, function(key, val) {
+        add_buffers_li("selector-modo-transporte",
+            "dropdownMenuBufferModoTrans", key, val)
+    })
+
+    $("#buffer-size").click(function() {
+        $(this).toggleClass("open")
+    })
+    $.each(BUFFERS_SIZE, function(key, val) {
+        add_buffers_li("selector-buffer-size",
+            "dropdownMenuBufferSize", val, val)
+    })
+
+    var bufferTags = create_selected_buffers_field(layer)
+
+    // boton que agrega el buffer al campo con los seleccionados
+    $("#button-add-buffer").click(function() {
+        var modo = $("#dropdownMenuBufferModoTrans").text()
+        var size = $("#selector-buffer-size").attr("name")
+        var tag = modo + " (" + String(size) + ")"
+        console.log(tag)
+        bufferTags.addTag(tag)
+    })
+
+}
+
+function add_buffers_li(idItems, idButton, text, name) {
+    var a = $('<a>').text(text).attr("href", "#").attr("name", name)
+    a.click(function() {
+        $("#" + idButton).text(this.text + "   ")
+        $("#" + idButton).append($("<span class='caret'></span>"))
+        $("#" + idItems).attr("name", this.name)
+    })
+    $("#" + idItems).append($('<li>').append(a))
+}
+
+function create_selected_buffers_field(layer) {
+    // If using Bootstrap 2, be sure to include:
+    // Tags.bootstrapVersion = "2";
+    var selector = $('<div>').attr("class", "tag-list")
+    $('#tag-list-buffers').append(selector)
+    var bufferTags = selector.tags({
+        readOnly: false,
+        tagData: [],
+        excludeList: [],
+        tagSize: "sm",
+        promptText: "No hay buffers seleccionados...",
+        beforeAddingTag: remove_repeated_modes,
+        afterAddingTag: add_buffer_tag,
+        afterDeletingTag: remove_buffer_tag
+    });
+
+    function remove_repeated_modes (newTag) {
+        var tags = this.getTags()
+        if (tags.length >= 1) {
+            tags.forEach(function (tag) {
+                var modeTag = get_mode_and_size(tag)[0]
+                var modeNewTag = get_mode_and_size(newTag)[0]
+                if (modeTag == modeNewTag) {
+                    bufferTags.removeTag(tag)
+                };
+            })
+        };
+    }
+
+    function add_buffer_tag (newTag) {
+        make_select_buffers_query(newTag)
+        update_capas_transporte(newTag, true)
+    }
+
+    function remove_buffer_tag (oldTag) {
+        make_select_buffers_query(oldTag)
+        update_capas_transporte(oldTag, false)
+    }
+
+    function make_select_buffers_query (newTag) {
+        var tags = bufferTags.getTags()
+        var query = ""
+
+        if (tags.length >= 1) {
+            query += "SELECT * FROM buffers_estaciones WHERE orig_sf = '"
+            query += get_sf_name(tags[0]) + "'"
+        }
+        if (tags.length > 1) {
+            tags.slice(1).forEach(function(tag) {
+                query += " OR orig_sf = '" + get_sf_name(tag) + "'"
+            })
+        }
+
+        console.log(query)
+        do_cartodb_query(layer.getSubLayer(1), query)
+    }
+
+    function update_capas_transporte (newTag, check) {
+        $("#capas-transporte li").each(function (index) {
+            var modeTag = $(this).children("input")[0].name
+            var modeNewTag = get_mode_and_size(newTag)[0]
+            if (modeTag.split("_")[1] == modeNewTag.split("_")[1]) {
+                $(this).children("input").prop("checked", check)
+            };
+        })
+        $("#capas-transporte li").trigger("change")
+    }
+
+    function get_sf_name (tag) {
+        var ms = get_mode_and_size(tag)
+        return ms[0] + "-buffer" + ms[1]
+    }
+
+    function get_mode_and_size (tag) {
+        var tagPattern = /([a-z]+)\s+\(([0-9]+)\)/i
+        var regexRes = tagPattern.exec(tag)
+        var mode = BUFFERS_TAGS[regexRes[1]]
+        var size = regexRes[2]
+        return [mode, size]
+    }
+
+    return bufferTags
 };

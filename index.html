@@ -37,12 +37,30 @@
     <div id="main-panel" class="well">
         <div id="panel-filtros">
             <div id="divisiones" class="dropdown clearfix">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones   <span class="caret"></span>
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones <span class="caret"></span>
                 </button>
                 <ul id="selector-divisiones" class="dropdown-menu" aria-labelledby="dropdownMenuDivisiones">
                 </ul>
             </div>
             <div id="tag-list-divisiones"></div>
+            <div id="buffer-selectors">
+                <div id="buffer-modo-transporte" class="dropdown clearfix">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferModoTrans" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Modo transporte <span class="caret"></span>
+                    </button>
+                    <ul id="selector-modo-transporte" class="dropdown-menu" aria-labelledby="dropdownMenuBufferModoTrans">
+                    </ul>
+                </div>
+                <div id="buffer-size" class="dropdown clearfix">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Distancia <span class="caret"></span>
+                    </button>
+                    <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize">
+                    </ul>
+                </div>
+                <div>
+                    <button id="button-add-buffer" type="button" class="btn btn-default">Agregar buffer</button>
+                </div>
+            </div>
+            <div id="tag-list-buffers"></div>
         </div>
         <div id="control-filtros">
         </div>
@@ -51,7 +69,6 @@
         <div id="control-indicadores">
         </div>
     </div>
-
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- JQuery -->
@@ -61,7 +78,7 @@
     <!-- include a custom select -->
     <script src="bootstrap-select/js/bootstrap-select.min.js"></script>
     <!-- include bootstrap tags js file -->
-	<script src='bootstrap-tags/js/bootstrap-tags.min.js'></script>
+    <script src='bootstrap-tags/js/bootstrap-tags.min.js'></script>
 </body>
 
 </html>

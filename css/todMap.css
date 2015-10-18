@@ -21,6 +21,11 @@ body,
     top: 100px;
     right: 20px;
 }
+
 #tag-list-divisiones {
     width: 250px;
+}
+
+#buffer-size, #buffer-modo-transporte {
+    float: left;
 }
