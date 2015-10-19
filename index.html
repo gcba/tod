@@ -18,8 +18,8 @@
     <link rel="stylesheet" type="text/css" href="bootstrap-select/css/bootstrap-select.min.css" />
     <!-- include bootstrap tags css files -->
     <link rel="stylesheet" type="text/css" href="bootstrap-tags/css/bootstrap-tags.css" />
-    <!-- include main .js of this map -->
-    <script src="js/todMap.js"></script>
+    <!-- first include the underscore.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -33,6 +33,13 @@
     <div id="leyendas">
     </div>
     <div id="change-basemap">
+    </div>
+    <div id="panel-indicadores" class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Indicadores</h3>
+        </div>
+        <div id="accordion" class="panel-body fixed-panel">
+        </div>
     </div>
     <div id="main-panel" class="well">
         <div id="panel-filtros">
@@ -69,16 +76,19 @@
         <div id="control-indicadores">
         </div>
     </div>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     <!-- include cartodb.js library -->
     <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
     <!-- include a custom select -->
     <script src="bootstrap-select/js/bootstrap-select.min.js"></script>
     <!-- include bootstrap tags js file -->
     <script src='bootstrap-tags/js/bootstrap-tags.min.js'></script>
+    <!-- include underscore functional module -->
+    <!-- include main .js of this map -->
+    <script src="js/todMap.js"></script>
 </body>
 
 </html>

@@ -1,3 +1,10 @@
+DEFAULT_INDIC_DIVS = "hab_km2"
+DEFAULT_INDIC_BUFFERS = "hab_km2"
+SUBLAYER_IDX = {
+    "divisions": 0,
+    "buffers": 1
+}
+
 function main() {
     cartodb.createVis('map', 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json', {
             shareable: true,
@@ -31,6 +38,9 @@ function main() {
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
             create_buffers_selector(layers[1])
+            create_change_indicators_panel(layers[1])
+            create_legend(DEFAULT_INDIC_DIVS, "divisions")
+            create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
         })
         .error(function(err) {
             console.log(err);
@@ -51,9 +61,6 @@ PANEL_TRANSPORTE = {
 }
 
 function create_trans_list(layer) {
-    $("#panel-transporte").click(function() {
-        $(this).toggleClass("open")
-    })
     $("#capas-transporte").change(function() {
         var names = $('#capas-transporte input:checked').map(function() {
             return this.name;
@@ -135,9 +142,6 @@ DIVS_NAME = {
 }
 
 function create_divs_selector(layer) {
-    $("#divisiones").click(function() {
-        $(this).toggleClass("open")
-    })
     $.each(DIVS_NAME, function(key, val) {
         add_divisions_li("selector-divisiones", "dropdownMenuDivisiones",
             val, key, layer)
@@ -155,8 +159,12 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         if (this.name != "None") {
             get_filter_divs(layer, this.name)
         }
+        $("#divisiones").attr("areaLevel", this.name)
 
         do_cartodb_query(layer.getSubLayer(0), query)
+        var indic = $("#legend-divisions").attr("indicator")
+        $("#panel-indicadores").attr("legend-type", "divisions")
+        recalculate_divisions_indicator(layer, indic)
     })
     $("#" + idItems).append($('<li>').append(a))
 }
@@ -241,17 +249,11 @@ BUFFERS_TAGS = {
 
 function create_buffers_selector(layer) {
     // agrega botones cuyo click cambia el attr name de la lista
-    $("#buffer-modo-transporte").click(function() {
-        $(this).toggleClass("open")
-    })
     $.each(BUFFERS_TAGS, function(key, val) {
         add_buffers_li("selector-modo-transporte",
             "dropdownMenuBufferModoTrans", key, val)
     })
 
-    $("#buffer-size").click(function() {
-        $(this).toggleClass("open")
-    })
     $.each(BUFFERS_SIZE, function(key, val) {
         add_buffers_li("selector-buffer-size",
             "dropdownMenuBufferSize", val, val)
@@ -264,7 +266,6 @@ function create_buffers_selector(layer) {
         var modo = $("#dropdownMenuBufferModoTrans").text()
         var size = $("#selector-buffer-size").attr("name")
         var tag = modo + " (" + String(size) + ")"
-        console.log(tag)
         bufferTags.addTag(tag)
     })
 
@@ -296,10 +297,10 @@ function create_selected_buffers_field(layer) {
         afterDeletingTag: remove_buffer_tag
     });
 
-    function remove_repeated_modes (newTag) {
+    function remove_repeated_modes(newTag) {
         var tags = this.getTags()
         if (tags.length >= 1) {
-            tags.forEach(function (tag) {
+            tags.forEach(function(tag) {
                 var modeTag = get_mode_and_size(tag)[0]
                 var modeNewTag = get_mode_and_size(newTag)[0]
                 if (modeTag == modeNewTag) {
@@ -309,17 +310,17 @@ function create_selected_buffers_field(layer) {
         };
     }
 
-    function add_buffer_tag (newTag) {
+    function add_buffer_tag(newTag) {
         make_select_buffers_query(newTag)
         update_capas_transporte(newTag, true)
     }
 
-    function remove_buffer_tag (oldTag) {
+    function remove_buffer_tag(oldTag) {
         make_select_buffers_query(oldTag)
         update_capas_transporte(oldTag, false)
     }
 
-    function make_select_buffers_query (newTag) {
+    function make_select_buffers_query(newTag) {
         var tags = bufferTags.getTags()
         var query = ""
 
@@ -335,10 +336,13 @@ function create_selected_buffers_field(layer) {
 
         console.log(query)
         do_cartodb_query(layer.getSubLayer(1), query)
+        var indic = $("#legend-buffers").attr("indicator")
+        $("#panel-indicadores").attr("legend-type", "buffers")
+        recalculate_buffers_indicator(layer, indic)
     }
 
-    function update_capas_transporte (newTag, check) {
-        $("#capas-transporte li").each(function (index) {
+    function update_capas_transporte(newTag, check) {
+        $("#capas-transporte li").each(function(index) {
             var modeTag = $(this).children("input")[0].name
             var modeNewTag = get_mode_and_size(newTag)[0]
             if (modeTag.split("_")[1] == modeNewTag.split("_")[1]) {
@@ -348,12 +352,12 @@ function create_selected_buffers_field(layer) {
         $("#capas-transporte li").trigger("change")
     }
 
-    function get_sf_name (tag) {
+    function get_sf_name(tag) {
         var ms = get_mode_and_size(tag)
         return ms[0] + "-buffer" + ms[1]
     }
 
-    function get_mode_and_size (tag) {
+    function get_mode_and_size(tag) {
         var tagPattern = /([a-z]+)\s+\(([0-9]+)\)/i
         var regexRes = tagPattern.exec(tag)
         var mode = BUFFERS_TAGS[regexRes[1]]
@@ -363,3 +367,227 @@ function create_selected_buffers_field(layer) {
 
     return bufferTags
 };
+
+// crear panel de indicadores para cambiar las leyendas
+INDIC_HIERARCHY = {
+    "Generales": ["hab", "area_km2", "hab_km2"],
+    "Edad": ["_0_14", "_15_64", "mas_65"],
+    "Uso del suelo": ["comercial", "residencia", "industrial", "servicios",
+        "otros"
+    ],
+    "Vivienda": ["con_basica", "con_insuf", "con_satisf", "serv_basic",
+        "serv_insuf", "serv_satis", "hac_149", "hac_150", "ocup_viv",
+    ],
+    "Mercado de trabajo": ["desocup", "empleo", "inact"],
+    "Nivel socioeconómico": ["nse_alt", "nse_mex_ca"],
+    "Educación": ["educ_priv", "educ_pub", "educ_sup", "escolarida"],
+    "Transporte": ["d_ffcc", "d_metrobus", "d_subte", "reach_area", "reach_prop"],
+    "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
+}
+
+function create_change_indicators_panel(layer) {
+
+    var indicsPanel = $("#panel-indicadores").children("div .panel-body")
+    $.each(INDIC_HIERARCHY, function(category, indics) {
+        var categoryPanel = $("<div>").attr("class", "panel panel-default")
+
+        // la categoría es el título
+        var panelTitle = $("<h5>").attr("class", "panel-title")
+        var a = $("<a>").text(category).attr("data-toggle", "collapse")
+        a.attr("data-parent", "#accordion")
+        var idPanelCategory = "category-panel-" + category.split(" ").join("-")
+        panelTitle.append(a.attr("href", "#" + idPanelCategory))
+        var panelHeading = $("<div>").attr("class", "panel-heading")
+        categoryPanel.append(panelHeading.append(panelTitle))
+
+        // los indicadores son una lista
+        var collapsePanel = $("<div>").attr("id", idPanelCategory)
+        collapsePanel.attr("class", "panel-collapse collapse")
+        var listIndics = $("<ul>").attr("class", "list-group")
+        indics.forEach(function(indic) {
+            listIndics.append(create_indic_changer(layer, indic))
+        })
+        collapsePanel.append(listIndics)
+        categoryPanel.append(collapsePanel)
+
+        indicsPanel.append(categoryPanel)
+    })
+}
+
+function create_indic_changer(layer, indic) {
+    var li = $("<li>").attr("class", "list-group-item")
+    var a = $("<a>").text(INDIC_DESC[indic]).click(function() {
+        var legendType = $("#panel-indicadores").attr("legend-type")
+        if (legendType == "divisions") {
+            recalculate_divisions_indicator(layer, indic)
+        } else {
+            recalculate_buffers_indicator(layer, indic)
+        };
+    })
+    return li.append(a)
+}
+
+function recalculate_divisions_indicator(layer, indic) {
+    // var legendType = $("#panel-indicadores").attr("legend-type")
+    var legendType = "divisions"
+    var table = TBL_NAMES[legendType]
+    var areaLevel = $("#divisiones").attr("areaLevel")
+    recalculate_indicator(layer, indic,
+        get_min_div_query(indic, table, areaLevel),
+        get_max_div_query(indic, table, areaLevel), legendType)
+}
+
+function recalculate_buffers_indicator(layer, indic) {
+    var legendType = "buffers"
+    var sql = layer.getSubLayer(SUBLAYER_IDX[legendType]).getSQL()
+    var minQuery = sql.replace("*", "MIN(" + indic + ")")
+    var maxQuery = sql.replace("*", "MAX(" + indic + ")")
+    recalculate_indicator(layer, indic, minQuery, maxQuery, legendType)
+}
+
+function recalculate_indicator(layer, indic, queryMin, queryMax, legendType) {
+    execute_query(queryMin, function(dataMin) {
+        var min = dataMin.rows[0]["min"]
+        execute_query(queryMax, function(dataMax) {
+            var max = dataMax.rows[0]["max"]
+            create_legend(indic, legendType, min, max)
+            change_indic(indic, legendType, min, max, layer)
+            $("#panel-indicadores").css("display", "none")
+        })
+    })
+}
+
+function get_min_div_query(indic, table, origSf) {
+    return "SELECT MIN(" + indic + ") FROM " + table + " WHERE orig_sf = '" + origSf + "'"
+}
+
+function get_max_div_query(indic, table, origSf) {
+    return "SELECT MAX(" + indic + ") FROM " + table + " WHERE orig_sf = '" + origSf + "'"
+}
+
+function execute_query(query, fnCallback) {
+    var sql = new cartodb.SQL({
+        user: 'agustinbenassi'
+    });
+    sql.execute(query, {})
+        .done(fnCallback)
+        .error(function(errors) {
+            // errors contains a list of errors
+            console.log("errors:" + errors);
+        })
+}
+
+
+// create custom Legend
+LEGEND_NAME = {
+    "divisions": "Divisiones",
+    "buffers": "Buffers"
+}
+LEGEND_IDX = {
+    "divisions": 3,
+    "buffers": 2
+}
+INDIC_DESC = {
+    "hab": "Población (cant)",
+    "area_km2": "Superficie (km2)",
+    "hab_km2": "Densidad poblacional (hab/km2)",
+    "_0_14": "0 a 14 años (%)",
+    "_15_64": "15 a 64 años (%)",
+    "mas_65": "Más de 65 años (%)",
+    "comercial": "Zona comercial (%)",
+    "residencia": "Zona residencial (%)",
+    "industrial": "Zona industrial (%)",
+    "servicios": "Zona de servicios (%)",
+    "otros": "Otros usos (%)",
+    "con_basica": "Calidad constructiva básica (%)",
+    "con_insuf": "Calidad constructiva insuficiente (%)",
+    "con_satisf": "Calidad constructiva satisfactoria (%)",
+    "serv_basic": "Conexión a servicios básica (%)",
+    "serv_insuf": "Conexión a servicios insuficiente (%)",
+    "serv_satis": "Conexión a servicios satisfactoria (%)",
+    "hac_149": "1.49 habs por cuarto o menos (%)",
+    "hac_150": "1.50 habs por cuarto o más (%)",
+    "ocup_viv": "Ocupación de vivienda (%)",
+    "desocup": "Desocupación (%)",
+    "empleo": "Empleo (%)",
+    "inact": "Inactividad (%)",
+    "nse_alt": "Nivel socioeconómico 1",
+    "nse_mex_ca": "Nivel socioeconómico 2",
+    "educ_priv": "Est. educativos privados (cant)",
+    "educ_pub": "Est. educativos públicos (cant)",
+    "educ_sup": "Educación superior (%)",
+    "escolarida": "Escolaridad (%)",
+    "d_ffcc": "Distancia al ffcc (km)",
+    "d_metrobus": "Distancia al metrobús (km)",
+    "d_subte": "Distancia al subte (km)",
+    "reach_area": "Sup. alcanzable en colectivo (km2)",
+    "reach_prop": "Sup. alcanzable en colectivo (% CABA)",
+    "nbi": "NBI (%)",
+    "compu": "Uso de computadora (%)",
+    "esp_verde": "Superficie espacios verdes (%)",
+    "hospitales": "Hospitales (cant)"
+}
+
+function create_legend(indic, legendType, min, max) {
+    var idx = LEGEND_IDX[legendType]
+    var legend = $("div .cartodb-legend-stack").children("div")[idx]
+    $(legend).attr("id", "legend-" + legendType)
+    $(legend).attr("indicator", indic)
+    $("#current-" + legendType + "-indic").remove()
+    $(legend).prepend(build_legend_indicator(indic, legendType))
+
+    // set min-max
+    var liMin = $(legend).find("li.min")[0]
+    $(liMin).text(Math.round(min * 100) / 100)
+    var liMax = $(legend).find("li.max")[0]
+    $(liMax).text(Math.round(max * 100) / 100)
+}
+
+function build_legend_indicator(indic, legendType) {
+    var change = $("<a>").text("cambiar").click(function() {
+        $("#panel-indicadores").css("display", "block")
+        $("#panel-indicadores").attr("legend-type", legendType)
+    })
+    var text = LEGEND_NAME[legendType] + ": " + INDIC_DESC[indic] + "  "
+    var p = $("<p>").attr("id", "current-" + legendType + "-indic")
+    return p.append(text).append(change).attr("class", "legend-indic")
+}
+
+function change_indic(indic, legendType, min, max, layer) {
+    var step = (max - min) / (COLORS[legendType].length - 1)
+    var css = create_css(indic, COLORS[legendType],
+        _.range(max, min - step, -step), TBL_NAMES[legendType])
+    console.log(css)
+    layer.getSubLayer(SUBLAYER_IDX[legendType]).setCartoCSS(css)
+}
+
+// create custom css
+COLORS = {
+    "divisions": ["#005824", "#238B45", "#41AE76", "#66C2A4", "#CCECE6",
+        "#D7FAF4", "#EDF8FB"
+    ],
+    "buffers": ["#B10026", " #E31A1C", "#FC4E2A", "#FD8D3C", "#FEB24C",
+        "#FED976", "#FFFFB2"
+    ]
+}
+TBL_NAMES = {
+    "divisions": "divisiones",
+    "buffers": "buffers_estaciones"
+}
+
+function create_css(indic, colors, thresholds, table) {
+    table = "#" + table
+
+    // general settings
+    var css = "/** choropleth visualization */ "
+    css += table + "{polygon-fill: " + colors[colors.length - 1] + ";"
+    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5;"
+    css += "line-opacity: 1;} "
+
+    // colors segments
+    $.each(colors, function(index, color) {
+        css += table + "[" + indic + "<=" + thresholds[index] + "]{"
+        css += "polygon-fill:" + color + "} "
+    })
+    return css
+}
