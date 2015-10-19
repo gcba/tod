@@ -433,36 +433,39 @@ function recalculate_divisions_indicator(layer, indic) {
     var table = TBL_NAMES[legendType]
     var areaLevel = $("#divisiones").attr("areaLevel")
     recalculate_indicator(layer, indic,
-        get_min_div_query(indic, table, areaLevel),
-        get_max_div_query(indic, table, areaLevel), legendType)
+        get_indic_div_query(indic, table, areaLevel), legendType)
 }
 
 function recalculate_buffers_indicator(layer, indic) {
     var legendType = "buffers"
     var sql = layer.getSubLayer(SUBLAYER_IDX[legendType]).getSQL()
-    var minQuery = sql.replace("*", "MIN(" + indic + ")")
-    var maxQuery = sql.replace("*", "MAX(" + indic + ")")
-    recalculate_indicator(layer, indic, minQuery, maxQuery, legendType)
+    var query = sql.replace("*", indic) + " AND " + indic
+    query += " IS NOT NULL ORDER BY " + indic
+    recalculate_indicator(layer, indic, query, legendType)
 }
 
-function recalculate_indicator(layer, indic, queryMin, queryMax, legendType) {
-    execute_query(queryMin, function(dataMin) {
-        var min = dataMin.rows[0]["min"]
-        execute_query(queryMax, function(dataMax) {
-            var max = dataMax.rows[0]["max"]
-            create_legend(indic, legendType, min, max)
-            change_indic(indic, legendType, min, max, layer)
-            $("#panel-indicadores").css("display", "none")
-        })
+function recalculate_indicator(layer, indic, query, legendType) {
+    console.log(query)
+    execute_query(query, function(data) {
+        var all = data.rows
+
+        // remove nulls
+        var pos = all.length - 1
+        while (!all[pos][indic]) {
+            pos -= 1
+        }
+        all = all.slice(0, pos)
+
+        var min = all[0][indic]
+        var max = all[all.length - 1][indic]
+        create_legend(indic, legendType, min, max)
+        change_indic(indic, legendType, min, max, all, layer)
+        $("#panel-indicadores").css("display", "none")
     })
 }
 
-function get_min_div_query(indic, table, origSf) {
-    return "SELECT MIN(" + indic + ") FROM " + table + " WHERE orig_sf = '" + origSf + "'"
-}
-
-function get_max_div_query(indic, table, origSf) {
-    return "SELECT MAX(" + indic + ") FROM " + table + " WHERE orig_sf = '" + origSf + "'"
+function get_indic_div_query(indic, table, origSf) {
+    return "SELECT " + indic + " FROM " + table + " WHERE orig_sf = '" + origSf + "' AND " + indic + " IS NOT NULL ORDER BY " + indic
 }
 
 function execute_query(query, fnCallback) {
@@ -553,10 +556,22 @@ function build_legend_indicator(indic, legendType) {
     return p.append(text).append(change).attr("class", "legend-indic")
 }
 
-function change_indic(indic, legendType, min, max, layer) {
-    var step = (max - min) / (COLORS[legendType].length - 1)
-    var css = create_css(indic, COLORS[legendType],
-        _.range(max, min - step, -step), TBL_NAMES[legendType])
+function change_indic(indic, legendType, min, max, all, layer) {
+    var step = Math.round(all.length / (COLORS[legendType].length))
+    // console.log(step)
+
+    var positions = _.range(all.length, 0, -step)
+    // console.log(positions)
+
+    var thresholds = $.map(positions, function (pos, index) {
+        console.log(pos - 1, all[pos - 1][indic])
+        return all[pos - 1][indic]
+    })
+    // console.log(thresholds)
+
+    var css = create_css(indic, COLORS[legendType], thresholds,
+        TBL_NAMES[legendType], DEFAULT_COLORS[legendType])
+
     console.log(css)
     layer.getSubLayer(SUBLAYER_IDX[legendType]).setCartoCSS(css)
 }
@@ -574,13 +589,17 @@ TBL_NAMES = {
     "divisions": "divisiones",
     "buffers": "buffers_estaciones"
 }
+DEFAULT_COLORS = {
+    "divisions": "#878787",
+    "buffers": "#878787"
+}
 
-function create_css(indic, colors, thresholds, table) {
+function create_css(indic, colors, thresholds, table, defaultColour) {
     table = "#" + table
 
     // general settings
     var css = "/** choropleth visualization */ "
-    css += table + "{polygon-fill: " + colors[colors.length - 1] + ";"
+    css += table + "{polygon-fill: " + defaultColour + ";"
     css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5;"
     css += "line-opacity: 1;} "
 
