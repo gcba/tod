@@ -699,7 +699,7 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
     // general settings
     var css = "/** choropleth visualization */ "
     css += table + "{polygon-fill: " + defaultColour + ";"
-    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.5;"
+    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.3;"
     css += "line-opacity: 1;} "
 
     // colors segments
