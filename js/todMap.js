@@ -9,17 +9,19 @@ SUBLAYER_IDX = {
 g_divisions = {
     "table": "divisiones",
     "sfField": "orig_sf",
-    "areaLevel": "FRAC",
+    "areaLevel": "None",
     "tags": [],
     "indicator": DEFAULT_INDIC_DIVS,
-    "sublayer_idx": 0
+    "sublayer_idx": 0,
+    "display_lgd": false,
 }
 g_buffers = {
     "table": "buffers_estaciones",
     "sfField": "orig_sf",
     "tags": [],
     "indicator": DEFAULT_INDIC_BUFFERS,
-    "sublayer_idx": 1
+    "sublayer_idx": 1,
+    "display_lgd": false,
 }
 globals = {
     "divisions": g_divisions,
@@ -41,16 +43,31 @@ function main() {
         })
         .done(function(vis, layers) {
             cartodb_vis = vis
-            // layer 0 is the base layer, layer 1 is cartodb layer
-            // setInteraction is disabled by default
+                // layer 0 is the base layer, layer 1 is cartodb layer
+                // setInteraction is disabled by default
             layers[1].setInteraction(true);
             layers[1].on('featureOver', function(e, latlng, pos, data) {
                 cartodb.log.log(e, latlng, pos, data);
             });
             var map = vis.getNativeMap();
+
+            // add a nice baselayer from Stamen
+            // L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            //     attribution: 'Stamen'
+            // }).addTo(map);
+
             // now, perform any operations you need
             // map.setZoom(3);
             // map.panTo([50.5, 30.5]);
+            var sublayer = layers[1].getSubLayer(0)
+            console.log(get_infowindow("divisions").html())
+            sublayer.infowindow.set("template",
+                get_infowindow("divisions").html())
+
+            var sublayer = layers[1].getSubLayer(1)
+            console.log(get_infowindow("buffers").html())
+            sublayer.infowindow.set("template",
+                get_infowindow("buffers").html())
 
             // set the map empty
             do_cartodb_query(layers[1].getSubLayer(0), "")
@@ -64,6 +81,8 @@ function main() {
             create_change_indicators_panel(layers[1])
             create_legend(DEFAULT_INDIC_DIVS, "divisions")
             create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
+
+
         })
         .error(function(err) {
             console.log(err);
@@ -193,8 +212,10 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         if (this.name != "None") {
             get_filter_divs(layer, this.name)
             $(get_legend("divisions")).css("display", "block")
+            g_divisions["displayLgd"] = true
         } else {
             $(get_legend("divisions")).css("display", "none")
+            g_divisions["displayLgd"] = false
         }
         // $("#divisiones").attr("areaLevel", this.name)
 
@@ -214,36 +235,41 @@ function update_infowindow(layer, legendType) {
     var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
 
     if (legendType == "divisions") {
-        var infowindow = update_divisions_infowindow()
+        var updated_infowindow_html = update_divisions_infowindow()
     } else if (legendType == "buffers") {
-        var infowindow = update_buffers_infowindow()
+        var updated_infowindow_html = update_buffers_infowindow()
     };
 
-    // console.log($(infowindow).html())
-    // sublayer.infowindow.set("template", $(infowindow).html())
+    sublayer.infowindow.set("template", updated_infowindow_html)
 
 }
 
 function update_divisions_infowindow() {
-    var infowindow = get_infowindow("divisions")
+    var infowindow = $(get_infowindow("divisions").html())
 
     var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
     $(infowindow.find("h4")[0]).text(division)
+    var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
+    $(infowindow.find("h4")[0]).text(division)
 
-    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    var id_field = "content.data." + DIVS_ID_FIELD[g_divisions["areaLevel"]]
     $(infowindow.find("p")[0]).text("{{" + id_field + "}}")
 
-    console.log(INDIC_DESC[g_divisions["indicator"]])
     $(infowindow.find("h4")[1]).text(INDIC_DESC[g_divisions["indicator"]])
-    $(infowindow.find("p")[1]).text("{{" + g_divisions["indicator"] + "}}")
+    var indicator = "content.data." + g_divisions["indicator"]
+    $(infowindow.find("p")[1]).text("{{" + indicator + "}}")
 
-    return infowindow
+    return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
 }
 
 function update_buffers_infowindow() {
     var infowindow = get_infowindow("buffers")
 
-    return infowindow
+    $(infowindow.find("h4")[0]).text(INDIC_DESC[g_buffers["indicator"]])
+    var indicator = "content.data." + g_buffers["indicator"]
+    $(infowindow.find("p")[0]).text("{{" + indicator + "}}")
+
+    return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
 }
 
 // filtros de divisiones
@@ -394,11 +420,16 @@ function create_selected_buffers_field(layer) {
     function add_buffer_tag(newTag) {
         make_select_buffers_query(newTag)
         update_capas_transporte(newTag, true)
+        g_buffers["displayLgd"] = true
     }
 
     function remove_buffer_tag(oldTag) {
         make_select_buffers_query(oldTag)
         update_capas_transporte(oldTag, false)
+        if (g_buffers["tags"].getTags().length == 0) {
+            g_buffers["displayLgd"] = false
+        };
+
     }
 
     function make_select_buffers_query(newTag) {
@@ -635,6 +666,12 @@ function create_legend(indic, legendType, min, max) {
     $(liMin).text(Math.round(min * 100) / 100)
     var liMax = $(legend).find("li.max")[0]
     $(liMax).text(Math.round(max * 100) / 100)
+
+    if (globals[legendType]["displayLgd"]) {
+        $(legend).css("display", "block")
+    } else {
+        $(legend).css("display", "none")
+    };
 }
 
 function build_legend_indicator(indic, legendType) {
@@ -673,6 +710,12 @@ function change_indic(indic, legendType, min, max, all, layer) {
 
 function get_infowindow(legendType) {
     return $('#infowindow_' + legendType)
+}
+
+function get_infowindow_html(legendType) {
+    var ini_script = '<script type="infowindow/html" id="infowindow_divisions">'
+    var end_script = '</script>'
+    return ini_script + get_infowindow(legendType).html() + end_script
 }
 
 // create custom css

@@ -76,26 +76,33 @@
         <div id="control-indicadores">
         </div>
     </div>
-    <div type="infowindow/html" id="infowindow_divisions" class="div-infowindow">
-        <div class="cartodb-tooltip-content-wrapper">
-            <div class="cartodb-tooltip-content">
-                <h4>Radio</h4>
-                <p>{{co_frac_ra}}</p>
-                <h4>Densidad poblacional (hab/km2)</h4>
-                <p>{{hab_km2}}</p>
+    <script type="infowindow/html" id="infowindow_divisions">
+        <div class="cartodb-popup">
+            <a href="#close" class="cartodb-popup-close-button close">x</a>
+            <div class="cartodb-popup-content-wrapper">
+                <div class="cartodb-popup-content">
+                    <h4>Radio</h4>
+                    <p>{{content.data.co_frac_ra}}</p>
+                    <h4>Densidad poblacional (hab/km2)</h4>
+                    <p>{{content.data.hab_km2}}</p>
+                </div>
             </div>
+            <div class="cartodb-popup-tip-container"></div>
         </div>
-    </div>
-    <div type="infowindow/html" id="infowindow_buffers" class="div-infowindow">
-        <div class="cartodb-tooltip-content-wrapper">
-            <div class="cartodb-tooltip-content">
-                <h4>Radio</h4>
-                <p>{{co_frac_ra}}</p>
-                <h4>Densidad poblacional (hab/km2)</h4>
-                <p>{{hab_km2}}</p>
+    </script>
+    </script>
+    <script type="infowindow/html" id="infowindow_buffers">
+        <div class="cartodb-popup">
+            <a href="#close" class="cartodb-popup-close-button close">x</a>
+            <div class="cartodb-popup-content-wrapper">
+                <div class="cartodb-popup-content">
+                    <h4>Densidad poblacional (hab/km2)</h4>
+                    <p>{{content.data.hab_km2}}</p>
+                </div>
             </div>
+            <div class="cartodb-popup-tip-container"></div>
         </div>
-    </div>
+    </script>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <!-- Latest compiled and minified JavaScript -->
