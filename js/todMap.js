@@ -60,12 +60,10 @@ function main() {
             // map.setZoom(3);
             // map.panTo([50.5, 30.5]);
             var sublayer = layers[1].getSubLayer(0)
-            console.log(get_infowindow("divisions").html())
             sublayer.infowindow.set("template",
                 get_infowindow("divisions").html())
 
             var sublayer = layers[1].getSubLayer(1)
-            console.log(get_infowindow("buffers").html())
             sublayer.infowindow.set("template",
                 get_infowindow("buffers").html())
 
@@ -81,8 +79,7 @@ function main() {
             create_change_indicators_panel(layers[1])
             create_legend(DEFAULT_INDIC_DIVS, "divisions")
             create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
-
-
+            create_download_image()
         })
         .error(function(err) {
             console.log(err);
@@ -429,7 +426,6 @@ function create_selected_buffers_field(layer) {
         if (g_buffers["tags"].getTags().length == 0) {
             g_buffers["displayLgd"] = false
         };
-
     }
 
     function make_select_buffers_query(newTag) {
@@ -751,4 +747,44 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
         css += "polygon-fill:" + color + "} "
     })
     return css
+}
+
+// descargar mapa
+function create_download_image() {
+    $("#button-download-image").click(function() {
+        html2canvas($("#map").get(), {
+            onrendered: function(canvas) {
+                var w = window.open();
+                $(w.document.body).css("top", "0")
+                $(w.document.body).css("left", "0")
+                $(w.document.body).css("margin", "0 0 0 0")
+                $(w.document.body).append(canvas)
+            },
+            useCORS: true,
+            allowTaint: true,
+            letterRendering: true
+        });
+    })
+
+}
+
+function dataURItoBlob(dataURI) {
+    // convert base64 to raw binary data held in a string
+    // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+    var byteString = atob(dataURI.split(',')[1]);
+
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+    // write the bytes of the string to an ArrayBuffer
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+
+    // write the ArrayBuffer to a blob, and you're done
+    var bb = new BlobBuilder();
+    bb.append(ab);
+    return bb.getBlob(mimeString);
 }
