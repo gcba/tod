@@ -60,7 +60,7 @@
                 <div id="buffer-size" class="dropdown clearfix">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Distancia <span class="caret"></span>
                     </button>
-                    <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize">
+                    <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize" name="None">
                     </ul>
                 </div>
                 <div>
@@ -74,6 +74,26 @@
         <div id="panel-indicadores">
         </div>
         <div id="control-indicadores">
+        </div>
+    </div>
+    <div type="infowindow/html" id="infowindow_divisions" class="div-infowindow">
+        <div class="cartodb-tooltip-content-wrapper">
+            <div class="cartodb-tooltip-content">
+                <h4>Radio</h4>
+                <p>{{co_frac_ra}}</p>
+                <h4>Densidad poblacional (hab/km2)</h4>
+                <p>{{hab_km2}}</p>
+            </div>
+        </div>
+    </div>
+    <div type="infowindow/html" id="infowindow_buffers" class="div-infowindow">
+        <div class="cartodb-tooltip-content-wrapper">
+            <div class="cartodb-tooltip-content">
+                <h4>Radio</h4>
+                <p>{{co_frac_ra}}</p>
+                <h4>Densidad poblacional (hab/km2)</h4>
+                <p>{{hab_km2}}</p>
+            </div>
         </div>
     </div>
     <!-- JQuery -->

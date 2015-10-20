@@ -48,3 +48,7 @@ body,
 .fixed-panel {
     overflow-y:scroll;
 }
+
+.div-infowindow {
+    display:none;
+}

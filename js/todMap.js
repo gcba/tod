@@ -1,9 +1,32 @@
 DEFAULT_INDIC_DIVS = "hab_km2"
 DEFAULT_INDIC_BUFFERS = "hab_km2"
 SUBLAYER_IDX = {
-    "divisions": 0,
-    "buffers": 1
+        "divisions": 0,
+        "buffers": 1
+    }
+    // trackea el status de las variables necesarias para
+    // actualizar las queries
+g_divisions = {
+    "table": "divisiones",
+    "sfField": "orig_sf",
+    "areaLevel": "FRAC",
+    "tags": [],
+    "indicator": DEFAULT_INDIC_DIVS,
+    "sublayer_idx": 0
 }
+g_buffers = {
+    "table": "buffers_estaciones",
+    "sfField": "orig_sf",
+    "tags": [],
+    "indicator": DEFAULT_INDIC_BUFFERS,
+    "sublayer_idx": 1
+}
+globals = {
+    "divisions": g_divisions,
+    "buffers": g_buffers
+}
+cartodb_vis = null
+
 
 function main() {
     cartodb.createVis('map', 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json', {
@@ -17,13 +40,13 @@ function main() {
             zoom: 12
         })
         .done(function(vis, layers) {
+            cartodb_vis = vis
             // layer 0 is the base layer, layer 1 is cartodb layer
             // setInteraction is disabled by default
             layers[1].setInteraction(true);
             layers[1].on('featureOver', function(e, latlng, pos, data) {
                 cartodb.log.log(e, latlng, pos, data);
             });
-            // you can get the native map to work with it
             var map = vis.getNativeMap();
             // now, perform any operations you need
             // map.setZoom(3);
@@ -53,6 +76,8 @@ window.onload = main;
 PANEL_TRANSPORTE = {
     "est_subte": "Estaciones de Subte",
     "lin_subte": "Lineas de Subte",
+    "est_sub_prem": "Estaciones de Premetro",
+    "lin_sub_prem": "Lineas de Premetro",
     "est_ffcc": "Estaciones de Ferrocarril",
     "lin_ffcc": "Lineas de Ferrocarril",
     "est_metrobus": "Estaciones de Metrobus",
@@ -140,6 +165,13 @@ DIVS_NAME = {
     "BARRIO": "Barrios",
     "DPTO": "Comunas"
 }
+DIVS_SINGLE_NAME = {
+    "None": "No se ha seleccionado una división",
+    "RADIO": "Radio",
+    "FRAC": "Fracción",
+    "BARRIO": "Barrio",
+    "DPTO": "Comuna"
+}
 
 function create_divs_selector(layer) {
     $.each(DIVS_NAME, function(key, val) {
@@ -152,23 +184,67 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
     var a = $('<a>').text(text).attr("href", "#").attr("name", name)
     a.click(function() {
         var query = get_initial_query("divisiones", this.name)
+        g_divisions["areaLevel"] = this.name
+
         $("#" + idButton).text(this.text + "   ")
         $("#" + idButton).append($("<span class='caret'></span>"))
 
         $("#tag-list-divisiones").empty()
         if (this.name != "None") {
             get_filter_divs(layer, this.name)
+            $(get_legend("divisions")).css("display", "block")
+        } else {
+            $(get_legend("divisions")).css("display", "none")
         }
-        $("#divisiones").attr("areaLevel", this.name)
+        // $("#divisiones").attr("areaLevel", this.name)
 
         do_cartodb_query(layer.getSubLayer(0), query)
-        var indic = $("#legend-divisions").attr("indicator")
+
         $("#panel-indicadores").attr("legend-type", "divisions")
-        recalculate_divisions_indicator(layer, indic)
+        if (this.name != "None") {
+            recalculate_divisions_indicator(layer, g_divisions["indicator"])
+        }
+        update_infowindow(layer, "divisions")
+
     })
     $("#" + idItems).append($('<li>').append(a))
 }
 
+function update_infowindow(layer, legendType) {
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
+
+    if (legendType == "divisions") {
+        var infowindow = update_divisions_infowindow()
+    } else if (legendType == "buffers") {
+        var infowindow = update_buffers_infowindow()
+    };
+
+    // console.log($(infowindow).html())
+    // sublayer.infowindow.set("template", $(infowindow).html())
+
+}
+
+function update_divisions_infowindow() {
+    var infowindow = get_infowindow("divisions")
+
+    var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
+    $(infowindow.find("h4")[0]).text(division)
+
+    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    $(infowindow.find("p")[0]).text("{{" + id_field + "}}")
+
+    console.log(INDIC_DESC[g_divisions["indicator"]])
+    $(infowindow.find("h4")[1]).text(INDIC_DESC[g_divisions["indicator"]])
+    $(infowindow.find("p")[1]).text("{{" + g_divisions["indicator"] + "}}")
+
+    return infowindow
+}
+
+function update_buffers_infowindow() {
+    var infowindow = get_infowindow("buffers")
+
+    return infowindow
+}
 
 // filtros de divisiones
 DIVS_ID_FIELD = {
@@ -243,6 +319,7 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
 BUFFERS_SIZE = [300, 500, 750, 1000, 1500, 2000]
 BUFFERS_TAGS = {
     "Subte": "est_subte",
+    "Premetro": "est_sub_prem",
     "FFCC": "est_ffcc",
     "Metrobus": "est_metrobus",
 }
@@ -259,14 +336,18 @@ function create_buffers_selector(layer) {
             "dropdownMenuBufferSize", val, val)
     })
 
-    var bufferTags = create_selected_buffers_field(layer)
+    create_selected_buffers_field(layer)
 
     // boton que agrega el buffer al campo con los seleccionados
     $("#button-add-buffer").click(function() {
         var modo = $("#dropdownMenuBufferModoTrans").text()
         var size = $("#selector-buffer-size").attr("name")
         var tag = modo + " (" + String(size) + ")"
-        bufferTags.addTag(tag)
+        if (modo.trim() != "Modo transporte" && size != "None") {
+            g_buffers["tags"].addTag(tag)
+        } else {
+            alert("Debe seleccionar un modo de transporte y una distancia.")
+        };
     })
 
 }
@@ -286,7 +367,7 @@ function create_selected_buffers_field(layer) {
     // Tags.bootstrapVersion = "2";
     var selector = $('<div>').attr("class", "tag-list")
     $('#tag-list-buffers').append(selector)
-    var bufferTags = selector.tags({
+    g_buffers["tags"] = selector.tags({
         readOnly: false,
         tagData: [],
         excludeList: [],
@@ -304,7 +385,7 @@ function create_selected_buffers_field(layer) {
                 var modeTag = get_mode_and_size(tag)[0]
                 var modeNewTag = get_mode_and_size(newTag)[0]
                 if (modeTag == modeNewTag) {
-                    bufferTags.removeTag(tag)
+                    g_buffers["tags"].removeTag(tag)
                 };
             })
         };
@@ -321,7 +402,7 @@ function create_selected_buffers_field(layer) {
     }
 
     function make_select_buffers_query(newTag) {
-        var tags = bufferTags.getTags()
+        var tags = g_buffers["tags"].getTags()
         var query = ""
 
         if (tags.length >= 1) {
@@ -336,9 +417,8 @@ function create_selected_buffers_field(layer) {
 
         console.log(query)
         do_cartodb_query(layer.getSubLayer(1), query)
-        var indic = $("#legend-buffers").attr("indicator")
         $("#panel-indicadores").attr("legend-type", "buffers")
-        recalculate_buffers_indicator(layer, indic)
+        recalculate_buffers_indicator(layer, g_buffers["indicator"])
     }
 
     function update_capas_transporte(newTag, check) {
@@ -365,7 +445,7 @@ function create_selected_buffers_field(layer) {
         return [mode, size]
     }
 
-    return bufferTags
+    return g_buffers["tags"]
 };
 
 // crear panel de indicadores para cambiar las leyendas
@@ -431,7 +511,7 @@ function recalculate_divisions_indicator(layer, indic) {
     // var legendType = $("#panel-indicadores").attr("legend-type")
     var legendType = "divisions"
     var table = TBL_NAMES[legendType]
-    var areaLevel = $("#divisiones").attr("areaLevel")
+    var areaLevel = g_divisions["areaLevel"]
     recalculate_indicator(layer, indic,
         get_indic_div_query(indic, table, areaLevel), legendType)
 }
@@ -451,10 +531,14 @@ function recalculate_indicator(layer, indic, query, legendType) {
 
         // remove nulls
         var pos = all.length - 1
+            // console.log(pos, all.length, all[pos][indic], all[all.length])
         while (!all[pos][indic]) {
             pos -= 1
         }
-        all = all.slice(0, pos)
+        // console.log(all.length - 1, pos)
+        all = all.slice(0, pos + 1)
+            // console.log(all.length - 1, pos)
+            // console.log(pos, all.length - 1, all[pos][indic])
 
         var min = all[0][indic]
         var max = all[all.length - 1][indic]
@@ -531,11 +615,18 @@ INDIC_DESC = {
     "hospitales": "Hospitales (cant)"
 }
 
-function create_legend(indic, legendType, min, max) {
+function get_legend(legendType) {
     var idx = LEGEND_IDX[legendType]
-    var legend = $("div .cartodb-legend-stack").children("div")[idx]
+    return $("div .cartodb-legend-stack").children("div")[idx]
+}
+
+function create_legend(indic, legendType, min, max) {
+    var legend = get_legend(legendType)
     $(legend).attr("id", "legend-" + legendType)
-    $(legend).attr("indicator", indic)
+
+    // $(legend).attr("indicator", indic)
+    globals[legendType]["indicator"] = indic
+
     $("#current-" + legendType + "-indic").remove()
     $(legend).prepend(build_legend_indicator(indic, legendType))
 
@@ -557,23 +648,31 @@ function build_legend_indicator(indic, legendType) {
 }
 
 function change_indic(indic, legendType, min, max, all, layer) {
+    globals[legendType]["indicator"] = indic
+
     var step = Math.round(all.length / (COLORS[legendType].length))
-    // console.log(step)
+        // console.log(step)
 
     var positions = _.range(all.length, 0, -step)
-    // console.log(positions)
+        // console.log(positions)
 
-    var thresholds = $.map(positions, function (pos, index) {
-        console.log(pos - 1, all[pos - 1][indic])
-        return all[pos - 1][indic]
-    })
-    // console.log(thresholds)
+    var thresholds = $.map(positions, function(pos, index) {
+            console.log(pos - 1, all[pos - 1][indic])
+            return all[pos - 1][indic]
+        })
+        // console.log(thresholds)
 
     var css = create_css(indic, COLORS[legendType], thresholds,
         TBL_NAMES[legendType], DEFAULT_COLORS[legendType])
 
     console.log(css)
-    layer.getSubLayer(SUBLAYER_IDX[legendType]).setCartoCSS(css)
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
+    sublayer.setCartoCSS(css)
+    update_infowindow(layer, legendType)
+}
+
+function get_infowindow(legendType) {
+    return $('#infowindow_' + legendType)
 }
 
 // create custom css
