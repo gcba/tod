@@ -15,14 +15,17 @@ import sys
 import zipfile
 import shapefile
 import glob
+from shapely.ops import cascaded_union
 
-from path_finders import find_shp_path
+from path_finders import find_shp_path, get_division_path
+from geo_utils import iter_shp_as_shapely
 import geo_utils
 import utils
 
 BASE_DIR = os.path.join("shp", "transporte")
 BUFFER_DIR = "buffers"
 BUFFERS = [300, 500, 750, 1000, 1500, 2000]
+CONTEXT_SHP = get_division_path("comunas_caba_censo_2010")
 
 
 def _create_shp_name(shp_dir, distance):
@@ -54,8 +57,31 @@ def write_shapefile(sf_est, shapely_shapes, shp_path):
     w.save(shp_path)
 
 
+def create_buffer(shape, distance, resolution, context_polygon=None):
+    if not context_polygon:
+        return shape.buffer(distance, resolution)
+    else:
+        # print("here")
+        shp = shape.buffer(distance, resolution).intersection(context_polygon)
+        return shp.convex_hull
+
+
+def create_context_polygon(context_shp_or_polygon):
+    if not context_shp_or_polygon:
+        return None
+    elif (type(context_shp_or_polygon) != str and
+          type(context_shp_or_polygon) != unicode):
+        return context_shp_or_polygon
+    else:
+        return cascaded_union(
+            [i[1].buffer(0) for i in
+             iter_shp_as_shapely(context_shp_or_polygon)])
+
+
 def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
-                        resolution=16, recalculate=False):
+                        resolution=16, recalculate=False,
+                        context_shp_or_polygon=None):
+    context_polygon = create_context_polygon(context_shp_or_polygon)
 
     shp_path = find_shp_path(directory)
     shp_name = _create_shp_name(shp_path, distance)
@@ -69,15 +95,21 @@ def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
         sf_est = shapefile.Reader(shp_path)
 
         # create buffers from shapely shapes
-        buffer_shapes = [shape.buffer(distance, resolution)
-                         for shape in geo_utils.get_shapely_shapes(sf_est)]
+        buffer_shapes = []
+        for shape in geo_utils.get_shapely_shapes(sf_est):
+            if not context_polygon or context_polygon.contains(shape):
+                buffer_shapes.append(create_buffer(shape, distance,
+                                                   resolution,
+                                                   context_polygon))
 
         write_shapefile(sf_est, buffer_shapes, buffer_shp_path)
         utils.copy_prj(shp_path, buffer_shp_path)
 
 
-def main(input_dir=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
+def main(input_dir=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False,
+         context_shp=CONTEXT_SHP):
     skip = skip or []
+    context_polygon = create_context_polygon(context_shp)
 
     # unzip any zipped shapefiles
     for zipped_shp in glob.glob(os.path.join(input_dir, "*.zip")):
@@ -103,7 +135,8 @@ def main(input_dir=BASE_DIR, skip=None, buffers=BUFFERS, recalculate=False):
                 try:
                     create_buffered_shp(os.path.join(input_dir, shp_dir),
                                         distance, BUFFER_DIR,
-                                        recalculate=recalculate)
+                                        recalculate=recalculate,
+                                        context_shp_or_polygon=context_polygon)
                 except Exception as inst:
                     print(shp_dir, "couldn't be buffered with distance",
                           distance)

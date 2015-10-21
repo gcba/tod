@@ -26,8 +26,10 @@ from path_finders import get_weights_path, iter_buffer_dirs, get_division_dir
 from path_finders import find_shp_path
 import geo_utils
 
-DIVISIONS = ["fracciones_caba_censo_2010", "radios_censo_2010"]
-DIVISION_NAMES = ["fracciones", "radios"]
+# DIVISIONS = ["fracciones_caba_censo_2010", "radios_censo_2010"]
+DIVISIONS = ["radios_censo_2010"]
+# DIVISION_NAMES = ["fracciones", "radios"]
+DIVISION_NAMES = ["radios"]
 CONTEXT_DIR = os.path.join("shp", "contexto")
 EMPTY_SHPS_DIR = [os.path.join(CONTEXT_DIR, "espacios-verdes-privados"),
                   os.path.join(CONTEXT_DIR, "espacios-verdes-publicos")]

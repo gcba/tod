@@ -104,6 +104,13 @@ def get_weights_path(buffer_dir, division_name, weights_dir=None):
     return os.path.join(get_project_dir(), weights_path)
 
 
+def iter_weights_paths(weights_dir=None):
+    weights_dir = os.path.join(get_project_dir(), weights_dir or WEIGHTS_DIR)
+    for filename in os.listdir(weights_dir):
+        if filename[0] != ".":
+            yield os.path.join(weights_dir, filename)
+
+
 def find_shp_path(directory):
     """Find the folder where the shape files are, from a base dir."""
 
