@@ -41,6 +41,19 @@
         <div id="accordion" class="panel-body fixed-panel">
         </div>
     </div>
+    <div id="panel-indicadores-select" class="panel panel-default">
+        <div class="panel-heading">
+            <div id="wrapper">
+                <div class="left">
+                    <h3 class="panel-title">Indicadores seleccionados</h3></div>
+                <div class="right" id="close-indicadores-select">
+                    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+                </div>
+            </div>
+        </div>
+        <div id="accordion-select" class="panel-body fixed-panel">
+        </div>
+    </div>
     <div id="main-panel" class="well">
         <div id="panel-filtros">
             <div id="divisiones" class="dropdown clearfix">
@@ -70,8 +83,27 @@
             <div id="tag-list-buffers"></div>
         </div>
         <div id="control-filtros">
+            <div id="universe-data" class="well well-sm">
+                <p>Superficie: <span id="superficie-total">0.00</span> km2</p>
+                <p>Población: <span id="poblacion-total">0.00</span> M</p>
+            </div>
         </div>
-        <div id="panel-indicadores">
+        <div id="panel-indicadores-seleccionados">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <div id="wrapper">
+                        <div class="left">
+                            <p>Indicadores</p></div>
+                        <div class="right" id="open-indicadores-select">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Table -->
+                <table id="indicadores-seleccionados" class="table">
+                </table>
+            </div>
         </div>
         <div id="control-indicadores">
         </div>
@@ -123,8 +155,6 @@
     <script src="js/html2canvas.js"></script>
     <script src="js/html2canvas.svg.js"></script>
     <!-- <script src="js/FileSaver.min.js"></script> -->
-
-
 </body>
 
 </html>

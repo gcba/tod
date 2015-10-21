@@ -28,7 +28,8 @@ globals = {
     "buffers": g_buffers
 }
 cartodb_vis = null
-
+AREA_WEIGHTED = ["hab_km2"]
+NON_WEIGHTED = ["hab", "area_km2"]
 
 function main() {
     cartodb.createVis('map', 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json', {
@@ -77,6 +78,7 @@ function main() {
             create_divs_selector(layers[1])
             create_buffers_selector(layers[1])
             create_change_indicators_panel(layers[1])
+            create_select_indicators_panel(layers[1])
             create_legend(DEFAULT_INDIC_DIVS, "divisions")
             create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
             create_download_image()
@@ -223,7 +225,7 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
         }
         update_infowindow(layer, "divisions")
-
+        set_universe_totals(query)
     })
     $("#" + idItems).append($('<li>').append(a))
 }
@@ -267,6 +269,21 @@ function update_buffers_infowindow() {
     $(infowindow.find("p")[0]).text("{{" + indicator + "}}")
 
     return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
+}
+
+function set_universe_totals(mapQuery) {
+    // $("#universe-data").css("display", "block")
+    var queryPop = mapQuery.replace("*", "SUM(hab)")
+    execute_query(queryPop, function(data) {
+        var pop = Math.round(data.rows[0]["sum"] / 1000000 * 100) / 100
+        $("#poblacion-total").text(pop)
+    })
+
+    var queryArea = mapQuery.replace("*", "SUM(area_km2)")
+    execute_query(queryArea, function(data) {
+        var area = Math.round(data.rows[0]["sum"] * 100) / 100
+        $("#superficie-total").text(area)
+    })
 }
 
 // filtros de divisiones
@@ -335,6 +352,8 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
 
         console.log(query)
         do_cartodb_query(layer.getSubLayer(0), query)
+        set_universe_totals(query)
+        calculate_indicators(layer)
     }
 };
 
@@ -521,6 +540,120 @@ function create_change_indicators_panel(layer) {
     })
 }
 
+function calculate_indicators (layer) {
+    var checked = $("#panel-indicadores-select").find("input:checked")
+    var names = checked.map(function() {
+        return this.name;
+    }).get();
+
+    select_indicators(layer.getSubLayer(0), names)
+    $("#panel-indicadores-select").css("display", "none")
+    // debugger
+}
+
+function create_select_indicators_panel(layer) {
+    console.log($("#close-indicadores-select"))
+    $("#close-indicadores-select").click(function() {
+        calculate_indicators(layer)
+    })
+
+    $("#open-indicadores-select").click(function () {
+        $("#panel-indicadores-select").css("display", "block")
+    })
+
+    var indicsPanel = $("#panel-indicadores-select").children("div .panel-body")
+    $.each(INDIC_HIERARCHY, function(category, indics) {
+        var categoryPanel = $("<div>").attr("class", "panel panel-default")
+
+        // la categoría es el título
+        var panelTitle = $("<h5>").attr("class", "panel-title")
+        var a = $("<a>").text(category).attr("data-toggle", "collapse")
+        a.attr("data-parent", "#accordion-select")
+        var idPanelCategory = "category-select-" + category.split(" ").join("-")
+        panelTitle.append(a.attr("href", "#" + idPanelCategory))
+        var panelHeading = $("<div>").attr("class", "panel-heading")
+        categoryPanel.append(panelHeading.append(panelTitle))
+
+        // los indicadores son una lista
+        var collapsePanel = $("<div>").attr("id", idPanelCategory)
+        collapsePanel.attr("class", "panel-collapse collapse")
+        var listIndics = $("<ul>").attr("class", "list-group")
+        indics.forEach(function(indic) {
+            listIndics.append(create_indic_option(layer, indic))
+        })
+        collapsePanel.append(listIndics)
+        categoryPanel.append(collapsePanel)
+
+        indicsPanel.append(categoryPanel)
+    })
+}
+
+
+
+
+function select_indicators (layer, names) {
+    var table = create_simple_indicators_table(layer, names)
+    // debugger
+    table.attr("id", "indicadores-seleccionados").attr("class", "table")
+    // debugger
+    $("#indicadores-seleccionados").empty()
+    // debugger
+    $("#indicadores-seleccionados").replaceWith(table)
+}
+
+function create_simple_indicators_table (layer, names) {
+    var trHead = $("<tr>").append($("<th>").text("Indicador"))
+    trHead.append($("<th>").text("Valor"))
+    var table = $("<table>").append($("<thead>").append(trHead))
+    table.append($("<tbody>"))
+    $.each(names, function (index, name) {
+        query_indic_all(layer, name, table)
+    })
+    return table
+}
+
+function add_new_row (table, idRow, row) {
+    var tr = $("<tr>").attr("id", idRow)
+    $.each(row, function (index, element) {
+        tr.append($("<td>").append(element))
+    })
+    // debugger
+    table.append(tr)
+}
+
+function query_indic_all (layer, name, table) {
+    if ($.inArray(name, NON_WEIGHTED) != -1) {
+        var allQuery = layer.getSQL().replace("*", "SUM(" + name + ")")
+        execute_query(allQuery, function (data) {
+            result = Math.round(data.rows[0]["sum"] * 10) / 10
+            var row = [INDIC_DESC[name], result]
+            // debugger
+            add_new_row(table, "table-" + name, row)
+        })
+    } else {
+        if ($.inArray(name, AREA_WEIGHTED) != -1) {
+            var weightIndic = "area_km2"
+        } else {
+            var weightIndic = "hab"
+        };
+
+        var allQuery = layer.getSQL().replace("*", name + ", " + weightIndic)
+        execute_query(allQuery, function (data) {
+            var sumWeight = 0
+            var sumIndic = 0
+            $.each(data.rows, function (index, row) {
+                sumWeight += row[weightIndic]
+                sumIndic += row[weightIndic] * row[name]
+            })
+            result = Math.round(sumIndic / sumWeight * 10) / 10
+            // debugger
+            var row = [INDIC_DESC[name], result]
+            add_new_row(table, "table-" + name, row)
+        })
+    };
+}
+
+
 function create_indic_changer(layer, indic) {
     var li = $("<li>").attr("class", "list-group-item")
     var a = $("<a>").text(INDIC_DESC[indic]).click(function() {
@@ -532,6 +665,13 @@ function create_indic_changer(layer, indic) {
         };
     })
     return li.append(a)
+}
+
+function create_indic_option(layer, indic) {
+    var li = $('<li>').attr("class", "list-group-item")
+    li.append($("<input type='checkbox'>").attr("name", indic))
+    li.append("  " + INDIC_DESC[indic])
+    return li
 }
 
 function recalculate_divisions_indicator(layer, indic) {
@@ -765,7 +905,6 @@ function create_download_image() {
             letterRendering: true
         });
     })
-
 }
 
 function dataURItoBlob(dataURI) {

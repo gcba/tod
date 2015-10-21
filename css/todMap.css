@@ -30,7 +30,7 @@ body,
     float: left;
 }
 
-#panel-indicadores {
+#panel-indicadores, #panel-indicadores-select {
     position: absolute;
     display: none;
     top: 50%;
@@ -64,3 +64,14 @@ body,
     margin:0 0 0 -65px;
 }
 
+.left {
+    float:left;
+}
+
+.right {
+    float:right;
+}
+
+#wrapper {
+    height: 20px;
+}
