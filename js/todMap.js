@@ -30,6 +30,10 @@ globals = {
 cartodb_vis = null
 AREA_WEIGHTED = ["hab_km2"]
 NON_WEIGHTED = ["hab", "area_km2"]
+DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
+    "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
+    "empleo", "inact", "nse_alt", "nse_mex_ca"
+]
 
 function main() {
     cartodb.createVis('map', 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json', {
@@ -39,7 +43,7 @@ function main() {
             search: true,
             tiles_loader: true,
             center_lat: -34.615753,
-            center_lon: -58.339657,
+            center_lon: -58.43,
             zoom: 12
         })
         .done(function(vis, layers) {
@@ -78,9 +82,11 @@ function main() {
             create_divs_selector(layers[1])
             create_buffers_selector(layers[1])
             create_change_indicators_panel(layers[1])
+            create_selected_indicators_table()
             create_select_indicators_panel(layers[1])
             create_legend(DEFAULT_INDIC_DIVS, "divisions")
             create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
+            set_legend_container_hidden()
             create_download_image()
         })
         .error(function(err) {
@@ -215,6 +221,7 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         } else {
             $(get_legend("divisions")).css("display", "none")
             g_divisions["displayLgd"] = false
+            set_legend_container_hidden()
         }
         // $("#divisiones").attr("areaLevel", this.name)
 
@@ -223,9 +230,13 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         $("#panel-indicadores").attr("legend-type", "divisions")
         if (this.name != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
+            $("#panel-indicadores-seleccionados").css("display", "block")
+            calculate_indicators(layer)
+        } else {
+            $("#panel-indicadores-seleccionados").css("display", "none")
         }
         update_infowindow(layer, "divisions")
-        set_universe_totals(query)
+        set_universe_totals(layer)
     })
     $("#" + idItems).append($('<li>').append(a))
 }
@@ -271,7 +282,25 @@ function update_buffers_infowindow() {
     return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
 }
 
-function set_universe_totals(mapQuery) {
+function set_universe_totals(layer) {
+    var sublayerDivs = layer.getSubLayer(SUBLAYER_IDX["divisions"])
+    var sublayerBuffers = layer.getSubLayer(SUBLAYER_IDX["buffers"])
+    var queryDivs = sublayerDivs.getSQL()
+    var queryBuffers = sublayerBuffers.getSQL()
+
+    if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
+        set_divisions_universe_totals(queryDivs)
+    } else if (g_divisions["displayLgd"]) {
+        set_divisions_universe_totals(queryDivs)
+    } else if (g_buffers["displayLgd"]) {
+        set_buffers_universe_totals(queryBuffers)
+    } else {
+        $("#poblacion-total").text("0.00")
+        $("#superficie-total").text("0.00")
+    };
+}
+
+function set_divisions_universe_totals(mapQuery) {
     // $("#universe-data").css("display", "block")
     var queryPop = mapQuery.replace("*", "SUM(hab)")
     execute_query(queryPop, function(data) {
@@ -285,6 +314,55 @@ function set_universe_totals(mapQuery) {
         $("#superficie-total").text(area)
     })
 }
+
+POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Union(the_geom) AS the_geom"
+
+function set_buffers_universe_totals(mapQuery) {
+
+    // set population universe total
+    var queryPop = "WITH buffers_union AS ("
+    queryPop += mapQuery.replace("*", POLYS_UNION_SELECT)
+    queryPop += "), \
+ \
+divs_con_intersect_sups AS \
+    (SELECT divisiones.cartodb_id, divisiones.hab, \
+            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+     FROM divisiones, buffers_union \
+     WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
+         AND divisiones.orig_sf = 'RADIO') \
+ \
+SELECT SUM(divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) \
+FROM divs_con_intersect_sups"
+
+    console.log(queryPop)
+    execute_query(queryPop, function(data) {
+        var pop = Math.round(data.rows[0]["sum"] / 1000000 * 100) / 100
+        $("#poblacion-total").text(pop)
+    })
+
+    // set area universe total
+    var queryArea = "WITH buffers_union AS ("
+    queryArea += mapQuery.replace("*", POLYS_UNION_SELECT)
+    queryArea += "), \
+ \
+ divs_con_intersect_sups AS \
+    (SELECT divisiones.cartodb_id, \
+            divisiones.area_km2, \
+            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+     FROM divisiones, buffers_union \
+     WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
+         AND divisiones.orig_sf = 'RADIO') \
+ \
+SELECT SUM(divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) \
+FROM divs_con_intersect_sups"
+
+    console.log(queryArea)
+    execute_query(queryArea, function(data) {
+        var area = Math.round(data.rows[0]["sum"] * 100) / 100
+        $("#superficie-total").text(area)
+    })
+}
+
 
 // filtros de divisiones
 DIVS_ID_FIELD = {
@@ -352,7 +430,7 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
 
         console.log(query)
         do_cartodb_query(layer.getSubLayer(0), query)
-        set_universe_totals(query)
+        set_universe_totals(layer)
         calculate_indicators(layer)
     }
 };
@@ -462,9 +540,15 @@ function create_selected_buffers_field(layer) {
         }
 
         console.log(query)
+        if (query != "") {
+            g_buffers["displayLgd"] = true
+        } else {
+            g_buffers["displayLgd"] = false
+        };
         do_cartodb_query(layer.getSubLayer(1), query)
         $("#panel-indicadores").attr("legend-type", "buffers")
         recalculate_buffers_indicator(layer, g_buffers["indicator"])
+        set_universe_totals(layer)
     }
 
     function update_capas_transporte(newTag, check) {
@@ -540,7 +624,7 @@ function create_change_indicators_panel(layer) {
     })
 }
 
-function calculate_indicators (layer) {
+function calculate_indicators(layer) {
     var checked = $("#panel-indicadores-select").find("input:checked")
     var names = checked.map(function() {
         return this.name;
@@ -548,16 +632,15 @@ function calculate_indicators (layer) {
 
     select_indicators(layer.getSubLayer(0), names)
     $("#panel-indicadores-select").css("display", "none")
-    // debugger
+        // debugger
 }
 
 function create_select_indicators_panel(layer) {
-    console.log($("#close-indicadores-select"))
     $("#close-indicadores-select").click(function() {
         calculate_indicators(layer)
     })
 
-    $("#open-indicadores-select").click(function () {
+    $("#open-indicadores-select").click(function() {
         $("#panel-indicadores-select").css("display", "block")
     })
 
@@ -586,48 +669,43 @@ function create_select_indicators_panel(layer) {
 
         indicsPanel.append(categoryPanel)
     })
+
+    calculate_indicators(layer)
 }
 
-
-
-
-function select_indicators (layer, names) {
-    var table = create_simple_indicators_table(layer, names)
-    // debugger
-    table.attr("id", "indicadores-seleccionados").attr("class", "table")
-    // debugger
-    $("#indicadores-seleccionados").empty()
-    // debugger
-    $("#indicadores-seleccionados").replaceWith(table)
+function create_selected_indicators_table() {
+    var table = $("#indicadores-seleccionados").DataTable({
+        "columns": [{
+            title: "Indicador"
+        }, {
+            title: "Valor"
+        }],
+        "bLengthChange": false,
+        'bPaginate': false,
+        'bInfo': false,
+        'bFilter': false,
+        "scrollY": "28vh"
+    })
 }
 
-function create_simple_indicators_table (layer, names) {
-    var trHead = $("<tr>").append($("<th>").text("Indicador"))
-    trHead.append($("<th>").text("Valor"))
-    var table = $("<table>").append($("<thead>").append(trHead))
-    table.append($("<tbody>"))
-    $.each(names, function (index, name) {
+function select_indicators(layer, names) {
+    var table = $("#indicadores-seleccionados").DataTable().clear()
+    $.each(names, function(index, name) {
         query_indic_all(layer, name, table)
     })
-    return table
 }
 
-function add_new_row (table, idRow, row) {
-    var tr = $("<tr>").attr("id", idRow)
-    $.each(row, function (index, element) {
-        tr.append($("<td>").append(element))
-    })
-    // debugger
-    table.append(tr)
+function add_new_row(table, idRow, row) {
+    table.row.add(row).draw(true)
 }
 
-function query_indic_all (layer, name, table) {
+function query_indic_all(layer, name, table) {
     if ($.inArray(name, NON_WEIGHTED) != -1) {
         var allQuery = layer.getSQL().replace("*", "SUM(" + name + ")")
-        execute_query(allQuery, function (data) {
+        execute_query(allQuery, function(data) {
             result = Math.round(data.rows[0]["sum"] * 10) / 10
             var row = [INDIC_DESC[name], result]
-            // debugger
+                // debugger
             add_new_row(table, "table-" + name, row)
         })
     } else {
@@ -638,15 +716,15 @@ function query_indic_all (layer, name, table) {
         };
 
         var allQuery = layer.getSQL().replace("*", name + ", " + weightIndic)
-        execute_query(allQuery, function (data) {
+        execute_query(allQuery, function(data) {
             var sumWeight = 0
             var sumIndic = 0
-            $.each(data.rows, function (index, row) {
+            $.each(data.rows, function(index, row) {
                 sumWeight += row[weightIndic]
                 sumIndic += row[weightIndic] * row[name]
             })
             result = Math.round(sumIndic / sumWeight * 10) / 10
-            // debugger
+                // debugger
             var row = [INDIC_DESC[name], result]
             add_new_row(table, "table-" + name, row)
         })
@@ -671,6 +749,12 @@ function create_indic_option(layer, indic) {
     var li = $('<li>').attr("class", "list-group-item")
     li.append($("<input type='checkbox'>").attr("name", indic))
     li.append("  " + INDIC_DESC[indic])
+
+    if ($.inArray(indic, DEFAULT_SELECTED_INDICATORS) != -1) {
+        // debugger
+        $(li.find("input")[0]).prop("checked", true)
+    };
+
     return li
 }
 
@@ -805,8 +889,16 @@ function create_legend(indic, legendType, min, max) {
 
     if (globals[legendType]["displayLgd"]) {
         $(legend).css("display", "block")
+        $("#map .cartodb-legend-stack").css("display", "block")
     } else {
         $(legend).css("display", "none")
+        set_legend_container_hidden()
+    };
+}
+
+function set_legend_container_hidden() {
+    if (!g_buffers["displayLgd"] && !g_divisions["displayLgd"]) {
+        $("#map .cartodb-legend-stack").css("display", "none")
     };
 }
 
@@ -856,11 +948,11 @@ function get_infowindow_html(legendType) {
 
 // create custom css
 COLORS = {
-    "divisions": ["#005824", "#238B45", "#41AE76", "#66C2A4", "#CCECE6",
-        "#D7FAF4", "#EDF8FB"
+    "divisions": ["#005824", "#238B45", "#41AE76", "#66C2A4",
+        "#CCECE6", "#D7FAF4", "#EDF8FB"
     ],
-    "buffers": ["#B10026", " #E31A1C", "#FC4E2A", "#FD8D3C", "#FEB24C",
-        "#FED976", "#FFFFB2"
+    "buffers": ["#B10026", "#E31A1C", "#FC4E2A", "#FD8D3C",
+        "#FEB24C", "#FED976", "#FFFFB2"
     ]
 }
 TBL_NAMES = {

@@ -9,7 +9,7 @@ body,
 #panel-transporte {
     position: fixed;
     bottom: 40px;
-    left: 0;
+    left: 5px;
 }
 
 #capas-transporte {
@@ -20,17 +20,21 @@ body,
     position: fixed;
     top: 100px;
     right: 20px;
+    max-height: calc(95% - 100px);
+    max-width: 33%;
 }
 
 #tag-list-divisiones {
     width: 250px;
 }
 
-#buffer-size, #buffer-modo-transporte {
+#buffer-size,
+#buffer-modo-transporte {
     float: left;
 }
 
-#panel-indicadores, #panel-indicadores-select {
+#panel-indicadores,
+#panel-indicadores-select {
     position: absolute;
     display: none;
     top: 50%;
@@ -38,7 +42,7 @@ body,
     margin: 0 auto;
     width: 500px;
     height: 500px;
-    margin:-250px 0 0 -250px;
+    margin: -250px 0 0 -250px;
 }
 
 .panel-body {
@@ -46,11 +50,11 @@ body,
 }
 
 .fixed-panel {
-    overflow-y:scroll;
+    overflow-y: scroll;
 }
 
 .div-infowindow {
-    display:none;
+    display: none;
 }
 
 #download-image {
@@ -61,17 +65,41 @@ body,
 
 #button-download-image {
     width: 130px;
-    margin:0 0 0 -65px;
+    margin: 0 0 0 -65px;
 }
 
 .left {
-    float:left;
+    float: left;
 }
 
 .right {
-    float:right;
+    float: right;
 }
 
 #wrapper {
     height: 20px;
+}
+
+#indicadores-seleccionados {
+    margin-top: 0px!important;
+}
+
+#panel-indicadores-seleccionados {
+    display: none;
+}
+
+div.cartodb-legend,
+div.cartodb-legend ul li {
+    color: #D3D3D3;
+}
+
+#map .cartodb-legend-stack {
+    display: none;
+    position: absolute;
+    left: 5px;
+    max-width: 300px;
+    bottom: 90px;
+    background: rgba(58, 58, 48, 0.4);
+    padding: 2px;
+    z-index: 99;
 }
