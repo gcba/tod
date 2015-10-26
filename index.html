@@ -112,39 +112,14 @@
             <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
         </div>
     </div>
-    <script type="infowindow/html" id="infowindow_divisions">
-        <div class="cartodb-popup">
-            <a href="#close" class="cartodb-popup-close-button close">x</a>
-            <div class="cartodb-popup-content-wrapper">
-                <div class="cartodb-popup-content">
-                    <h4>Radio</h4>
-                    <p>{{content.data.co_frac_ra}}</p>
-                    <h4>Densidad poblacional (hab/km2)</h4>
-                    <p>{{content.data.hab_km2}}</p>
-                </div>
-            </div>
-            <div class="cartodb-popup-tip-container"></div>
-        </div>
-    </script>
-    </script>
-    <script type="infowindow/html" id="infowindow_buffers">
-        <div class="cartodb-popup">
-            <a href="#close" class="cartodb-popup-close-button close">x</a>
-            <div class="cartodb-popup-content-wrapper">
-                <div class="cartodb-popup-content">
-                    <h4>Densidad poblacional (hab/km2)</h4>
-                    <p>{{content.data.hab_km2}}</p>
-                </div>
-            </div>
-            <div class="cartodb-popup-tip-container"></div>
-        </div>
-    </script>
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- include cartodb.js library -->
-    <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+    <!-- <script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script> -->
+    <!-- pongo una versión anterior para que funcionen los tooltip -->
+    <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.13/cartodb.js"></script>
     <!-- include a custom select -->
     <script src="bootstrap-select/js/bootstrap-select.min.js"></script>
     <!-- include bootstrap tags js file -->

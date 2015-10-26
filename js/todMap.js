@@ -13,7 +13,7 @@ g_divisions = {
     "tags": [],
     "indicator": DEFAULT_INDIC_DIVS,
     "sublayer_idx": 0,
-    "display_lgd": false,
+    "displayLgd": false,
 }
 g_buffers = {
     "table": "buffers_estaciones",
@@ -21,7 +21,7 @@ g_buffers = {
     "tags": [],
     "indicator": DEFAULT_INDIC_BUFFERS,
     "sublayer_idx": 1,
-    "display_lgd": false,
+    "displayLgd": false,
 }
 globals = {
     "divisions": g_divisions,
@@ -64,13 +64,6 @@ function main() {
             // now, perform any operations you need
             // map.setZoom(3);
             // map.panTo([50.5, 30.5]);
-            var sublayer = layers[1].getSubLayer(0)
-            sublayer.infowindow.set("template",
-                get_infowindow("divisions").html())
-
-            var sublayer = layers[1].getSubLayer(1)
-            sublayer.infowindow.set("template",
-                get_infowindow("buffers").html())
 
             // set the map empty
             do_cartodb_query(layers[1].getSubLayer(0), "")
@@ -233,53 +226,78 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
             $("#panel-indicadores-seleccionados").css("display", "block")
             calculate_indicators(layer)
         } else {
-            $("#panel-indicadores-seleccionados").css("display", "none")
+            if (!g_buffers["displayLgd"]) {
+                $("#panel-indicadores-seleccionados").css("display", "none")
+            } else {
+                calculate_indicators(layer)
+
+            };
         }
-        update_infowindow(layer, "divisions")
+        update_tooltip(layer, "divisions")
         set_universe_totals(layer)
     })
     $("#" + idItems).append($('<li>').append(a))
 }
 
-function update_infowindow(layer, legendType) {
-    var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
+function update_tooltip(layer, legendType) {
+    // sólo usar tooltip o infobox, pero no las dos
 
     if (legendType == "divisions") {
-        var updated_infowindow_html = update_divisions_infowindow()
+        // update_divisions_tooltip(layer, legendType)
+        // update_divisions_infobox(layer, legendType)
     } else if (legendType == "buffers") {
-        var updated_infowindow_html = update_buffers_infowindow()
+        // update_buffers_tooltip(layer, legendType)
+        // update_buffers_infobox(layer, legendType)
     };
+}
 
-    sublayer.infowindow.set("template", updated_infowindow_html)
+function update_divisions_infobox(layer, legendType) {
+    // no funciona con divisions+buffers activado
+    var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
+    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    var indicator = g_divisions["indicator"]
+    var indicator_desc = INDIC[indicator]["short"]
+
+    $("#divisions-tooltip").remove()
+
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
+    sublayer.set({
+        'interactivity': ['cartodb_id', id_field, indicator]
+    });
+    var i = new cdb.geo.ui.InfoBox({
+        width: 300,
+        layer: layer,
+        template: '<div id="divisions-tooltip" class="cartodb-tooltip-content-wrapper"> <div class="cartodb-tooltip-content"><h4>' + division + '</h4><p>{{' + id_field + '}}</p><h4>' + indicator_desc + '</h4><p>{{' + indicator + '}}</p></div></div>',
+        position: 'top|left'
+    });
+    $('#map').append(i.render().el);
 
 }
 
-function update_divisions_infowindow() {
-    var infowindow = $(get_infowindow("divisions").html())
-
+function update_divisions_tooltip(layer, legendType) {
     var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
-    $(infowindow.find("h4")[0]).text(division)
-    var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
-    $(infowindow.find("h4")[0]).text(division)
+    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    var indicator = g_divisions["indicator"]
+    var indicator_desc = INDIC[indicator]["short"]
 
-    var id_field = "content.data." + DIVS_ID_FIELD[g_divisions["areaLevel"]]
-    $(infowindow.find("p")[0]).text("{{" + id_field + "}}")
+    $("#divisions-tooltip").remove()
 
-    $(infowindow.find("h4")[1]).text(INDIC_DESC[g_divisions["indicator"]])
-    var indicator = "content.data." + g_divisions["indicator"]
-    $(infowindow.find("p")[1]).text("{{" + indicator + "}}")
-
-    return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
+    sublayer.set({
+        'interactivity': ['cartodb_id', id_field, indicator]
+    });
+    var i = new cdb.geo.ui.Tooltip({
+        layer: layer,
+        template: '<div id="divisions-tooltip" class="cartodb-tooltip-content-wrapper"> <div class="cartodb-tooltip-content"><h4>' + division + '</h4><p>{{' + id_field + '}}</p><h4>' + indicator_desc + '</h4><p>{{' + indicator + '}}</p></div></div>',
+        width: 200,
+        position: 'bottom|right'
+    });
+    $('#map').append(i.render().el);
+    console.log("Tooltip set with:", division, id_field, indicator)
 }
 
-function update_buffers_infowindow() {
-    var infowindow = get_infowindow("buffers")
-
-    $(infowindow.find("h4")[0]).text(INDIC_DESC[g_buffers["indicator"]])
-    var indicator = "content.data." + g_buffers["indicator"]
-    $(infowindow.find("p")[0]).text("{{" + indicator + "}}")
-
-    return '<div class="cartodb-popup">' + infowindow.html() + '</div>'
+function update_buffers_tooltip(layer, legendType) {
+    // no está implementado
 }
 
 function set_universe_totals(layer) {
@@ -302,20 +320,22 @@ function set_universe_totals(layer) {
 
 function set_divisions_universe_totals(mapQuery) {
     // $("#universe-data").css("display", "block")
-    var queryPop = mapQuery.replace("*", "SUM(hab)")
+    var queryPop = mapQuery.replace("*", "SUM(hab) AS hab")
     execute_query(queryPop, function(data) {
-        var pop = Math.round(data.rows[0]["sum"] / 1000000 * 100) / 100
+        var pop = format_val("hab", data.rows[0]["hab"])
         $("#poblacion-total").text(pop)
     })
 
-    var queryArea = mapQuery.replace("*", "SUM(area_km2)")
+    var queryArea = mapQuery.replace("*", "SUM(area_km2) AS area_km2")
     execute_query(queryArea, function(data) {
-        var area = Math.round(data.rows[0]["sum"] * 100) / 100
+        var area = format_val("area_km2", data.rows[0]["area_km2"])
         $("#superficie-total").text(area)
     })
 }
 
-POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Union(the_geom) AS the_geom"
+POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Buffer(ST_Union(the_geom), 0) AS the_geom"
+POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
+
 
 function set_buffers_universe_totals(mapQuery) {
 
@@ -336,7 +356,7 @@ FROM divs_con_intersect_sups"
 
     console.log(queryPop)
     execute_query(queryPop, function(data) {
-        var pop = Math.round(data.rows[0]["sum"] / 1000000 * 100) / 100
+        var pop = Math.round(data.rows[0]["sum"] * INDIC[indic]["scale"] / 1000000 * 100) / 100
         $("#poblacion-total").text(pop)
     })
 
@@ -358,11 +378,149 @@ FROM divs_con_intersect_sups"
 
     console.log(queryArea)
     execute_query(queryArea, function(data) {
-        var area = Math.round(data.rows[0]["sum"] * 100) / 100
+        var area = Math.round(data.rows[0]["sum"] * INDIC[indic]["scale"] * 100) / 100
         $("#superficie-total").text(area)
     })
 }
 
+function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
+
+    // agrega las variables usadas como ponderadores
+    if ($.inArray("hab", indics) == -1) {
+        indics.push("hab")
+    };
+    if ($.inArray("area_km2", indics) == -1) {
+        indics.push("area_km2")
+    };
+
+    // crea los strings para las partes de la query con los indicadores
+    var joined_indics1 = "divisiones." + indics.join(", divisiones.")
+    var joined_indics1b = " AND divisiones." + indics.join(" IS NOT NULL AND divisiones.") + " IS NOT NULL"
+    var joined_indics2 = "divs_con_intersect_sups."
+    joined_indics2 += $.grep(indics, function(indic, index) {
+        return (indic != "hab" && indic != "area_km2")
+    }).join(", divs_con_intersect_sups.")
+    var joined_indics3 = "divs_con_habs_y_sups."
+    joined_indics3 += indics.join(", divs_con_habs_y_sups.")
+
+    // crea la consulta final que suma los indicadores ponderados
+    var final_query = ""
+    $.each(indics, function(index, indic) {
+        if ($.inArray(indic, NON_WEIGHTED) != -1) {
+            final_query += "SUM(divs_con_ponds." + indic + ")"
+            final_query += " AS "
+            final_query += indic + ", "
+        } else if ($.inArray(indic, AREA_WEIGHTED) != -1) {
+            final_query += "SUM(divs_con_ponds." + indic + " * divs_con_ponds."
+            final_query += "pond_sup) AS " + indic + ", "
+        } else {
+            final_query += "SUM(divs_con_ponds." + indic + " * divs_con_ponds."
+            final_query += "pond_hab) AS " + indic + ", "
+        };
+    })
+
+    // construcción de la query
+    var query = "WITH buffers_union AS \
+    (" + mapBuffersQuery.replace("*", POLYS_UNION_SELECT) + "), buffers_out AS \
+    (" + mapDivsQuery.replace("* FROM divisiones", POLYS_DIFF_UNION_SELECT) + "), \
+ \
+     divs_con_intersect_sups AS \
+    (SELECT divisiones.cartodb_id, " + joined_indics1 + ", \
+            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_out.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+     FROM divisiones, buffers_out \
+     WHERE ST_Intersects(divisiones.the_geom, buffers_out.the_geom) \
+         AND divisiones.orig_sf = 'RADIO' " + joined_indics1b + "), \
+ \
+     divs_con_habs_y_sups AS \
+    (SELECT divs_con_intersect_sups.cartodb_id, " + joined_indics2 + ", \
+            (divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) AS area_km2, \
+            (divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) AS hab \
+     FROM divs_con_intersect_sups), \
+ \
+     divs_con_ponds AS \
+    (SELECT divs_con_habs_y_sups.cartodb_id, " + joined_indics3 + ", \
+            (divs_con_habs_y_sups.area_km2 / \
+                 (SELECT SUM(area_km2) \
+                  FROM divs_con_habs_y_sups)) AS pond_sup, \
+            (divs_con_habs_y_sups.hab / \
+                 (SELECT SUM(hab) \
+                  FROM divs_con_habs_y_sups)) AS pond_hab \
+     FROM divs_con_habs_y_sups) \
+ \
+SELECT " + final_query.slice(0, final_query.length - 2) + " \
+FROM divs_con_ponds"
+
+    return query
+}
+
+function gen_buffers_in_query(mapBuffersQuery, indics) {
+
+    // agrega las variables usadas como ponderadores
+    if ($.inArray("hab", indics) == -1) {
+        indics.push("hab")
+    };
+    if ($.inArray("area_km2", indics) == -1) {
+        indics.push("area_km2")
+    };
+
+    // crea los strings para las partes de la query con los indicadores
+    var joined_indics1 = "divisiones." + indics.join(", divisiones.")
+    var joined_indics1b = " AND divisiones." + indics.join(" IS NOT NULL AND divisiones.") + " IS NOT NULL"
+    var joined_indics2 = "divs_con_intersect_sups."
+    joined_indics2 += $.grep(indics, function(indic, index) {
+        return (indic != "hab" && indic != "area_km2")
+    }).join(", divs_con_intersect_sups.")
+    var joined_indics3 = "divs_con_habs_y_sups."
+    joined_indics3 += indics.join(", divs_con_habs_y_sups.")
+
+    // crea la consulta final que suma los indicadores ponderados
+    var final_query = ""
+    $.each(indics, function(index, indic) {
+        if ($.inArray(indic, NON_WEIGHTED) != -1) {
+            final_query += "SUM(divs_con_ponds." + indic + ")"
+            final_query += " AS "
+            final_query += indic + ", "
+        } else if ($.inArray(indic, AREA_WEIGHTED) != -1) {
+            final_query += "SUM(divs_con_ponds." + indic + " * divs_con_ponds."
+            final_query += "pond_sup) AS " + indic + ", "
+        } else {
+            final_query += "SUM(divs_con_ponds." + indic + " * divs_con_ponds."
+            final_query += "pond_hab) AS " + indic + ", "
+        };
+    })
+
+    // construcción de la query
+    var query = "WITH buffers_union AS \
+    (" + mapBuffersQuery.replace("*", POLYS_UNION_SELECT) + "), \
+ \
+     divs_con_intersect_sups AS \
+    (SELECT divisiones.cartodb_id, " + joined_indics1 + ", \
+            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+     FROM divisiones, buffers_union \
+     WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
+         AND divisiones.orig_sf = 'RADIO' " + joined_indics1b + "), \
+ \
+     divs_con_habs_y_sups AS \
+    (SELECT divs_con_intersect_sups.cartodb_id, " + joined_indics2 + ", \
+            (divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) AS area_km2, \
+            (divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) AS hab \
+     FROM divs_con_intersect_sups), \
+ \
+     divs_con_ponds AS \
+    (SELECT divs_con_habs_y_sups.cartodb_id, " + joined_indics3 + ", \
+            (divs_con_habs_y_sups.area_km2 / \
+                 (SELECT SUM(area_km2) \
+                  FROM divs_con_habs_y_sups)) AS pond_sup, \
+            (divs_con_habs_y_sups.hab / \
+                 (SELECT SUM(hab) \
+                  FROM divs_con_habs_y_sups)) AS pond_hab \
+     FROM divs_con_habs_y_sups) \
+ \
+SELECT " + final_query.slice(0, final_query.length - 2) + " \
+FROM divs_con_ponds"
+
+    return query
+}
 
 // filtros de divisiones
 DIVS_ID_FIELD = {
@@ -515,6 +673,8 @@ function create_selected_buffers_field(layer) {
         make_select_buffers_query(newTag)
         update_capas_transporte(newTag, true)
         g_buffers["displayLgd"] = true
+        $("#panel-indicadores-seleccionados").css("display", "block")
+        calculate_indicators(layer)
     }
 
     function remove_buffer_tag(oldTag) {
@@ -522,6 +682,11 @@ function create_selected_buffers_field(layer) {
         update_capas_transporte(oldTag, false)
         if (g_buffers["tags"].getTags().length == 0) {
             g_buffers["displayLgd"] = false
+            if (!g_divisions["displayLgd"]) {
+                $("#panel-indicadores-seleccionados").css("display", "none")
+            } else {
+                calculate_indicators(layer)
+            };
         };
     }
 
@@ -630,7 +795,7 @@ function calculate_indicators(layer) {
         return this.name;
     }).get();
 
-    select_indicators(layer.getSubLayer(0), names)
+    select_indicators(layer, names)
     $("#panel-indicadores-select").css("display", "none")
         // debugger
 }
@@ -674,67 +839,201 @@ function create_select_indicators_panel(layer) {
 }
 
 function create_selected_indicators_table() {
+    var columns = [{
+        title: "Indicador"
+    }, {
+        title: "In"
+    }, {
+        title: "Out"
+    }, {
+        title: "All"
+    }]
     var table = $("#indicadores-seleccionados").DataTable({
-        "columns": [{
-            title: "Indicador"
-        }, {
-            title: "Valor"
-        }],
+        "columns": columns,
         "bLengthChange": false,
         'bPaginate': false,
         'bInfo': false,
         'bFilter': false,
-        "scrollY": "28vh"
+        "scrollY": "28vh",
     })
 }
 
 function select_indicators(layer, names) {
-    var table = $("#indicadores-seleccionados").DataTable().clear()
-    $.each(names, function(index, name) {
-        query_indic_all(layer, name, table)
-    })
+    console.log(g_divisions["displayLgd"] && g_buffers["displayLgd"])
+        var table = $("#indicadores-seleccionados").DataTable().clear().draw()
+
+    if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
+        table.column(1).visible(true)
+        table.column(2).visible(true)
+        query_indic_mixed(layer, names, table)
+
+    } else if (g_divisions["displayLgd"] || g_buffers["displayLgd"]) {
+        if (g_divisions["displayLgd"]) {
+            table.column(1).visible(false)
+            table.column(2).visible(false)
+            var sublayer = layer.getSubLayer(SUBLAYER_IDX["divisions"])
+            query_divisions_indic_all(sublayer, names, table, convert_result_in_new_row)
+        } else {
+            table.column(1).visible(false)
+            table.column(2).visible(false)
+            var sublayer = layer.getSubLayer(SUBLAYER_IDX["buffers"])
+            query_buffers_indic_in(sublayer, names, table, convert_result_in_new_row)
+        };
+
+    } else {
+        console.log("Nothing showed in the map.")
+    };
 }
 
 function add_new_row(table, idRow, row) {
     table.row.add(row).draw(true)
 }
 
-function query_indic_all(layer, name, table) {
-    if ($.inArray(name, NON_WEIGHTED) != -1) {
-        var allQuery = layer.getSQL().replace("*", "SUM(" + name + ")")
-        execute_query(allQuery, function(data) {
-            result = Math.round(data.rows[0]["sum"] * 10) / 10
-            var row = [INDIC_DESC[name], result]
-                // debugger
-            add_new_row(table, "table-" + name, row)
-        })
-    } else {
-        if ($.inArray(name, AREA_WEIGHTED) != -1) {
-            var weightIndic = "area_km2"
-        } else {
-            var weightIndic = "hab"
-        };
+function query_indic_mixed(layer, indics, table) {
 
-        var allQuery = layer.getSQL().replace("*", name + ", " + weightIndic)
-        execute_query(allQuery, function(data) {
-            var sumWeight = 0
-            var sumIndic = 0
-            $.each(data.rows, function(index, row) {
-                sumWeight += row[weightIndic]
-                sumIndic += row[weightIndic] * row[name]
-            })
-            result = Math.round(sumIndic / sumWeight * 10) / 10
-                // debugger
-            var row = [INDIC_DESC[name], result]
-            add_new_row(table, "table-" + name, row)
+    var sublayerBuffers = layer.getSubLayer(SUBLAYER_IDX["buffers"])
+    var sublayerDivisions = layer.getSubLayer(SUBLAYER_IDX["divisions"])
+
+    query_buffers_indic_in(sublayerBuffers, indics, table,
+        function(table, indics, bufferInResult) {
+
+            query_buffers_indic_out(layer, indics, table,
+                function(table, indics, bufferOutResult) {
+
+                    query_divisions_indic_all(sublayerDivisions, indics,
+                        table,
+                        function(table, indics, divisionsAllResult) {
+                            $.each(indics, function(index, indic) {
+                                var row = [INDIC[indic]["short"],
+                                    format_val(indic, bufferInResult[indic]),
+                                    format_val(indic, bufferOutResult[indic]),
+                                    format_val(indic, divisionsAllResult[indic])
+                                ]
+                                add_new_row(table, "table-" + indic, row)
+                            })
+                        })
+                })
         })
-    };
 }
 
+function convert_result_in_new_row(table, indics, result) {
+    $.each(indics, function(index, indic) {
+        var row = [INDIC[indic]["short"], "", "", format_val(indic,
+            result[indic])]
+        add_new_row(table, "table-" + indic, row)
+    })
+}
+
+function format_val(indic, value) {
+    return Math.round(value * INDIC[indic]["scale"] * 100) / 100
+}
+
+function group_by_weight_type(indics) {
+    var groupedIndics = {
+        "count": [],
+        "pop": [],
+        "area": []
+    }
+    $.each(indics, function(index, indic) {
+        if ($.inArray(indic, NON_WEIGHTED) != -1) {
+            groupedIndics["count"].push(indic)
+        } else if ($.inArray(indic, AREA_WEIGHTED) != -1) {
+            groupedIndics["area"].push(indic)
+        } else {
+            groupedIndics["pop"].push(indic)
+        };
+    })
+    return groupedIndics
+}
+
+function query_buffers_indic_out(layer, indics, table, res_manager) {
+    var mapDivisionsQuery = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
+    var mapBuffersQuery = layer.getSubLayer(SUBLAYER_IDX["buffers"]).getSQL()
+    var query = gen_buffers_out_query(mapDivisionsQuery, mapBuffersQuery, indics)
+    execute_query(query, function(data) {
+        res_manager(table, indics, data.rows[0])
+    })
+}
+
+function query_buffers_indic_in(sublayer, indics, table, res_manager) {
+    var query = gen_buffers_in_query(sublayer.getSQL(), indics)
+    execute_query(query, function(data) {
+        res_manager(table, indics, data.rows[0])
+    })
+}
+
+function query_divisions_indic_all(sublayer, indics, table, res_manager) {
+    var groupedIndics = group_by_weight_type(indics)
+    var result = {}
+
+    // create count variables query
+    var countCols = ""
+    if (groupedIndics["count"].length > 0) {
+        $.each(groupedIndics["count"], function(index, indic) {
+            countCols += ", SUM(" + indic + ") AS " + indic
+        })
+        countCols = countCols.slice(1)
+        var countQuery = sublayer.getSQL().replace("*", countCols)
+    } else {
+        countQuery = ""
+    };
+
+    // create weighted variables query
+    var weightedIndics = $.merge(groupedIndics["area"], groupedIndics["pop"])
+    weightedIndics.push("area_km2")
+    weightedIndics.push("hab")
+
+    if (weightedIndics.length > 2) {
+        var weightedCols = weightedIndics.join(", ")
+        var weightedQuery = sublayer.getSQL().replace("*", weightedCols)
+    } else {
+        var weightedCols = ""
+        var weightedQuery = ""
+    };
+
+    // count query first
+    execute_query(countQuery, function(dataCountQuery) {
+        execute_query(weightedQuery, function(dataWeightedQuery) {
+            var sumAreaWeight = 0
+            var sumPopWeight = 0
+            var sumWeightedIndics = {}
+            $.each(weightedIndics, function(index, indic) {
+                if (indic != "hab" && indic != "area_km2") {
+                    sumWeightedIndics[indic] = 0
+                }
+            })
+
+            $.each(dataWeightedQuery.rows, function(index, row) {
+                sumAreaWeight += row["area_km2"]
+                sumPopWeight += row["hab"]
+
+                $.each(sumWeightedIndics, function(key, value) {
+                    if ($.inArray(key, AREA_WEIGHTED) != -1) {
+                        sumWeightedIndics[key] += row[key] * row["area_km2"]
+                    } else {
+                        sumWeightedIndics[key] += row[key] * row["hab"]
+                    };
+                })
+            })
+
+            var result = {}
+            $.each(sumWeightedIndics, function(key, value) {
+                if ($.inArray(key, AREA_WEIGHTED) != -1) {
+                    result[key] = value / sumAreaWeight
+                } else {
+                    result[key] = value / sumPopWeight
+                };
+            })
+
+            result = $.extend(dataCountQuery.rows[0], result)
+            res_manager(table, indics, result)
+        })
+    })
+}
 
 function create_indic_changer(layer, indic) {
     var li = $("<li>").attr("class", "list-group-item")
-    var a = $("<a>").text(INDIC_DESC[indic]).click(function() {
+    var a = $("<a>").text(INDIC[indic]["short"]).click(function() {
         var legendType = $("#panel-indicadores").attr("legend-type")
         if (legendType == "divisions") {
             recalculate_divisions_indicator(layer, indic)
@@ -748,7 +1047,7 @@ function create_indic_changer(layer, indic) {
 function create_indic_option(layer, indic) {
     var li = $('<li>').attr("class", "list-group-item")
     li.append($("<input type='checkbox'>").attr("name", indic))
-    li.append("  " + INDIC_DESC[indic])
+    li.append("  " + INDIC[indic]["short"])
 
     if ($.inArray(indic, DEFAULT_SELECTED_INDICATORS) != -1) {
         // debugger
@@ -807,12 +1106,18 @@ function execute_query(query, fnCallback) {
     var sql = new cartodb.SQL({
         user: 'agustinbenassi'
     });
-    sql.execute(query, {})
-        .done(fnCallback)
-        .error(function(errors) {
-            // errors contains a list of errors
-            console.log("errors:" + errors);
+    if (query.length == 0) {
+        fnCallback({
+            "rows": [{}]
         })
+    } else {
+        sql.execute(query, {})
+            .done(fnCallback)
+            .error(function(errors) {
+                // errors contains a list of errors
+                console.log("errors:" + errors);
+            })
+    };
 }
 
 
@@ -825,45 +1130,197 @@ LEGEND_IDX = {
     "divisions": 3,
     "buffers": 2
 }
-INDIC_DESC = {
-    "hab": "Población (cant)",
-    "area_km2": "Superficie (km2)",
-    "hab_km2": "Densidad poblacional (hab/km2)",
-    "_0_14": "0 a 14 años (%)",
-    "_15_64": "15 a 64 años (%)",
-    "mas_65": "Más de 65 años (%)",
-    "comercial": "Zona comercial (%)",
-    "residencia": "Zona residencial (%)",
-    "industrial": "Zona industrial (%)",
-    "servicios": "Zona de servicios (%)",
-    "otros": "Otros usos (%)",
-    "con_basica": "Calidad constructiva básica (%)",
-    "con_insuf": "Calidad constructiva insuficiente (%)",
-    "con_satisf": "Calidad constructiva satisfactoria (%)",
-    "serv_basic": "Conexión a servicios básica (%)",
-    "serv_insuf": "Conexión a servicios insuficiente (%)",
-    "serv_satis": "Conexión a servicios satisfactoria (%)",
-    "hac_149": "1.49 habs por cuarto o menos (%)",
-    "hac_150": "1.50 habs por cuarto o más (%)",
-    "ocup_viv": "Ocupación de vivienda (%)",
-    "desocup": "Desocupación (%)",
-    "empleo": "Empleo (%)",
-    "inact": "Inactividad (%)",
-    "nse_alt": "Nivel socioeconómico 1",
-    "nse_mex_ca": "Nivel socioeconómico 2",
-    "educ_priv": "Est. educativos privados (cant)",
-    "educ_pub": "Est. educativos públicos (cant)",
-    "educ_sup": "Educación superior (%)",
-    "escolarida": "Escolaridad (%)",
-    "d_ffcc": "Distancia al ffcc (km)",
-    "d_metrobus": "Distancia al metrobús (km)",
-    "d_subte": "Distancia al subte (km)",
-    "reach_area": "Sup. alcanzable en 1 colectivo (km2)",
-    "reach_prop": "Sup. alcanzable en 1 colectivo (% CABA)",
-    "nbi": "NBI (%)",
-    "compu": "Uso de computadora (%)",
-    "esp_verde": "Superficie espacios verdes (%)",
-    "hospitales": "Hospitales (cant)"
+INDIC = {
+    "hab": {
+        "short": "Población (M)",
+        "scale": 1 / 1000000,
+        "long": "Población (M)"
+    },
+    "area_km2": {
+        "short": "Superficie (km2)",
+        "scale": 1,
+        "long": "Superficie (km2)"
+    },
+    "hab_km2": {
+        "short": "Densidad poblacional (hab/km2)",
+        "scale": 1,
+        "long": "Densidad poblacional (hab/km2)"
+    },
+    "_0_14": {
+        "short": "0 a 14 años (%)",
+        "scale": 100,
+        "long": "0 a 14 años (%)"
+    },
+    "_15_64": {
+        "short": "15 a 64 años (%)",
+        "scale": 100,
+        "long": "15 a 64 años (%)"
+    },
+    "mas_65": {
+        "short": "Más de 65 años (%)",
+        "scale": 100,
+        "long": "Más de 65 años (%)"
+    },
+    "comercial": {
+        "short": "Zona comercial (%)",
+        "scale": 100,
+        "long": "Zona comercial (%)"
+    },
+    "residencia": {
+        "short": "Zona residencial (%)",
+        "scale": 100,
+        "long": "Zona residencial (%)"
+    },
+    "industrial": {
+        "short": "Zona industrial (%)",
+        "scale": 100,
+        "long": "Zona industrial (%)"
+    },
+    "servicios": {
+        "short": "Zona de servicios (%)",
+        "scale": 100,
+        "long": "Zona de servicios (%)"
+    },
+    "otros": {
+        "short": "Otros usos (%)",
+        "scale": 100,
+        "long": "Otros usos (%)"
+    },
+    "con_basica": {
+        "short": "Calidad constructiva básica (%)",
+        "scale": 100,
+        "long": "Calidad constructiva básica (%)"
+    },
+    "con_insuf": {
+        "short": "Calidad constructiva insuficiente (%)",
+        "scale": 100,
+        "long": "Calidad constructiva insuficiente (%)"
+    },
+    "con_satisf": {
+        "short": "Calidad constructiva satisfactoria (%)",
+        "scale": 100,
+        "long": "Calidad constructiva satisfactoria (%)"
+    },
+    "serv_basic": {
+        "short": "Conexión a servicios básica (%)",
+        "scale": 100,
+        "long": "Conexión a servicios básica (%)"
+    },
+    "serv_insuf": {
+        "short": "Conexión a servicios insuficiente (%)",
+        "scale": 100,
+        "long": "Conexión a servicios insuficiente (%)"
+    },
+    "serv_satis": {
+        "short": "Conexión a servicios satisfactoria (%)",
+        "scale": 100,
+        "long": "Conexión a servicios satisfactoria (%)"
+    },
+    "hac_149": {
+        "short": "1.49 habs por cuarto o menos (%)",
+        "scale": 100,
+        "long": "1.49 habs por cuarto o menos (%)"
+    },
+    "hac_150": {
+        "short": "1.50 habs por cuarto o más (%)",
+        "scale": 100,
+        "long": "1.50 habs por cuarto o más (%)"
+    },
+    "ocup_viv": {
+        "short": "Ocupación de vivienda (%)",
+        "scale": 100,
+        "long": "Ocupación de vivienda (%)"
+    },
+    "desocup": {
+        "short": "Desocupación (%)",
+        "scale": 100,
+        "long": "Desocupación (%)"
+    },
+    "empleo": {
+        "short": "Empleo (%)",
+        "scale": 100,
+        "long": "Empleo (%)"
+    },
+    "inact": {
+        "short": "Inactividad (%)",
+        "scale": 100,
+        "long": "Inactividad (%)"
+    },
+    "nse_alt": {
+        "short": "Nivel socioeconómico 1",
+        "scale": 1,
+        "long": "Nivel socioeconómico 1"
+    },
+    "nse_mex_ca": {
+        "short": "Nivel socioeconómico 2",
+        "scale": 1,
+        "long": "Nivel socioeconómico 2"
+    },
+    "educ_priv": {
+        "short": "Est. educativos privados (cant)",
+        "scale": 1,
+        "long": "Est. educativos privados (cant)"
+    },
+    "educ_pub": {
+        "short": "Est. educativos públicos (cant)",
+        "scale": 1,
+        "long": "Est. educativos públicos (cant)"
+    },
+    "educ_sup": {
+        "short": "Educación superior (%)",
+        "scale": 100,
+        "long": "Educación superior (%)"
+    },
+    "escolarida": {
+        "short": "Escolaridad (%)",
+        "scale": 100,
+        "long": "Escolaridad (%)"
+    },
+    "d_ffcc": {
+        "short": "Distancia al ffcc (km)",
+        "scale": 1,
+        "long": "Distancia al ffcc (km)"
+    },
+    "d_metrobus": {
+        "short": "Distancia al metrobús (km)",
+        "scale": 1,
+        "long": "Distancia al metrobús (km)"
+    },
+    "d_subte": {
+        "short": "Distancia al subte (km)",
+        "scale": 1,
+        "long": "Distancia al subte (km)"
+    },
+    "reach_area": {
+        "short": "Sup. alcanzable en 1 colectivo (km2)",
+        "scale": 1,
+        "long": "Sup. alcanzable en 1 colectivo (km2)"
+    },
+    "reach_prop": {
+        "short": "Sup. alcanzable en 1 colectivo (% CABA)",
+        "scale": 100,
+        "long": "Sup. alcanzable en 1 colectivo (% CABA)"
+    },
+    "nbi": {
+        "short": "NBI (%)",
+        "scale": 100,
+        "long": "NBI (%)"
+    },
+    "compu": {
+        "short": "Uso de computadora (%)",
+        "scale": 100,
+        "long": "Uso de computadora (%)"
+    },
+    "esp_verde": {
+        "short": "Superficie espacios verdes (%)",
+        "scale": 100,
+        "long": "Superficie espacios verdes (%)"
+    },
+    "hospitales": {
+        "short": "Hospitales (cant)",
+        "scale": 1,
+        "long": "Hospitales (cant)"
+    }
 }
 
 function get_legend(legendType) {
@@ -907,7 +1364,7 @@ function build_legend_indicator(indic, legendType) {
         $("#panel-indicadores").css("display", "block")
         $("#panel-indicadores").attr("legend-type", legendType)
     })
-    var text = LEGEND_NAME[legendType] + ": " + INDIC_DESC[indic] + "  "
+    var text = LEGEND_NAME[legendType] + ": " + INDIC[indic]["short"] + "  "
     var p = $("<p>").attr("id", "current-" + legendType + "-indic")
     return p.append(text).append(change).attr("class", "legend-indic")
 }
@@ -933,17 +1390,17 @@ function change_indic(indic, legendType, min, max, all, layer) {
     console.log(css)
     var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
     sublayer.setCartoCSS(css)
-    update_infowindow(layer, legendType)
+    update_tooltip(layer, legendType)
 }
 
-function get_infowindow(legendType) {
-    return $('#infowindow_' + legendType)
+function get_tooltip(legendType) {
+    return $('#tooltip_' + legendType)
 }
 
-function get_infowindow_html(legendType) {
-    var ini_script = '<script type="infowindow/html" id="infowindow_divisions">'
+function get_tooltip_html(legendType) {
+    var ini_script = '<script type="tooltip/html" id="tooltip_divisions">'
     var end_script = '</script>'
-    return ini_script + get_infowindow(legendType).html() + end_script
+    return ini_script + get_tooltip(legendType).html() + end_script
 }
 
 // create custom css
