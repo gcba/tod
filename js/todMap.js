@@ -356,7 +356,7 @@ FROM divs_con_intersect_sups"
 
     console.log(queryPop)
     execute_query(queryPop, function(data) {
-        var pop = Math.round(data.rows[0]["sum"] * INDIC[indic]["scale"] / 1000000 * 100) / 100
+        var pop = format_val("hab", data.rows[0]["sum"])
         $("#poblacion-total").text(pop)
     })
 
@@ -378,7 +378,7 @@ FROM divs_con_intersect_sups"
 
     console.log(queryArea)
     execute_query(queryArea, function(data) {
-        var area = Math.round(data.rows[0]["sum"] * INDIC[indic]["scale"] * 100) / 100
+        var area = format_val("area_km2", data.rows[0]["sum"])
         $("#superficie-total").text(area)
     })
 }
