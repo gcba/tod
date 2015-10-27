@@ -43,7 +43,7 @@ function main() {
             search: true,
             tiles_loader: true,
             center_lat: -34.615753,
-            center_lon: -58.43,
+            center_lon: -58.4,
             zoom: 12
         })
         .done(function(vis, layers) {
