@@ -301,13 +301,17 @@ function update_buffers_tooltip(layer, legendType) {
 }
 
 function set_universe_totals(layer) {
+    // remueve resultados anteriores
+    $("#poblacion-total").text("")
+    $("#superficie-total").text("")
+
     var sublayerDivs = layer.getSubLayer(SUBLAYER_IDX["divisions"])
     var sublayerBuffers = layer.getSubLayer(SUBLAYER_IDX["buffers"])
     var queryDivs = sublayerDivs.getSQL()
     var queryBuffers = sublayerBuffers.getSQL()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
-        set_divisions_universe_totals(queryDivs)
+        set_coverage_universe_totals(queryDivs, queryBuffers)
     } else if (g_divisions["displayLgd"]) {
         set_divisions_universe_totals(queryDivs)
     } else if (g_buffers["displayLgd"]) {
@@ -318,15 +322,14 @@ function set_universe_totals(layer) {
     };
 }
 
-function set_divisions_universe_totals(mapQuery) {
-    // $("#universe-data").css("display", "block")
-    var queryPop = mapQuery.replace("*", "SUM(hab) AS hab")
+function set_divisions_universe_totals(mapDivsQuery) {
+    var queryPop = mapDivsQuery.replace("*", "SUM(hab) AS hab")
     execute_query(queryPop, function(data) {
         var pop = format_val("hab", data.rows[0]["hab"])
         $("#poblacion-total").text(pop)
     })
 
-    var queryArea = mapQuery.replace("*", "SUM(area_km2) AS area_km2")
+    var queryArea = mapDivsQuery.replace("*", "SUM(area_km2) AS area_km2")
     execute_query(queryArea, function(data) {
         var area = format_val("area_km2", data.rows[0]["area_km2"])
         $("#superficie-total").text(area)
@@ -336,12 +339,9 @@ function set_divisions_universe_totals(mapQuery) {
 POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Buffer(ST_Union(the_geom), 0) AS the_geom"
 POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
 
-
-function set_buffers_universe_totals(mapQuery) {
-
-    // set population universe total
+function query_pop_in(mapBuffersQuery) {
     var queryPop = "WITH buffers_union AS ("
-    queryPop += mapQuery.replace("*", POLYS_UNION_SELECT)
+    queryPop += mapBuffersQuery.replace("*", POLYS_UNION_SELECT)
     queryPop += "), \
  \
 divs_con_intersect_sups AS \
@@ -353,16 +353,12 @@ divs_con_intersect_sups AS \
  \
 SELECT SUM(divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
+    return queryPop
+}
 
-    console.log(queryPop)
-    execute_query(queryPop, function(data) {
-        var pop = format_val("hab", data.rows[0]["sum"])
-        $("#poblacion-total").text(pop)
-    })
-
-    // set area universe total
+function query_area_in(mapBuffersQuery) {
     var queryArea = "WITH buffers_union AS ("
-    queryArea += mapQuery.replace("*", POLYS_UNION_SELECT)
+    queryArea += mapBuffersQuery.replace("*", POLYS_UNION_SELECT)
     queryArea += "), \
  \
  divs_con_intersect_sups AS \
@@ -375,12 +371,54 @@ FROM divs_con_intersect_sups"
  \
 SELECT SUM(divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
+    return queryArea
+}
 
-    console.log(queryArea)
+function set_buffers_universe_totals(mapBuffersQuery) {
+
+    // set population universe total
+    var queryPop = query_pop_in(mapBuffersQuery)
+    execute_query(queryPop, function(data) {
+        var pop = format_val("hab", data.rows[0]["sum"])
+        $("#poblacion-total").text(pop)
+    })
+
+    // set area universe total
+    var queryArea = query_area_in(mapBuffersQuery)
     execute_query(queryArea, function(data) {
         var area = format_val("area_km2", data.rows[0]["sum"])
         $("#superficie-total").text(area)
     })
+}
+
+function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
+    var queryPopAll = mapDivsQuery.replace("*", "SUM(hab) AS hab")
+    var queryAreaAll = mapDivsQuery.replace("*", "SUM(area_km2) AS area_km2")
+    var queryPopIn = query_pop_in(mapBuffersQuery)
+    var queryAreaIn = query_area_in(mapBuffersQuery)
+
+    execute_query(queryPopAll, function(dataPopAll) {
+        var popAll = format_val("hab", dataPopAll.rows[0]["hab"])
+        execute_query(queryAreaAll, function(dataAreaAll) {
+            var areaAll = format_val("area_km2", dataAreaAll.rows[0]["area_km2"])
+
+            execute_query(queryPopIn, function(dataPopIn) {
+                var popIn = format_val("hab", dataPopIn.rows[0]["sum"])
+                execute_query(queryAreaIn, function(dataAreaIn) {
+                    var areaIn = format_val("area_km2", dataAreaIn.rows[0]["sum"])
+
+                    var popCover = format_percent(popIn / popAll) + " ("
+                    popCover += popIn + " / " + popAll + ")"
+                    $("#poblacion-total").text(popCover)
+
+                    var areaCover = format_percent(areaIn / areaAll) + " ("
+                    areaCover += areaIn + " / " + areaAll + ")"
+                    $("#superficie-total").text(areaCover)
+                })
+            })
+        })
+    })
+
 }
 
 function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
@@ -426,7 +464,9 @@ function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
  \
      divs_con_intersect_sups AS \
     (SELECT divisiones.cartodb_id, " + joined_indics1 + ", \
-            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_out.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+        CASE WHEN ST_Within(ST_Buffer(divisiones.the_geom, 0), buffers_out.the_geom) THEN 1 \
+                ELSE (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_out.the_geom)) / ST_Area(divisiones.the_geom)) \
+            END AS intersect_sup \
      FROM divisiones, buffers_out \
      WHERE ST_Intersects(divisiones.the_geom, buffers_out.the_geom) \
          AND divisiones.orig_sf = 'RADIO' " + joined_indics1b + "), \
@@ -790,6 +830,7 @@ function create_change_indicators_panel(layer) {
 }
 
 function calculate_indicators(layer) {
+    $("#indicadores-seleccionados").DataTable().rows().remove().draw()
     var checked = $("#panel-indicadores-select").find("input:checked")
     var names = checked.map(function() {
         return this.name;
@@ -797,7 +838,6 @@ function calculate_indicators(layer) {
 
     select_indicators(layer, names)
     $("#panel-indicadores-select").css("display", "none")
-        // debugger
 }
 
 function create_select_indicators_panel(layer) {
@@ -860,7 +900,7 @@ function create_selected_indicators_table() {
 
 function select_indicators(layer, names) {
     console.log(g_divisions["displayLgd"] && g_buffers["displayLgd"])
-        var table = $("#indicadores-seleccionados").DataTable().clear().draw()
+    var table = $("#indicadores-seleccionados").DataTable()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
         table.column(1).visible(true)
@@ -903,6 +943,7 @@ function query_indic_mixed(layer, indics, table) {
                     query_divisions_indic_all(sublayerDivisions, indics,
                         table,
                         function(table, indics, divisionsAllResult) {
+                            table.rows().remove().draw()
                             $.each(indics, function(index, indic) {
                                 var row = [INDIC[indic]["short"],
                                     format_val(indic, bufferInResult[indic]),
@@ -926,6 +967,10 @@ function convert_result_in_new_row(table, indics, result) {
 
 function format_val(indic, value) {
     return Math.round(value * INDIC[indic]["scale"] * 100) / 100
+}
+
+function format_percent(value) {
+    return Math.round(value * 100 * 100) / 100 + "%"
 }
 
 function group_by_weight_type(indics) {
