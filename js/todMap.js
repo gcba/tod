@@ -32,7 +32,7 @@ AREA_WEIGHTED = ["hab_km2"]
 NON_WEIGHTED = ["hab", "area_km2"]
 DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
-    "empleo", "inact", "nse_alt", "nse_mex_ca"
+    "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
 ]
 
 function main() {
@@ -487,8 +487,7 @@ function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
                   FROM divs_con_habs_y_sups)) AS pond_hab \
      FROM divs_con_habs_y_sups) \
  \
-SELECT " + final_query.slice(0, final_query.length - 2) + " \
-FROM divs_con_ponds"
+SELECT * FROM divs_con_ponds"
 
     return query
 }
@@ -556,8 +555,7 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
                   FROM divs_con_habs_y_sups)) AS pond_hab \
      FROM divs_con_habs_y_sups) \
  \
-SELECT " + final_query.slice(0, final_query.length - 2) + " \
-FROM divs_con_ponds"
+SELECT * FROM divs_con_ponds"
 
     return query
 }
@@ -975,13 +973,13 @@ function format_percent(value) {
 
 function group_by_weight_type(indics) {
     var groupedIndics = {
-        "count": [],
+        "sum": [],
         "pop": [],
         "area": []
     }
     $.each(indics, function(index, indic) {
         if ($.inArray(indic, NON_WEIGHTED) != -1) {
-            groupedIndics["count"].push(indic)
+            groupedIndics["sum"].push(indic)
         } else if ($.inArray(indic, AREA_WEIGHTED) != -1) {
             groupedIndics["area"].push(indic)
         } else {
@@ -991,19 +989,68 @@ function group_by_weight_type(indics) {
     return groupedIndics
 }
 
+function calc_aggregated_indics (rows, indics) {
+    var groupedIndics = group_by_weight_type(indics)
+    var averages = {}
+
+    // calc indics that must be added, but not averaged
+    if (groupedIndics["sum"].length > 0) {
+        $.each(groupedIndics["sum"], function(index, indic) {
+            averages[indic] = calc_indic_sum(rows, indic)
+        })
+    }
+
+    // calc weighted indics
+    if (groupedIndics["pop"].length > 0) {
+        $.each(groupedIndics["pop"], function(index, indic) {
+            averages[indic] = calc_indic_weighted_avg(rows, indic, "hab")
+        })
+    }
+    if (groupedIndics["area"].length > 0) {
+        $.each(groupedIndics["area"], function(index, indic) {
+            averages[indic] = calc_indic_weighted_avg(rows, indic, "area_km2")
+        })
+    }
+
+    return averages
+}
+
+function calc_indic_sum (rows, indic) {
+    var indic_sum = 0
+    $.each(rows, function (index, row) {
+        indic_sum += row[indic]
+    })
+    return indic_sum
+}
+
+function calc_indic_weighted_avg (rows, indic, weight) {
+    var indic_sum = 0
+    var weight_sum = 0
+    $.each(rows, function (index, row) {
+        if (row[indic]) {
+            indic_sum += row[indic] * row[weight]
+            weight_sum += row[weight]
+        }
+    })
+    return indic_sum / weight_sum
+}
+
+
 function query_buffers_indic_out(layer, indics, table, res_manager) {
     var mapDivisionsQuery = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
     var mapBuffersQuery = layer.getSubLayer(SUBLAYER_IDX["buffers"]).getSQL()
     var query = gen_buffers_out_query(mapDivisionsQuery, mapBuffersQuery, indics)
     execute_query(query, function(data) {
-        res_manager(table, indics, data.rows[0])
+        var averages = calc_aggregated_indics(data.rows, indics)
+        res_manager(table, indics, averages)
     })
 }
 
 function query_buffers_indic_in(sublayer, indics, table, res_manager) {
     var query = gen_buffers_in_query(sublayer.getSQL(), indics)
     execute_query(query, function(data) {
-        res_manager(table, indics, data.rows[0])
+        var averages = calc_aggregated_indics(data.rows, indics)
+        res_manager(table, indics, averages)
     })
 }
 
@@ -1013,8 +1060,8 @@ function query_divisions_indic_all(sublayer, indics, table, res_manager) {
 
     // create count variables query
     var countCols = ""
-    if (groupedIndics["count"].length > 0) {
-        $.each(groupedIndics["count"], function(index, indic) {
+    if (groupedIndics["sum"].length > 0) {
+        $.each(groupedIndics["sum"], function(index, indic) {
             countCols += ", SUM(" + indic + ") AS " + indic
         })
         countCols = countCols.slice(1)
