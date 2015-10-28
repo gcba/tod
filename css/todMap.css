@@ -6,28 +6,59 @@ body,
     margin: 0;
 }
 
-#panel-transporte {
+#show-hide-legends {
+    display: none;
+    margin: 5px;
+}
+
+#container-panel-transporte {
     position: fixed;
     bottom: 40px;
     left: 5px;
-    z-index: 2;
+    z-index: 5;
+}
+
+#panel-transporte {
+    margin: 5px;
 }
 
 #capas-transporte {
     width: 220px;
-    z-index: 99;
+}
+
+#main-panel,
+#main-panel-container {
+    top: 100px;
+    right: 20px;
+    position: fixed;
 }
 
 #main-panel {
-    position: fixed;
-    top: 100px;
-    right: 20px;
     max-height: calc(95% - 100px);
-    max-width: 33%;
+    max-width: 30%;
+}
+
+#open-main-panel {
+    display: none;
+}
+
+.cartodb-fullscreen,
+.cartodb-zoom {
+    z-index: 4
 }
 
 #tag-list-divisiones {
     width: 250px;
+}
+
+#open-legends,
+#open-indicators-table {
+    display: none;
+}
+
+#open-indicators-table,
+#close-indicators-table {
+    margin-right: 10px;
 }
 
 #buffer-size,
@@ -104,7 +135,7 @@ div.cartodb-legend ul li {
     display: none;
     position: absolute;
     left: 5px;
-    max-width: 300px;
+    max-width: 275px;
     bottom: 90px;
     background: rgba(58, 58, 48, 0.4);
     padding: 2px;

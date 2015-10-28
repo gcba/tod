@@ -73,10 +73,13 @@ function main() {
 
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
+            create_main_panel_hide_btn()
             create_buffers_selector(layers[1])
             create_change_indicators_panel(layers[1])
             create_selected_indicators_table()
             create_select_indicators_panel(layers[1])
+            create_panel_indicators_hide_btn()
+            create_legends_hide_btn()
             create_legend(DEFAULT_INDIC_DIVS, "divisions")
             create_legend(DEFAULT_INDIC_BUFFERS, "buffers")
             set_legend_container_hidden()
@@ -174,6 +177,17 @@ function add_orig_sf(query, name) {
 
 // panel principal
 // subpanel de filtros
+function create_main_panel_hide_btn() {
+    $("#close-main-panel").click(function() {
+        $("#main-panel").hide("fast")
+        $("#open-main-panel").show("fast")
+    })
+    $("#open-main-panel").click(function() {
+        $("#main-panel").show("fast")
+        $("#open-main-panel").hide("fast")
+    })
+}
+
 // selección de divisiones
 DIVS_NAME = {
     "None": "Ninguna",
@@ -223,11 +237,11 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         $("#panel-indicadores").attr("legend-type", "divisions")
         if (this.name != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
-            $("#panel-indicadores-seleccionados").css("display", "block")
+            $("#panel-indicadores-seleccionados").show("fast")
             calculate_indicators(layer)
         } else {
             if (!g_buffers["displayLgd"]) {
-                $("#panel-indicadores-seleccionados").css("display", "none")
+                $("#panel-indicadores-seleccionados").hide("fast")
             } else {
                 calculate_indicators(layer)
 
@@ -798,6 +812,20 @@ INDIC_HIERARCHY = {
     "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
 }
 
+function create_panel_indicators_hide_btn () {
+    $("#close-indicators-table").click(function () {
+        $("#close-indicators-table").hide("fast")
+        $("#open-indicators-table").show("fast")
+        $("#indicadores-seleccionados_wrapper").hide("fast")
+    })
+    $("#open-indicators-table").click(function () {
+        $("#open-indicators-table").hide("fast")
+        $("#close-indicators-table").show("fast")
+        $("#indicadores-seleccionados_wrapper").show("fast")
+        $("#indicadores-seleccionados").DataTable().draw()
+    })
+}
+
 function create_change_indicators_panel(layer) {
 
     var indicsPanel = $("#panel-indicadores").children("div .panel-body")
@@ -989,7 +1017,7 @@ function group_by_weight_type(indics) {
     return groupedIndics
 }
 
-function calc_aggregated_indics (rows, indics) {
+function calc_aggregated_indics(rows, indics) {
     var groupedIndics = group_by_weight_type(indics)
     var averages = {}
 
@@ -1015,18 +1043,18 @@ function calc_aggregated_indics (rows, indics) {
     return averages
 }
 
-function calc_indic_sum (rows, indic) {
+function calc_indic_sum(rows, indic) {
     var indic_sum = 0
-    $.each(rows, function (index, row) {
+    $.each(rows, function(index, row) {
         indic_sum += row[indic]
     })
     return indic_sum
 }
 
-function calc_indic_weighted_avg (rows, indic, weight) {
+function calc_indic_weighted_avg(rows, indic, weight) {
     var indic_sum = 0
     var weight_sum = 0
-    $.each(rows, function (index, row) {
+    $.each(rows, function(index, row) {
         if (row[indic]) {
             indic_sum += row[indic] * row[weight]
             weight_sum += row[weight]
@@ -1420,6 +1448,19 @@ function get_legend(legendType) {
     return $("div .cartodb-legend-stack").children("div")[idx]
 }
 
+function create_legends_hide_btn() {
+    $("#close-legends").click(function() {
+        $(".cartodb-legend-stack").hide("fast")
+        $("#close-legends").hide("fast")
+        $("#open-legends").show("fast")
+    })
+    $("#open-legends").click(function() {
+        $(".cartodb-legend-stack").show("fast")
+        $("#open-legends").hide("fast")
+        $("#close-legends").show("fast")
+    })
+}
+
 function create_legend(indic, legendType, min, max) {
     var legend = get_legend(legendType)
     $(legend).attr("id", "legend-" + legendType)
@@ -1438,7 +1479,8 @@ function create_legend(indic, legendType, min, max) {
 
     if (globals[legendType]["displayLgd"]) {
         $(legend).css("display", "block")
-        $("#map .cartodb-legend-stack").css("display", "block")
+        $("#map .cartodb-legend-stack").show("fast")
+        $("#show-hide-legends").show("fast")
     } else {
         $(legend).css("display", "none")
         set_legend_container_hidden()
@@ -1447,7 +1489,8 @@ function create_legend(indic, legendType, min, max) {
 
 function set_legend_container_hidden() {
     if (!g_buffers["displayLgd"] && !g_divisions["displayLgd"]) {
-        $("#map .cartodb-legend-stack").css("display", "none")
+        $("#map .cartodb-legend-stack").hide("fast")
+        $("#show-hide-legends").hide("fast")
     };
 }
 

@@ -24,11 +24,21 @@
 
 <body>
     <div id="map"></div>
-    <div id="panel-transporte" class="dropup clearfix">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuTransporte" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Capas transporte <span class="caret"></span>
-        </button>
-        <ul id="capas-transporte" class="checked-list-box dropdown-menu" aria-labelledby="dropdownMenuTransporte">
-        </ul>
+    <div id="container-panel-transporte">
+        <div id="show-hide-legends" class="left">
+            <button id="close-legends" type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
+            </button>
+            <button id="open-legends" type="button" class="btn btn-default" aria-label="Left Align">
+                <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div id="panel-transporte" class="left dropup clearfix">
+            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuTransporte" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Capas transporte <span class="caret"></span>
+            </button>
+            <ul id="capas-transporte" class="checked-list-box dropdown-menu" aria-labelledby="dropdownMenuTransporte">
+            </ul>
+        </div>
     </div>
     <div id="leyendas">
     </div>
@@ -54,62 +64,77 @@
         <div id="accordion-select" class="panel-body fixed-panel">
         </div>
     </div>
-    <div id="main-panel" class="well">
-        <div id="panel-filtros">
-            <div id="divisiones" class="dropdown clearfix">
-                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones <span class="caret"></span>
-                </button>
-                <ul id="selector-divisiones" class="dropdown-menu" aria-labelledby="dropdownMenuDivisiones">
-                </ul>
-            </div>
-            <div id="tag-list-divisiones"></div>
-            <div id="buffer-selectors">
-                <div id="buffer-modo-transporte" class="dropdown clearfix">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferModoTrans" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Modo transporte <span class="caret"></span>
-                    </button>
-                    <ul id="selector-modo-transporte" class="dropdown-menu" aria-labelledby="dropdownMenuBufferModoTrans">
-                    </ul>
-                </div>
-                <div id="buffer-size" class="dropdown clearfix">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Distancia <span class="caret"></span>
-                    </button>
-                    <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize" name="None">
-                    </ul>
-                </div>
-                <div>
-                    <button id="button-add-buffer" type="button" class="btn btn-default">Agregar buffer</button>
-                </div>
-            </div>
-            <div id="tag-list-buffers"></div>
+    <div id="main-panel-container" class="well">
+        <div class="right" id="open-main-panel">
+            <span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>
         </div>
-        <div id="control-filtros">
-            <div id="universe-data" class="well well-sm">
-                <p>Superficie: <span id="superficie-total">0.00</span> km2</p>
-                <p>Población: <span id="poblacion-total">0.00</span> M</p>
-            </div>
-        </div>
-        <div id="panel-indicadores-seleccionados" class="fixed-panel">
-            <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading">
-                    <div id="wrapper">
-                        <div class="left">
-                            <p>Indicadores</p></div>
-                        <div class="right" id="open-indicadores-select">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </div>
+        <div id="main-panel" class="well">
+            <div id="panel-filtros">
+                <div id="divisiones" class="dropdown clearfix">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones <span class="caret"></span>
+                    </button>
+                    <ul id="selector-divisiones" class="dropdown-menu" aria-labelledby="dropdownMenuDivisiones">
+                    </ul>
+                    <div class="right" id="close-main-panel">
+                        <span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span>
                     </div>
                 </div>
-                <!-- Table -->
-                <table id="indicadores-seleccionados" class="table">
-                </table>
+                <div id="tag-list-divisiones"></div>
+                <div id="buffer-selectors">
+                    <div id="buffer-modo-transporte" class="dropdown clearfix">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferModoTrans" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Modo transporte <span class="caret"></span>
+                        </button>
+                        <ul id="selector-modo-transporte" class="dropdown-menu" aria-labelledby="dropdownMenuBufferModoTrans">
+                        </ul>
+                    </div>
+                    <div id="buffer-size" class="dropdown clearfix">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Distancia <span class="caret"></span>
+                        </button>
+                        <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize" name="None">
+                        </ul>
+                    </div>
+                    <div>
+                        <button id="button-add-buffer" type="button" class="btn btn-default">Agregar buffer</button>
+                    </div>
+                </div>
+                <div id="tag-list-buffers"></div>
             </div>
-        </div>
-        <div id="control-indicadores">
-        </div>
-        <div id="download-image">
-            <button id="button-download-image" type="button" class="btn btn-default">Screenshot</button>
-            <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
+            <div id="control-filtros">
+                <div id="universe-data" class="well well-sm">
+                    <p>Superficie: <span id="superficie-total">0.00</span> km2</p>
+                    <p>Población: <span id="poblacion-total">0.00</span> M</p>
+                </div>
+            </div>
+            <div id="panel-indicadores-seleccionados" class="fixed-panel">
+                <div class="panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">
+                        <div id="wrapper">
+                            <div class="left">
+                                <p>Indicadores</p>
+                            </div>
+                            <div class="right" id="open-indicators-select">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </div>
+                            <div class="right" id="open-indicators-table">
+                                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                            </div>
+                            <div class="right" id="close-indicators-table">
+                                <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Table -->
+                    <table id="indicadores-seleccionados" class="table">
+                    </table>
+                </div>
+            </div>
+            <div id="control-indicadores">
+            </div>
+            <div id="download-image">
+                <button id="button-download-image" type="button" class="btn btn-default">Screenshot</button>
+                <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
+            </div>
         </div>
     </div>
     <!-- JQuery -->
