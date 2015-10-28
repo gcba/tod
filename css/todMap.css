@@ -10,10 +10,12 @@ body,
     position: fixed;
     bottom: 40px;
     left: 5px;
+    z-index: 2;
 }
 
 #capas-transporte {
     width: 220px;
+    z-index: 99;
 }
 
 #main-panel {
@@ -43,6 +45,11 @@ body,
     width: 400px;
     height: 500px;
     margin: -250px 0 0 -200px;
+    z-index: 3;
+}
+
+#main-panel {
+    z-index: 2;
 }
 
 .panel-body {
@@ -101,5 +108,5 @@ div.cartodb-legend ul li {
     bottom: 90px;
     background: rgba(58, 58, 48, 0.4);
     padding: 2px;
-    z-index: 99;
+    z-index: 1;
 }
