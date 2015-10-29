@@ -28,13 +28,13 @@ body,
 
 #main-panel,
 #main-panel-container {
-    top: 100px;
-    right: 20px;
+    top: 50px;
+    right: 10px;
     position: fixed;
 }
 
 #main-panel {
-    max-height: calc(95% - 100px);
+    max-height: calc(97% - 50px);
     max-width: 30%;
 }
 
@@ -140,4 +140,13 @@ div.cartodb-legend ul li {
     background: rgba(58, 58, 48, 0.4);
     padding: 2px;
     z-index: 1;
+}
+
+.cartodb-layer-selector-box,
+.cartodb-searchbox,
+.cartodb-share {
+    float: right;
+    display: inline-block;
+    margin: 0 5px 4px 5px!important;
+    position: relative;
 }

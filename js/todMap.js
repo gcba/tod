@@ -27,6 +27,7 @@ globals = {
     "divisions": g_divisions,
     "buffers": g_buffers
 }
+g_tbl_options = {}
 cartodb_vis = null
 AREA_WEIGHTED = ["hab_km2"]
 NON_WEIGHTED = ["hab", "area_km2"]
@@ -39,21 +40,22 @@ function main() {
     cartodb.createVis('map', 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json', {
             shareable: true,
             title: true,
-            description: true,
+            description: false,
             search: true,
             tiles_loader: true,
             center_lat: -34.615753,
             center_lon: -58.4,
-            zoom: 12
+            zoom: 12,
+            legends: true
         })
         .done(function(vis, layers) {
             cartodb_vis = vis
                 // layer 0 is the base layer, layer 1 is cartodb layer
                 // setInteraction is disabled by default
             layers[1].setInteraction(true);
-            layers[1].on('featureOver', function(e, latlng, pos, data) {
-                cartodb.log.log(e, latlng, pos, data);
-            });
+            // layers[1].on('featureOver', function(e, latlng, pos, data) {
+            //     cartodb.log.log(e, latlng, pos, data);
+            // });
             var map = vis.getNativeMap();
 
             // add a nice baselayer from Stamen
@@ -71,6 +73,7 @@ function main() {
             do_cartodb_query(layers[1].getSubLayer(2), "")
             do_cartodb_query(layers[1].getSubLayer(3), "")
 
+            relocate_cartodb_overlays()
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
             create_main_panel_hide_btn()
@@ -91,6 +94,12 @@ function main() {
 }
 window.onload = main;
 
+function relocate_cartodb_overlays() {
+    $(".cartodb-layer-selector-box").prependTo($(".cartodb-header .content"))
+    $(".cartodb-searchbox").prependTo($(".cartodb-header .content"))
+    $(".cartodb-share").prependTo($(".cartodb-header .content"))
+        // $(".cartodb-header .content").css("display", "none")
+}
 
 // panel de capas de transporte
 PANEL_TRANSPORTE = {
@@ -225,12 +234,13 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
             get_filter_divs(layer, this.name)
             $(get_legend("divisions")).css("display", "block")
             g_divisions["displayLgd"] = true
+            $("#open-legends").hide("fast")
+            $("#close-legends").show("fast")
         } else {
             $(get_legend("divisions")).css("display", "none")
             g_divisions["displayLgd"] = false
             set_legend_container_hidden()
         }
-        // $("#divisiones").attr("areaLevel", this.name)
 
         do_cartodb_query(layer.getSubLayer(0), query)
 
@@ -238,6 +248,8 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         if (this.name != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
             $("#panel-indicators-seleccionados").show("fast")
+            var height = calc_data_table_height(0.95)
+            set_data_table_height(g_tbl_options, height)
             calculate_indicators(layer)
         } else {
             if (!g_buffers["displayLgd"]) {
@@ -725,6 +737,8 @@ function create_selected_buffers_field(layer) {
         make_select_buffers_query(newTag)
         update_capas_transporte(newTag, true)
         g_buffers["displayLgd"] = true
+        $("#open-legends").hide("fast")
+        $("#close-legends").show("fast")
         $("#panel-indicators-seleccionados").css("display", "block")
         calculate_indicators(layer)
     }
@@ -904,14 +918,17 @@ function create_select_indicators_panel(layer) {
     calculate_indicators(layer)
 }
 
-function calcDataTableHeight(options, percent) {
-    var position = $("#indicators-seleccionados").offset()
-    var height = ($(document).height() - position.top) * percent
-    console.log($(document).height(), position.top, height)
-    options.sScrollY = (height - 57) + "px"
+function set_data_table_height(options, height) {
+    options.sScrollY = height + "px"
     var table = $("#indicators-seleccionados").DataTable(options)
     table.draw();
 };
+
+function calc_data_table_height(percent) {
+    var position = $("#indicators-seleccionados").offset()
+    var height = ($(document).height() - position.top) * percent
+    return (height - 57)
+}
 
 function create_selected_indicators_table() {
     var columns = [{
@@ -930,12 +947,18 @@ function create_selected_indicators_table() {
         'bInfo': false,
         'bFilter': false,
         'bDestroy': true,
-        "sScrollY": "25vh",
-                "bScrollCollapse": true
+        "sScrollY": "30vh",
+        "bScrollCollapse": true
     }
+    g_tbl_options = options
     var table = $("#indicators-seleccionados").DataTable(options)
     $(window).resize(function() {
-        calcDataTableHeight(options, 0.95)
+        var height = calc_data_table_height(0.95)
+        if (height > 10) {
+            set_data_table_height(options, height)
+        } else {
+            $("#close-indicators-table").click()
+        };
     });
 }
 
@@ -1466,6 +1489,7 @@ function get_legend(legendType) {
 function create_legends_hide_btn() {
     $("#close-legends").click(function() {
         $(".cartodb-legend-stack").hide("fast")
+        // debugger
         $("#close-legends").hide("fast")
         $("#open-legends").show("fast")
     })
