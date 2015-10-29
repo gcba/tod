@@ -119,6 +119,7 @@ function create_trans_list(layer) {
         var names = $('#capas-transporte input:checked').map(function() {
             return this.name;
         }).get();
+        // console.log("changing...", names)
         make_transport_query(names, layer)
     })
     $.each(PANEL_TRANSPORTE, function(key, val) {
@@ -134,6 +135,7 @@ function add_trans_li(idList, text, name) {
 }
 
 function make_transport_query(names, layer) {
+    // console.log("haciendo la query de transporte")
     var lineas = layer.getSubLayer(2)
     var estaciones = layer.getSubLayer(3)
     var queryLineas = ""
@@ -163,6 +165,7 @@ function do_cartodb_query(sublayer, query) {
     } else {
         sublayer.show()
         sublayer.setSQL(query)
+        console.log(query)
     };
 }
 
@@ -319,7 +322,7 @@ function update_divisions_tooltip(layer, legendType) {
         position: 'bottom|right'
     });
     $('#map').append(i.render().el);
-    console.log("Tooltip set with:", division, id_field, indicator)
+    // console.log("Tooltip set with:", division, id_field, indicator)
 }
 
 function update_buffers_tooltip(layer, legendType) {
@@ -362,12 +365,12 @@ function set_divisions_universe_totals(mapDivsQuery) {
     })
 }
 
-POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Buffer(ST_Union(the_geom), 0) AS the_geom"
+POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Buffer(ST_Union(buffers_estaciones.the_geom), 0) AS the_geom"
 POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
 
 function query_pop_in(mapBuffersQuery) {
     var queryPop = "WITH buffers_union AS ("
-    queryPop += mapBuffersQuery.replace("*", POLYS_UNION_SELECT)
+    queryPop += mapBuffersQuery.replace("buffers_estaciones.*", POLYS_UNION_SELECT)
     queryPop += "), \
  \
 divs_con_intersect_sups AS \
@@ -384,7 +387,7 @@ FROM divs_con_intersect_sups"
 
 function query_area_in(mapBuffersQuery) {
     var queryArea = "WITH buffers_union AS ("
-    queryArea += mapBuffersQuery.replace("*", POLYS_UNION_SELECT)
+    queryArea += mapBuffersQuery.replace("buffers_estaciones.*", POLYS_UNION_SELECT)
     queryArea += "), \
  \
  divs_con_intersect_sups AS \
@@ -485,7 +488,7 @@ function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
 
     // construcción de la query
     var query = "WITH buffers_union AS \
-    (" + mapBuffersQuery.replace("*", POLYS_UNION_SELECT) + "), buffers_out AS \
+    (" + mapBuffersQuery.replace("buffers_estaciones.*", POLYS_UNION_SELECT) + "), buffers_out AS \
     (" + mapDivsQuery.replace("* FROM divisiones", POLYS_DIFF_UNION_SELECT) + "), \
  \
      divs_con_intersect_sups AS \
@@ -556,7 +559,7 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
 
     // construcción de la query
     var query = "WITH buffers_union AS \
-    (" + mapBuffersQuery.replace("*", POLYS_UNION_SELECT) + "), \
+    (" + mapBuffersQuery.replace("buffers_estaciones.*", POLYS_UNION_SELECT) + "), \
  \
      divs_con_intersect_sups AS \
     (SELECT divisiones.cartodb_id, " + joined_indics1 + ", \
@@ -609,7 +612,6 @@ function get_filter_divs(layer, nameDivs) {
                 filterDivs = data.rows.map(function(row) {
                     return String(row[divField])
                 });
-                console.log(nameDivs, filterDivs)
                 create_divs_filter(layer, filterDivs, nameDivs)
             })
             .error(function(errors) {
@@ -650,8 +652,8 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
             query += ")"
         }
 
-        console.log(query)
         do_cartodb_query(layer.getSubLayer(0), query)
+        make_select_buffers_query(layer)
         set_universe_totals(layer)
         calculate_indicators(layer)
     }
@@ -734,7 +736,7 @@ function create_selected_buffers_field(layer) {
     }
 
     function add_buffer_tag(newTag) {
-        make_select_buffers_query(newTag)
+        make_select_buffers_query(layer)
         update_capas_transporte(newTag, true)
         g_buffers["displayLgd"] = true
         $("#open-legends").hide("fast")
@@ -744,7 +746,7 @@ function create_selected_buffers_field(layer) {
     }
 
     function remove_buffer_tag(oldTag) {
-        make_select_buffers_query(oldTag)
+        make_select_buffers_query(layer)
         update_capas_transporte(oldTag, false)
         if (g_buffers["tags"].getTags().length == 0) {
             g_buffers["displayLgd"] = false
@@ -756,32 +758,6 @@ function create_selected_buffers_field(layer) {
         };
     }
 
-    function make_select_buffers_query(newTag) {
-        var tags = g_buffers["tags"].getTags()
-        var query = ""
-
-        if (tags.length >= 1) {
-            query += "SELECT * FROM buffers_estaciones WHERE orig_sf = '"
-            query += get_sf_name(tags[0]) + "'"
-        }
-        if (tags.length > 1) {
-            tags.slice(1).forEach(function(tag) {
-                query += " OR orig_sf = '" + get_sf_name(tag) + "'"
-            })
-        }
-
-        console.log(query)
-        if (query != "") {
-            g_buffers["displayLgd"] = true
-        } else {
-            g_buffers["displayLgd"] = false
-        };
-        do_cartodb_query(layer.getSubLayer(1), query)
-        $("#panel-indicators").attr("legend-type", "buffers")
-        recalculate_buffers_indicator(layer, g_buffers["indicator"])
-        set_universe_totals(layer)
-    }
-
     function update_capas_transporte(newTag, check) {
         $("#capas-transporte li").each(function(index) {
             var modeTag = $(this).children("input")[0].name
@@ -790,24 +766,63 @@ function create_selected_buffers_field(layer) {
                 $(this).children("input").prop("checked", check)
             };
         })
-        $("#capas-transporte li").trigger("change")
+        $("#capas-transporte").trigger("change")
     }
 
-    function get_sf_name(tag) {
-        var ms = get_mode_and_size(tag)
-        return ms[0] + "-buffer" + ms[1]
-    }
 
-    function get_mode_and_size(tag) {
-        var tagPattern = /([a-z]+)\s+\(([0-9]+)\)/i
-        var regexRes = tagPattern.exec(tag)
-        var mode = BUFFERS_TAGS[regexRes[1]]
-        var size = regexRes[2]
-        return [mode, size]
-    }
 
     return g_buffers["tags"]
 };
+
+function get_mode_and_size(tag) {
+    var tagPattern = /([a-z]+)\s+\(([0-9]+)\)/i
+    var regexRes = tagPattern.exec(tag)
+    var mode = BUFFERS_TAGS[regexRes[1]]
+    var size = regexRes[2]
+    return [mode, size]
+}
+
+function get_sf_name(tag) {
+    var ms = get_mode_and_size(tag)
+    return ms[0] + "-buffer" + ms[1]
+}
+
+function make_select_buffers_query(layer) {
+    var tags = g_buffers["tags"].getTags()
+    var query = ""
+    var queryDivs = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
+
+    if (tags.length >= 1) {
+        query += "WITH divs AS (" + queryDivs + ") "
+        query += "SELECT buffers_estaciones.* FROM buffers_estaciones, divs WHERE "
+        if (tags.length == 1) {
+            query += "buffers_estaciones.orig_sf = '"
+        } else {
+            query += "(buffers_estaciones.orig_sf = '"
+        };
+        query += get_sf_name(tags[0]) + "'"
+    }
+    if (tags.length > 1) {
+        tags.slice(1).forEach(function(tag) {
+            query += " OR buffers_estaciones.orig_sf = '" + get_sf_name(tag) + "'"
+        })
+    }
+    if (query.length > 0) {
+        if (tags.length > 1) { query += ")" }
+        query += " AND ST_Intersects(buffers_estaciones.the_geom, divs.the_geom)"
+    };
+
+    if (query != "") {
+        g_buffers["displayLgd"] = true
+    } else {
+        g_buffers["displayLgd"] = false
+    };
+
+    do_cartodb_query(layer.getSubLayer(1), query)
+    $("#panel-indicators").attr("legend-type", "buffers")
+    recalculate_buffers_indicator(layer, g_buffers["indicator"])
+    set_universe_totals(layer)
+}
 
 // crear panel de indicators para cambiar las leyendas
 INDIC_HIERARCHY = {
@@ -963,7 +978,6 @@ function create_selected_indicators_table() {
 }
 
 function select_indicators(layer, names) {
-    console.log(g_divisions["displayLgd"] && g_buffers["displayLgd"])
     var table = $("#indicators-seleccionados").DataTable()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
@@ -1225,15 +1239,16 @@ function recalculate_divisions_indicator(layer, indic) {
 }
 
 function recalculate_buffers_indicator(layer, indic) {
+    var indicReference = "buffers_estaciones." + indic
     var legendType = "buffers"
     var sql = layer.getSubLayer(SUBLAYER_IDX[legendType]).getSQL()
-    var query = sql.replace("*", indic) + " AND " + indic
-    query += " IS NOT NULL ORDER BY " + indic
+    var query = sql.replace("buffers_estaciones.*", indicReference)
+    query += " AND " + indicReference
+    query += " IS NOT NULL ORDER BY " + indicReference
     recalculate_indicator(layer, indic, query, legendType)
 }
 
 function recalculate_indicator(layer, indic, query, legendType) {
-    console.log(query)
     execute_query(query, function(data) {
         var all = data.rows
 
@@ -1489,7 +1504,7 @@ function get_legend(legendType) {
 function create_legends_hide_btn() {
     $("#close-legends").click(function() {
         $(".cartodb-legend-stack").hide("fast")
-        // debugger
+            // debugger
         $("#close-legends").hide("fast")
         $("#open-legends").show("fast")
     })
@@ -1553,7 +1568,6 @@ function change_indic(indic, legendType, min, max, all, layer) {
         // console.log(positions)
 
     var thresholds = $.map(positions, function(pos, index) {
-            console.log(pos - 1, all[pos - 1][indic])
             return all[pos - 1][indic]
         })
         // console.log(thresholds)
@@ -1561,7 +1575,6 @@ function change_indic(indic, legendType, min, max, all, layer) {
     var css = create_css(indic, COLORS[legendType], thresholds,
         TBL_NAMES[legendType], DEFAULT_COLORS[legendType])
 
-    console.log(css)
     var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
     sublayer.setCartoCSS(css)
     update_tooltip(layer, legendType)
