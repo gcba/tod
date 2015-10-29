@@ -234,14 +234,14 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
 
         do_cartodb_query(layer.getSubLayer(0), query)
 
-        $("#panel-indicadores").attr("legend-type", "divisions")
+        $("#panel-indicators").attr("legend-type", "divisions")
         if (this.name != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
-            $("#panel-indicadores-seleccionados").show("fast")
+            $("#panel-indicators-seleccionados").show("fast")
             calculate_indicators(layer)
         } else {
             if (!g_buffers["displayLgd"]) {
-                $("#panel-indicadores-seleccionados").hide("fast")
+                $("#panel-indicators-seleccionados").hide("fast")
             } else {
                 calculate_indicators(layer)
 
@@ -445,7 +445,7 @@ function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
         indics.push("area_km2")
     };
 
-    // crea los strings para las partes de la query con los indicadores
+    // crea los strings para las partes de la query con los indicators
     var joined_indics1 = "divisiones." + indics.join(", divisiones.")
     var joined_indics1b = " AND divisiones." + indics.join(" IS NOT NULL AND divisiones.") + " IS NOT NULL"
     var joined_indics2 = "divs_con_intersect_sups."
@@ -455,7 +455,7 @@ function gen_buffers_out_query(mapDivsQuery, mapBuffersQuery, indics) {
     var joined_indics3 = "divs_con_habs_y_sups."
     joined_indics3 += indics.join(", divs_con_habs_y_sups.")
 
-    // crea la consulta final que suma los indicadores ponderados
+    // crea la consulta final que suma los indicators ponderados
     var final_query = ""
     $.each(indics, function(index, indic) {
         if ($.inArray(indic, NON_WEIGHTED) != -1) {
@@ -516,7 +516,7 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
         indics.push("area_km2")
     };
 
-    // crea los strings para las partes de la query con los indicadores
+    // crea los strings para las partes de la query con los indicators
     var joined_indics1 = "divisiones." + indics.join(", divisiones.")
     var joined_indics1b = " AND divisiones." + indics.join(" IS NOT NULL AND divisiones.") + " IS NOT NULL"
     var joined_indics2 = "divs_con_intersect_sups."
@@ -526,7 +526,7 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
     var joined_indics3 = "divs_con_habs_y_sups."
     joined_indics3 += indics.join(", divs_con_habs_y_sups.")
 
-    // crea la consulta final que suma los indicadores ponderados
+    // crea la consulta final que suma los indicators ponderados
     var final_query = ""
     $.each(indics, function(index, indic) {
         if ($.inArray(indic, NON_WEIGHTED) != -1) {
@@ -725,7 +725,7 @@ function create_selected_buffers_field(layer) {
         make_select_buffers_query(newTag)
         update_capas_transporte(newTag, true)
         g_buffers["displayLgd"] = true
-        $("#panel-indicadores-seleccionados").css("display", "block")
+        $("#panel-indicators-seleccionados").css("display", "block")
         calculate_indicators(layer)
     }
 
@@ -735,7 +735,7 @@ function create_selected_buffers_field(layer) {
         if (g_buffers["tags"].getTags().length == 0) {
             g_buffers["displayLgd"] = false
             if (!g_divisions["displayLgd"]) {
-                $("#panel-indicadores-seleccionados").css("display", "none")
+                $("#panel-indicators-seleccionados").css("display", "none")
             } else {
                 calculate_indicators(layer)
             };
@@ -763,7 +763,7 @@ function create_selected_buffers_field(layer) {
             g_buffers["displayLgd"] = false
         };
         do_cartodb_query(layer.getSubLayer(1), query)
-        $("#panel-indicadores").attr("legend-type", "buffers")
+        $("#panel-indicators").attr("legend-type", "buffers")
         recalculate_buffers_indicator(layer, g_buffers["indicator"])
         set_universe_totals(layer)
     }
@@ -795,7 +795,7 @@ function create_selected_buffers_field(layer) {
     return g_buffers["tags"]
 };
 
-// crear panel de indicadores para cambiar las leyendas
+// crear panel de indicators para cambiar las leyendas
 INDIC_HIERARCHY = {
     "Generales": ["hab", "area_km2", "hab_km2"],
     "Edad": ["_0_14", "_15_64", "mas_65"],
@@ -812,23 +812,23 @@ INDIC_HIERARCHY = {
     "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
 }
 
-function create_panel_indicators_hide_btn () {
-    $("#close-indicators-table").click(function () {
+function create_panel_indicators_hide_btn() {
+    $("#close-indicators-table").click(function() {
         $("#close-indicators-table").hide("fast")
         $("#open-indicators-table").show("fast")
-        $("#indicadores-seleccionados_wrapper").hide("fast")
+        $("#indicators-seleccionados_wrapper").hide("fast")
     })
-    $("#open-indicators-table").click(function () {
+    $("#open-indicators-table").click(function() {
         $("#open-indicators-table").hide("fast")
         $("#close-indicators-table").show("fast")
-        $("#indicadores-seleccionados_wrapper").show("fast")
-        $("#indicadores-seleccionados").DataTable().draw()
+        $("#indicators-seleccionados_wrapper").show("fast")
+        $("#indicators-seleccionados").DataTable().draw()
     })
 }
 
 function create_change_indicators_panel(layer) {
 
-    var indicsPanel = $("#panel-indicadores").children("div .panel-body")
+    var indicsPanel = $("#panel-indicators").children("div .panel-body")
     $.each(INDIC_HIERARCHY, function(category, indics) {
         var categoryPanel = $("<div>").attr("class", "panel panel-default")
 
@@ -841,7 +841,7 @@ function create_change_indicators_panel(layer) {
         var panelHeading = $("<div>").attr("class", "panel-heading")
         categoryPanel.append(panelHeading.append(panelTitle))
 
-        // los indicadores son una lista
+        // los indicators son una lista
         var collapsePanel = $("<div>").attr("id", idPanelCategory)
         collapsePanel.attr("class", "panel-collapse collapse")
         var listIndics = $("<ul>").attr("class", "list-group")
@@ -856,26 +856,26 @@ function create_change_indicators_panel(layer) {
 }
 
 function calculate_indicators(layer) {
-    $("#indicadores-seleccionados").DataTable().rows().remove().draw()
-    var checked = $("#panel-indicadores-select").find("input:checked")
+    $("#indicators-seleccionados").DataTable().rows().remove().draw()
+    var checked = $("#panel-indicators-select").find("input:checked")
     var names = checked.map(function() {
         return this.name;
     }).get();
 
     select_indicators(layer, names)
-    $("#panel-indicadores-select").css("display", "none")
 }
 
 function create_select_indicators_panel(layer) {
-    $("#close-indicadores-select").click(function() {
+    $("#close-indicators-select").click(function() {
         calculate_indicators(layer)
+        $("#panel-indicators-select").hide("fast")
     })
 
-    $("#open-indicadores-select").click(function() {
-        $("#panel-indicadores-select").css("display", "block")
+    $("#open-indicators-select").click(function() {
+        $("#panel-indicators-select").show("fast")
     })
 
-    var indicsPanel = $("#panel-indicadores-select").children("div .panel-body")
+    var indicsPanel = $("#panel-indicators-select").children("div .panel-body")
     $.each(INDIC_HIERARCHY, function(category, indics) {
         var categoryPanel = $("<div>").attr("class", "panel panel-default")
 
@@ -888,7 +888,7 @@ function create_select_indicators_panel(layer) {
         var panelHeading = $("<div>").attr("class", "panel-heading")
         categoryPanel.append(panelHeading.append(panelTitle))
 
-        // los indicadores son una lista
+        // los indicators son una lista
         var collapsePanel = $("<div>").attr("id", idPanelCategory)
         collapsePanel.attr("class", "panel-collapse collapse")
         var listIndics = $("<ul>").attr("class", "list-group")
@@ -904,6 +904,15 @@ function create_select_indicators_panel(layer) {
     calculate_indicators(layer)
 }
 
+function calcDataTableHeight(options, percent) {
+    var position = $("#indicators-seleccionados").offset()
+    var height = ($(document).height() - position.top) * percent
+    console.log($(document).height(), position.top, height)
+    options.sScrollY = (height - 57) + "px"
+    var table = $("#indicators-seleccionados").DataTable(options)
+    table.draw();
+};
+
 function create_selected_indicators_table() {
     var columns = [{
         title: "Indicador"
@@ -914,19 +923,25 @@ function create_selected_indicators_table() {
     }, {
         title: "All"
     }]
-    var table = $("#indicadores-seleccionados").DataTable({
+    var options = {
         "columns": columns,
         "bLengthChange": false,
         'bPaginate': false,
         'bInfo': false,
         'bFilter': false,
-        "scrollY": "28vh",
-    })
+        'bDestroy': true,
+        "sScrollY": "25vh",
+                "bScrollCollapse": true
+    }
+    var table = $("#indicators-seleccionados").DataTable(options)
+    $(window).resize(function() {
+        calcDataTableHeight(options, 0.95)
+    });
 }
 
 function select_indicators(layer, names) {
     console.log(g_divisions["displayLgd"] && g_buffers["displayLgd"])
-    var table = $("#indicadores-seleccionados").DataTable()
+    var table = $("#indicators-seleccionados").DataTable()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
         table.column(1).visible(true)
@@ -1154,7 +1169,7 @@ function query_divisions_indic_all(sublayer, indics, table, res_manager) {
 function create_indic_changer(layer, indic) {
     var li = $("<li>").attr("class", "list-group-item")
     var a = $("<a>").text(INDIC[indic]["short"]).click(function() {
-        var legendType = $("#panel-indicadores").attr("legend-type")
+        var legendType = $("#panel-indicators").attr("legend-type")
         if (legendType == "divisions") {
             recalculate_divisions_indicator(layer, indic)
         } else {
@@ -1178,7 +1193,7 @@ function create_indic_option(layer, indic) {
 }
 
 function recalculate_divisions_indicator(layer, indic) {
-    // var legendType = $("#panel-indicadores").attr("legend-type")
+    // var legendType = $("#panel-indicators").attr("legend-type")
     var legendType = "divisions"
     var table = TBL_NAMES[legendType]
     var areaLevel = g_divisions["areaLevel"]
@@ -1214,7 +1229,7 @@ function recalculate_indicator(layer, indic, query, legendType) {
         var max = all[all.length - 1][indic]
         create_legend(indic, legendType, min, max)
         change_indic(indic, legendType, min, max, all, layer)
-        $("#panel-indicadores").css("display", "none")
+        $("#panel-indicators").css("display", "none")
     })
 }
 
@@ -1496,8 +1511,8 @@ function set_legend_container_hidden() {
 
 function build_legend_indicator(indic, legendType) {
     var change = $("<a>").text("cambiar").click(function() {
-        $("#panel-indicadores").css("display", "block")
-        $("#panel-indicadores").attr("legend-type", legendType)
+        $("#panel-indicators").css("display", "block")
+        $("#panel-indicators").attr("legend-type", legendType)
     })
     var text = LEGEND_NAME[legendType] + ": " + INDIC[indic]["short"] + "  "
     var p = $("<p>").attr("id", "current-" + legendType + "-indic")

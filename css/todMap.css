@@ -66,8 +66,8 @@ body,
     float: left;
 }
 
-#panel-indicadores,
-#panel-indicadores-select {
+#panel-indicators,
+#panel-indicators-select {
     position: absolute;
     display: none;
     top: 50%;
@@ -118,11 +118,11 @@ body,
     height: 20px;
 }
 
-#indicadores-seleccionados {
+#indicators-seleccionados {
     margin-top: 0px!important;
 }
 
-#panel-indicadores-seleccionados {
+#panel-indicators-seleccionados {
     display: none;
 }
 
