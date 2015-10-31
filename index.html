@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="bootstrap-select/css/bootstrap-select.min.css" />
     <!-- include bootstrap tags css files -->
     <link rel="stylesheet" type="text/css" href="bootstrap-tags/css/bootstrap-tags.css" />
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/spinner.css" type="text/css">
     <!-- first include the underscore.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js" type="text/javascript"></script>
 </head>
@@ -93,7 +94,7 @@
                         <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize" name="None">
                         </ul>
                     </div>
-                    <div>
+                    <div id="buffer-add">
                         <button id="button-add-buffer" type="button" class="btn btn-default">Agregar buffer</button>
                     </div>
                 </div>
@@ -128,6 +129,9 @@
                     <table id="indicators-seleccionados" class="table">
                     </table>
                 </div>
+                <div class="spinner-loader">
+                    Loading…
+                </div>
             </div>
             <div id="control-indicators">
             </div>
@@ -154,7 +158,10 @@
     <!-- include main .js of this map -->
     <script src="js/html2canvas.js"></script>
     <script src="js/html2canvas.svg.js"></script>
-    <script src="js/todMap.js"></script>
+    <script src="js/string-format.js"></script>
+    <script src="js/todParams.js"></script>
+    <script src="js/todQueries.js"></script>
+    <script src="js/todMain.js"></script>
     <!-- <script src="js/FileSaver.min.js"></script> -->
 </body>
 

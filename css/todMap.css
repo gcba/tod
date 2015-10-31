@@ -35,7 +35,8 @@ body,
 
 #main-panel {
     max-height: calc(97% - 50px);
-    max-width: 30%;
+    width: 400px;
+    /*max-width: 30%*/
 }
 
 #open-main-panel {
@@ -45,10 +46,6 @@ body,
 .cartodb-fullscreen,
 .cartodb-zoom {
     z-index: 4
-}
-
-#tag-list-divisiones {
-    width: 250px;
 }
 
 #open-legends,
@@ -64,6 +61,10 @@ body,
 #buffer-size,
 #buffer-modo-transporte {
     float: left;
+}
+
+#tag-list-buffers {
+    display: none;
 }
 
 #panel-indicators,
@@ -149,4 +150,10 @@ div.cartodb-legend ul li {
     display: inline-block;
     margin: 0 5px 4px 5px!important;
     position: relative;
+}
+
+.spinner-loader {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
 }
