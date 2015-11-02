@@ -148,6 +148,7 @@ function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
     var joined_indics1b = " AND divisiones.{} IS NOT NULL".format(
         indics.join(" IS NOT NULL AND divisiones."))
 
+    // console.log(indics)
     var joined_indics2 = "divs_con_intersect_sups.{}".format(
         $.grep(indics, function(indic, index) {
             return (indic != "hab" && indic != "area_km2")

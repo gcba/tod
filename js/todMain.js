@@ -620,7 +620,7 @@ function create_select_indicators_panel(layer) {
     calculate_indicators(layer)
 }
 
-function resize_table () {
+function resize_table() {
     var height = calc_data_table_height(0.95)
     set_data_table_height(g_tbl_options, height)
 }
@@ -676,6 +676,7 @@ function select_indicators(layer, names) {
     replace_table_with_loading()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
+        // debugger
         query_indic_mixed(layer, names, table)
         show_or_hide_cols()
 
@@ -683,10 +684,9 @@ function select_indicators(layer, names) {
         show_or_hide_cols()
         if (g_divisions["displayLgd"]) {
             var sublayer = layer.getSubLayer(SUBLAYER_IDX["divisions"])
-            query_divisions_indic_all(sublayer, names, table, draw_indics_in_table)
+            query_divisions_indic_all(layer, names, table, draw_indics_in_table)
         } else {
-            var sublayer = layer.getSubLayer(SUBLAYER_IDX["buffers"])
-            query_buffers_indic_in(sublayer, names, table, draw_indics_in_table)
+            query_buffers_indic_in(layer, names, table, draw_indics_in_table)
         };
 
     } else {
@@ -702,7 +702,7 @@ function replace_table_with_loading() {
 function replace_loading_with_table() {
     $("#indicators-seleccionados_wrapper").css("display", "block")
     $(".spinner-loader").css("display", "none")
-    // rebuild_table()
+        // rebuild_table()
 }
 
 function show_or_hide_cols() {
@@ -716,24 +716,81 @@ function show_or_hide_cols() {
     }
 }
 
-function add_new_row(table, idRow, row) {
-    table.row.add(row).draw(true)
+function add_new_row(layer, table, idRow, row) {
+    var indic = idRow.split("-")[1]
+    var rowNode = table.row.add(row).draw(true).node()
+
+    // row atributtes
+    $(rowNode).attr("id", idRow).css("overflow", "visible")
+    $(rowNode).attr("visualize-indic", "none")
+    var td = $($(rowNode).find("td")[0])
+    td.attr("class", "dropdown")
+
+    // assign color if active in the map
+    if (g_divisions["indicator"] == indic) {
+        // console.log(g_divisions["displayLgd"])
+        $(rowNode).attr("visualize-indic", "divisions")
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["divisions"])
+    } else if (g_buffers["indicator"] == indic) {
+        $(rowNode).attr("visualize-indic", "buffers")
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["buffers"])
+    };
+
+    // build clickable interfase
+    var dropdown = $('<a data-toggle="dropdown" class="dropdown-toggle">{}<b class="caret"></b></a>'.format(row[0]))
+    var options = $('<ul class="dropdown-menu"></ul>')
+
+    var divs = $('<li><a href="#">Divisiones</a></li>').click(function() {
+        // remove color from last selected row
+        table.rows().iterator('row', function(context, index) {
+            var visIndic = $(this.row(index).node()).attr("visualize-indic")
+            if (visIndic == "divisions") {
+                $(this.row(index).node()).attr("visualize-indic", "none")
+                $(this.row(index).node()).css("background-color", "#fff")
+            }
+        });
+        // assign divisions color
+        $(rowNode).attr("visualize-indic", "divisions")
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["divisions"])
+        recalculate_divisions_indicator(layer, indic)
+    })
+
+    var buffers = $('<li><a href="#">Buffers</a></li>').click(function() {
+        // remove color from last selected row
+        table.rows().iterator('row', function(context, index) {
+            var visIndic = $(this.row(index).node()).attr("visualize-indic")
+            if (visIndic == "buffers") {
+                $(this.row(index).node()).attr("visualize-indic", "none")
+                $(this.row(index).node()).css("background-color", "#fff")
+            }
+        });
+        // assign buffers color
+        $(rowNode).attr("visualize-indic", "buffers")
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["buffers"])
+        recalculate_buffers_indicator(layer, indic)
+    })
+
+    options.append(divs)
+    options.append(buffers)
+    td.text("").append(dropdown)
+    td.append(options)
+
+    // var rowIndex = table.api.fnAddData(row);
+    // var row = table.api.fnGetNodes(rowIndex);
+    // $(row).attr('id', idRow);
 }
 
 function query_indic_mixed(layer, indics, table) {
-
-    var sublayerBuffers = layer.getSubLayer(SUBLAYER_IDX["buffers"])
-    var sublayerDivisions = layer.getSubLayer(SUBLAYER_IDX["divisions"])
-
-    query_buffers_indic_in(sublayerBuffers, indics, table,
-        function(table, indics, bufferInResult) {
+    // debugger
+    query_buffers_indic_in(layer, indics, table,
+        function(layer, table, indics, bufferInResult) {
 
             query_buffers_indic_out(layer, indics, table,
-                function(table, indics, bufferOutResult) {
+                function(layer, table, indics, bufferOutResult) {
 
-                    query_divisions_indic_all(sublayerDivisions, indics,
+                    query_divisions_indic_all(layer, indics,
                         table,
-                        function(table, indics, divisionsAllResult) {
+                        function(layer, table, indics, divisionsAllResult) {
                             replace_loading_with_table()
                             table.rows().remove().draw()
                             $.each(indics, function(index, indic) {
@@ -742,7 +799,7 @@ function query_indic_mixed(layer, indics, table) {
                                     format_val(indic, bufferOutResult[indic]),
                                     format_val(indic, divisionsAllResult[indic])
                                 ]
-                                add_new_row(table, "table-" + indic, row)
+                                add_new_row(layer, table, "table-" + indic, row)
                             })
                             table.draw()
                         })
@@ -750,17 +807,17 @@ function query_indic_mixed(layer, indics, table) {
         })
 }
 
-function draw_indics_in_table(table, indics, result) {
+function draw_indics_in_table(layer, table, indics, result) {
     replace_loading_with_table()
     $.each(indics, function(index, indic) {
         var row = [INDICS[indic]["short"], "", "", format_val(indic,
             result[indic])]
-        add_new_row(table, "table-" + indic, row)
+        add_new_row(layer, table, "table-" + indic, row)
     })
     rebuild_table()
 }
 
-function rebuild_table () {
+function rebuild_table() {
     // var data = $("#indicators-seleccionados").DataTable().data()
     var height = calc_data_table_height(0.95)
     g_tbl_options["sScrollY"] = height
@@ -845,22 +902,27 @@ function calc_indic_weighted_avg(rows, indic, weight) {
 function query_buffers_indic_out(layer, indics, table, res_manager) {
     var mapDivisionsQuery = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
     var mapBuffersQuery = layer.getSubLayer(SUBLAYER_IDX["buffers"]).getSQL()
+        // debugger
     var query = gen_buffers_out_query(mapDivisionsQuery, mapBuffersQuery, indics)
+
     do_db_query(query, function(data) {
         var averages = calc_aggregated_indics(data.rows, indics)
-        res_manager(table, indics, averages)
+        res_manager(layer, table, indics, averages)
     })
 }
 
-function query_buffers_indic_in(sublayer, indics, table, res_manager) {
+function query_buffers_indic_in(layer, indics, table, res_manager) {
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX["buffers"])
     var query = gen_buffers_in_query(sublayer.getSQL(), indics)
+
     do_db_query(query, function(data) {
         var averages = calc_aggregated_indics(data.rows, indics)
-        res_manager(table, indics, averages)
+        res_manager(layer, table, indics, averages)
     })
 }
 
-function query_divisions_indic_all(sublayer, indics, table, res_manager) {
+function query_divisions_indic_all(layer, indics, table, res_manager) {
+    var sublayer = layer.getSubLayer(SUBLAYER_IDX["divisions"])
     var groupedIndics = group_by_weight_type(indics)
     var result = {}
 
@@ -924,7 +986,7 @@ function query_divisions_indic_all(sublayer, indics, table, res_manager) {
             })
 
             result = $.extend(dataCountQuery.rows[0], result)
-            res_manager(table, indics, result)
+            res_manager(layer, table, indics, result)
         })
     })
 }

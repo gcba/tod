@@ -295,4 +295,6 @@ DEFAULT_SELECTED_INDICSATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
 ]
 
+INDIC_SELECTED_COLOR = {"divisions": "#66C2A4", "buffers": "#FD8D3C"}
+
 
