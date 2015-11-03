@@ -121,7 +121,7 @@ INDICS = {
     "nse_mex_ca": {
         "short": "Nivel socioeconómico",
         "scale": 1,
-        "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de datos del Censo Nacional 2010 (INDEC)"
+        "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de Censo Nacional 2010 (INDEC)"
     },
     "educ_priv": {
         "short": "Est. educativos privados (unidades)",
@@ -146,17 +146,17 @@ INDICS = {
     "d_ffcc": {
         "short": "Distancia al ffcc (km)",
         "scale": 1,
-        "long": "Distancia del centroide de un radio censal a la estación más cercana de ferrocarril o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de ferrocarril georreferenciadas por Ministerio de Desarrollo Urbano (GCBA) y datos del Censo Nacional 2010 (INDEC)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de ferrocarril o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de ferrocarril georreferenciadas por Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "d_metrobus": {
         "short": "Distancia al metrobús (km)",
         "scale": 1,
-        "long": "Distancia del centroide de un radio censal a la estación más cercana de metrobús o promedio ponderado por población de este indicador para otras unidades geográficas en 2014 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de metrobús georreferenciadas por la Subsecretaría de Transporte (GCBA) y datos del Censo Nacional 2010 (INDEC)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de metrobús o promedio ponderado por población de este indicador para otras unidades geográficas en 2014 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de metrobús georreferenciadas por la Subsecretaría de Transporte (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "d_subte": {
         "short": "Distancia al subte (km)",
         "scale": 1,
-        "long": "Distancia del centroide de un radio censal a la estación más cercana de subte o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de subte georreferenciadas por el Ministerio de Desarrollo Urbano (GCBA) y datos del Censo Nacional 2010 (INDEC)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de subte o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de subte georreferenciadas por el Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "reach_area": {
         "short": "Sup. alcanzable en 1 colectivo (km2)",
