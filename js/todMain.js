@@ -73,7 +73,7 @@ function main() {
             create_legend(g_divisions["indicator"], "divisions")
             create_legend(g_buffers["indicator"], "buffers")
             set_legend_container_hidden()
-            create_download_image()
+            create_download_image(layers[1])
         })
         .error(function(err) {
             console.log(err);
@@ -676,7 +676,6 @@ function select_indicators(layer, names) {
     replace_table_with_loading()
 
     if (g_divisions["displayLgd"] && g_buffers["displayLgd"]) {
-        // debugger
         query_indic_mixed(layer, names, table)
         show_or_hide_cols()
 
@@ -728,56 +727,35 @@ function add_new_row(layer, table, idRow, row) {
 
     // assign color if active in the map
     if (g_divisions["indicator"] == indic) {
-        // console.log(g_divisions["displayLgd"])
-        $(rowNode).attr("visualize-indic", "divisions")
-        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["divisions"])
+        set_row_color(rowNode, "divisions")
     } else if (g_buffers["indicator"] == indic) {
-        $(rowNode).attr("visualize-indic", "buffers")
-        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["buffers"])
+        set_row_color(rowNode, "buffers")
     };
 
-    // build clickable interfase
+    // build clickable interface
     var dropdown = $('<a data-toggle="dropdown" class="dropdown-toggle">{}<b class="caret"></b></a>'.format(row[0]))
     var options = $('<ul class="dropdown-menu"></ul>')
 
-    var divs = $('<li><a href="#">Divisiones</a></li>').click(function() {
-        // remove color from last selected row
-        table.rows().iterator('row', function(context, index) {
-            var visIndic = $(this.row(index).node()).attr("visualize-indic")
-            if (visIndic == "divisions") {
-                $(this.row(index).node()).attr("visualize-indic", "none")
-                $(this.row(index).node()).css("background-color", "#fff")
-            }
-        });
-        // assign divisions color
-        $(rowNode).attr("visualize-indic", "divisions")
-        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["divisions"])
+    var divs = $('<li><a href="#">Divisiones</a></li>')
+    divs.click(function() {
+        set_table_indic_color(indic, "divisions")
         recalculate_divisions_indicator(layer, indic)
     })
-
-    var buffers = $('<li><a href="#">Buffers</a></li>').click(function() {
-        // remove color from last selected row
-        table.rows().iterator('row', function(context, index) {
-            var visIndic = $(this.row(index).node()).attr("visualize-indic")
-            if (visIndic == "buffers") {
-                $(this.row(index).node()).attr("visualize-indic", "none")
-                $(this.row(index).node()).css("background-color", "#fff")
-            }
-        });
-        // assign buffers color
-        $(rowNode).attr("visualize-indic", "buffers")
-        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["buffers"])
+    var buffers = $('<li><a href="#">Buffers</a></li>')
+    buffers.click(function() {
+        set_table_indic_color(indic, "buffers")
         recalculate_buffers_indicator(layer, indic)
     })
 
+    // if (g_divisions["displayLgd"]) {
+        // debugger
     options.append(divs)
+    // };
+    // if (g_buffers["displayLgd"]) {
     options.append(buffers)
+    // };
     td.text("").append(dropdown)
     td.append(options)
-
-    // var rowIndex = table.api.fnAddData(row);
-    // var row = table.api.fnGetNodes(rowIndex);
-    // $(row).attr('id', idRow);
 }
 
 function query_indic_mixed(layer, indics, table) {
@@ -996,12 +974,43 @@ function create_indic_changer(layer, indic) {
     var a = $("<a>").text(INDICS[indic]["short"]).click(function() {
         var legendType = $("#panel-indicators").attr("legend-type")
         if (legendType == "divisions") {
+            set_table_indic_color(indic, "divisions")
             recalculate_divisions_indicator(layer, indic)
         } else {
+            set_table_indic_color(indic, "buffers")
             recalculate_buffers_indicator(layer, indic)
         };
     })
     return li.append(a)
+}
+
+function set_table_indic_color(indic, legendType) {
+    var table = $("#indicators-seleccionados").DataTable()
+
+    table.rows().iterator('row', function(context, index) {
+        var visIndic = $(this.row(index).node()).attr("visualize-indic")
+        var idRow = $(this.row(index).node()).attr("id")
+        var indicRow = idRow.split("-")[1]
+        var rowNode = $(this.row(index).node())
+
+        if (visIndic == legendType & indicRow != indic) {
+            set_row_color(rowNode, "none")
+        } else if (indicRow == indic & globals[legendType]["displayLgd"]) {
+            set_row_color(rowNode, legendType)
+        };
+    });
+}
+
+function set_row_color(rowNode, visIndic) {
+    if (visIndic == "none") {
+        $(rowNode).attr("visualize-indic", "none")
+        $(rowNode).css("background-color", "#fff")
+    } else if (visIndic == "divisions" | visIndic == "buffers") {
+        $(rowNode).attr("visualize-indic", visIndic)
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR[visIndic])
+    } else {
+        console.log("set_row_color case not implemented.")
+    }
 }
 
 function create_indic_option(layer, indic) {
@@ -1087,9 +1096,9 @@ function create_legend(indic, legendType, min, max) {
 
     // set min-max
     var liMin = $(legend).find("li.min")[0]
-    $(liMin).text(Math.round(min * 100) / 100)
+    $(liMin).text(Math.round(min * INDICS[indic]["scale"] * 100) / 100)
     var liMax = $(legend).find("li.max")[0]
-    $(liMax).text(Math.round(max * 100) / 100)
+    $(liMax).text(Math.round(max * INDICS[indic]["scale"] * 100) / 100)
 
     if (globals[legendType]["displayLgd"]) {
         $(legend).css("display", "block")
@@ -1169,20 +1178,31 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
 }
 
 // descargar mapa
-function create_download_image() {
+function create_download_image(layer) {
     $("#button-download-image").click(function() {
-        html2canvas($("#map").get(), {
-            onrendered: function(canvas) {
-                var w = window.open();
-                $(w.document.body).css("top", "0")
-                $(w.document.body).css("left", "0")
-                $(w.document.body).css("margin", "0 0 0 0")
-                $(w.document.body).append(canvas)
-            },
-            useCORS: true,
-            allowTaint: true,
-            letterRendering: true
-        });
+        // var w = window.open();
+        // $(w.document.body).width(3000)
+        // $(w.document.body).height(3000)
+        // $(w.document.body).css("top", "0")
+        // $(w.document.body).css("left", "0")
+        // $(w.document.body).css("margin", "0 0 0 0")
+
+
+        // $(w.document.body).append($("#map").get())
+        // w.onload = main;
+
+        // html2canvas($(w.document.body), {
+        //     onrendered: function(canvas) {
+        //         var w2 = window.open();
+        //         $(w2.document.body).css("top", "0")
+        //         $(w2.document.body).css("left", "0")
+        //         $(w2.document.body).css("margin", "0 0 0 0")
+        //         $(w2.document.body).append(canvas)
+        //     },
+        //     useCORS: true,
+        //     allowTaint: true,
+        //     letterRendering: true
+        // });
     })
 }
 
