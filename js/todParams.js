@@ -1,197 +1,192 @@
 USER = 'agustinbenassi'
 CARTODB_JSON_URL = 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json'
-BBOX = [-58.534235,-34.708906,-58.329524,-34.531349]
+BBOX = [-58.534235, -34.708906, -58.329524, -34.531349]
 
 INDICS = {
     "hab": {
         "short": "Población (M)",
         "scale": 1 / 1000000,
-        "long": "Población (M)"
+        "long": "Población total en 2010 (millones de habitantes) - Censo Nacional 2010 (INDEC)"
     },
     "area_km2": {
         "short": "Superficie (km2)",
         "scale": 1,
-        "long": "Superficie (km2)"
+        "long": "Superficie total (kilómetros cuadrados) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA)"
     },
     "hab_km2": {
         "short": "Densidad poblacional (miles hab/km2)",
         "scale": 1 / 1000,
-        "long": "Densidad poblacional (miles hab/km2)"
+        "long": "Densidad poblacional en 2010 (miles de habitantes por kilómetro cuadrado) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "_0_14": {
         "short": "0 a 14 años (%)",
         "scale": 100,
-        "long": "0 a 14 años (%)"
+        "long": "Proporción de la población con 14 años de edad o menos en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "_15_64": {
         "short": "15 a 64 años (%)",
         "scale": 100,
-        "long": "15 a 64 años (%)"
+        "long": "Proporción de la población con entre 15 y 64 años de edad en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "mas_65": {
         "short": "Más de 65 años (%)",
         "scale": 100,
-        "long": "Más de 65 años (%)"
+        "long": "Proporción de la población con 65 años de edad o más en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "comercial": {
         "short": "Zona comercial (%)",
         "scale": 100,
-        "long": "Zona comercial (%)"
+        "long": "Proporción de la superficie destinada a uso comercial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)"
     },
     "residencia": {
         "short": "Zona residencial (%)",
         "scale": 100,
-        "long": "Zona residencial (%)"
+        "long": "Proporción de la superficie destinada a uso residencial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)"
     },
     "industrial": {
         "short": "Zona industrial (%)",
         "scale": 100,
-        "long": "Zona industrial (%)"
+        "long": "Proporción de la superficie destinada a uso industrial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)"
     },
     "servicios": {
         "short": "Zona de servicios (%)",
         "scale": 100,
-        "long": "Zona de servicios (%)"
+        "long": "Proporción de la superficie destinada a uso de servicios en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)"
     },
     "otros": {
         "short": "Otros usos (%)",
         "scale": 100,
-        "long": "Otros usos (%)"
+        "long": "Proporción de la superficie destinada a otros usos en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)"
     },
     "con_basica": {
         "short": "Calidad constructiva básica (%)",
         "scale": 100,
-        "long": "Calidad constructiva básica (%)"
+        "long": "Proporción de viviendas cuya calidad constructiva es básica en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "con_insuf": {
         "short": "Calidad constructiva insuficiente (%)",
         "scale": 100,
-        "long": "Calidad constructiva insuficiente (%)"
+        "long": "Proporción de viviendas cuya calidad constructiva es  insuficiente en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "con_satisf": {
         "short": "Calidad constructiva satisfactoria (%)",
         "scale": 100,
-        "long": "Calidad constructiva satisfactoria (%)"
+        "long": "Proporción de viviendas cuya calidad constructiva es  satisfactoria en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "serv_basic": {
         "short": "Conexión a servicios básica (%)",
         "scale": 100,
-        "long": "Conexión a servicios básica (%)"
+        "long": "Proporción de viviendas cuya calidad de conexión a servicios básicos es básica en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "serv_insuf": {
         "short": "Conexión a servicios insuficiente (%)",
         "scale": 100,
-        "long": "Conexión a servicios insuficiente (%)"
+        "long": "Proporción de viviendas cuya calidad de conexión a servicios básicos es insuficiente en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "serv_satis": {
         "short": "Conexión a servicios satisfactoria (%)",
         "scale": 100,
-        "long": "Conexión a servicios satisfactoria (%)"
+        "long": "Proporción de viviendas cuya calidad de conexión a servicios básicos es satisfactoria en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "hac_149": {
         "short": "1.49 habs por cuarto o menos (%)",
         "scale": 100,
-        "long": "1.49 habs por cuarto o menos (%)"
+        "long": "Proporción de hogares con 1.49 habitantes por cuarto o menos en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "hac_150": {
         "short": "1.50 habs por cuarto o más (%)",
         "scale": 100,
-        "long": "1.50 habs por cuarto o más (%)"
+        "long": "Proporción de hogares con 1.50 habitantes por cuarto o más en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "ocup_viv": {
         "short": "Ocupación de vivienda (%)",
         "scale": 100,
-        "long": "Ocupación de vivienda (%)"
+        "long": "Proporción de viviendas ocupadas en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "desocup": {
         "short": "Desocupación (%)",
         "scale": 100,
-        "long": "Desocupación (%)"
+        "long": "Proporción de habitantes desocupados sobre la población económicamente activa, definida como la suma de habitantes ocupados y desocupados en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "empleo": {
         "short": "Empleo (%)",
         "scale": 100,
-        "long": "Empleo (%)"
+        "long": "Proporción de habitantes empleados sobre la cantidad de habitantes con 14 años o más en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "inact": {
         "short": "Inactividad (%)",
         "scale": 100,
-        "long": "Inactividad (%)"
-    },
-    "nse_alt": {
-        "short": "Nivel socioeconómico 1",
-        "scale": 1,
-        "long": "Nivel socioeconómico 1"
+        "long": "Proporción de habitantes inactivos sobre la cantidad de habitantes con 14 años o más en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "nse_mex_ca": {
-        "short": "Nivel socioeconómico 2",
+        "short": "Nivel socioeconómico",
         "scale": 1,
-        "long": "Nivel socioeconómico 2"
+        "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de datos del Censo Nacional 2010 (INDEC)"
     },
     "educ_priv": {
-        "short": "Est. educativos privados (cant)",
+        "short": "Est. educativos privados (unidades)",
         "scale": 1,
-        "long": "Est. educativos privados (cant)"
+        "long": "Cantidad de establecimientos educativos privados en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
     },
     "educ_pub": {
-        "short": "Est. educativos públicos (cant)",
+        "short": "Est. educativos públicos (unidades)",
         "scale": 1,
-        "long": "Est. educativos públicos (cant)"
+        "long": "Cantidad de establecimientos educativos públicos en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
     },
     "educ_sup": {
-        "short": "Educación superior (%)",
+        "short": "Índice de educación superior (%)",
         "scale": 100,
-        "long": "Educación superior (%)"
+        "long": "Proporción de habitantes mayores a 25 años con educación universitaria completada en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "escolarida": {
-        "short": "Escolaridad (%)",
+        "short": "Índice de escolaridad (%)",
         "scale": 100,
-        "long": "Escolaridad (%)"
+        "long": "Proporción de habitantes menores a 18 años que asiste a un establecimiento educativo en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "d_ffcc": {
         "short": "Distancia al ffcc (km)",
         "scale": 1,
-        "long": "Distancia al ffcc (km)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de ferrocarril o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de ferrocarril georreferenciadas por Ministerio de Desarrollo Urbano (GCBA) y datos del Censo Nacional 2010 (INDEC)"
     },
     "d_metrobus": {
         "short": "Distancia al metrobús (km)",
         "scale": 1,
-        "long": "Distancia al metrobús (km)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de metrobús o promedio ponderado por población de este indicador para otras unidades geográficas en 2014 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de metrobús georreferenciadas por la Subsecretaría de Transporte (GCBA) y datos del Censo Nacional 2010 (INDEC)"
     },
     "d_subte": {
         "short": "Distancia al subte (km)",
         "scale": 1,
-        "long": "Distancia al subte (km)"
+        "long": "Distancia del centroide de un radio censal a la estación más cercana de subte o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de subte georreferenciadas por el Ministerio de Desarrollo Urbano (GCBA) y datos del Censo Nacional 2010 (INDEC)"
     },
     "reach_area": {
         "short": "Sup. alcanzable en 1 colectivo (km2)",
         "scale": 1,
-        "long": "Sup. alcanzable en 1 colectivo (km2)"
+        "long": "Superficie alcanzable media estimada viajando hasta 10 kilómetros en un solo servicio de colectivos, sin trasbordos, en 2015. Se toma una distancia máxima recorrida a pie de 300 metros, tanto para abordar el servicio desde el punto de origen como para llegar al punto de destino una vez abandonada la unidad (kilómetros cuadrados) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y trazado georreferenciado de recorridos de colectivos por Unidad de Sistemas de Información Geográfica (GCBA)"
     },
     "reach_prop": {
         "short": "Sup. alcanzable en 1 colectivo (% CABA)",
         "scale": 100,
-        "long": "Sup. alcanzable en 1 colectivo (% CABA)"
+        "long": "Superficie alcanzable media estimada viajando hasta 10 kilómetros en un solo servicio de colectivos, sin trasbordos, en 2015. Se toma una distancia máxima recorrida a pie de 300 metros, tanto para abordar el servicio desde el punto de origen como para llegar al punto de destino una vez abandonada la unidad (proporción de kilómetros cuadrados sobre la superficie total de la CABA) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y trazado georreferenciado de recorridos de colectivos por Unidad de Sistemas de Información Geográfica (GCBA)"
     },
     "nbi": {
         "short": "NBI (%)",
         "scale": 100,
-        "long": "NBI (%)"
+        "long": "Proporción de hogares con al menos una necesidad básica insatisfecha en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "compu": {
-        "short": "Uso de computadora (%)",
+        "short": "Índice de computadora en el hogar (%)",
         "scale": 100,
-        "long": "Uso de computadora (%)"
+        "long": "Proporción de hogares con computadora sobre el total de hogares equipados con al menos uno de los siguientes elementos: heladera, computadora, teléfono celular o teléfono de línea, en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "esp_verde": {
         "short": "Superficie espacios verdes (%)",
         "scale": 100,
-        "long": "Superficie espacios verdes (%)"
+        "long": "Proporción de espacios verdes sobre la superficie total en 2013 (%) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y espacios verdes georreferenciados por la Unidad de Sistemas de Información Geográfica (GCBA)"
     },
     "hospitales": {
-        "short": "Hospitales (cant)",
+        "short": "Hospitales (unidades)",
         "scale": 1,
-        "long": "Hospitales (cant)"
+        "long": "Cantidad de hospitales en 2014 (unidades) - Cálculo a partir de hospitales georreferenciados por el Ministerio de Salud (GCBA)"
     }
 }
 
@@ -291,11 +286,12 @@ PANEL_TRANSPORTE = {
 
 AREA_WEIGHTED = ["hab_km2", "comercial", "residencia"]
 NON_WEIGHTED = ["hab", "area_km2"]
-DEFAULT_SELECTED_INDICSATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
+DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
     "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
 ]
 
-INDIC_SELECTED_COLOR = {"divisions": "#66C2A4", "buffers": "#FD8D3C"}
-
-
+INDIC_SELECTED_COLOR = {
+    "divisions": "#66C2A4",
+    "buffers": "#FD8D3C"
+}

@@ -157,3 +157,11 @@ div.cartodb-legend ul li {
     margin-left: auto;
     margin-right: auto;
 }
+
+.tooltip {
+    position: fixed;
+}
+
+.legend-indic-change-button {
+    display: none;
+}

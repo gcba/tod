@@ -533,11 +533,13 @@ function create_panel_indicators_hide_btn() {
     $("#close-indicators-table").click(function() {
         $("#close-indicators-table").hide("fast")
         $("#open-indicators-table").show("fast")
+        $(".legend-indic-change-button").show("fast")
         $("#indicators-seleccionados_wrapper").hide("fast")
     })
     $("#open-indicators-table").click(function() {
         $("#open-indicators-table").hide("fast")
         $("#close-indicators-table").show("fast")
+        $(".legend-indic-change-button").hide("fast")
         $("#indicators-seleccionados_wrapper").show("fast")
         rebuild_table()
     })
@@ -546,6 +548,9 @@ function create_panel_indicators_hide_btn() {
 function create_change_indicators_panel(layer) {
 
     var indicsPanel = $("#panel-indicators").children("div .panel-body")
+    $("#close-indicators-panel").click(function() {
+        $("#panel-indicators").hide("fast")
+    })
     $.each(INDICS_HIERARCHY, function(category, indics) {
         var categoryPanel = $("<div>").attr("class", "panel panel-default")
 
@@ -563,7 +568,9 @@ function create_change_indicators_panel(layer) {
         collapsePanel.attr("class", "panel-collapse collapse")
         var listIndics = $("<ul>").attr("class", "list-group")
         indics.forEach(function(indic) {
-            listIndics.append(create_indic_changer(layer, indic))
+            if (indic in INDICS) {
+                listIndics.append(create_indic_changer(layer, indic))
+            };
         })
         collapsePanel.append(listIndics)
         categoryPanel.append(collapsePanel)
@@ -609,7 +616,9 @@ function create_select_indicators_panel(layer) {
         collapsePanel.attr("class", "panel-collapse collapse")
         var listIndics = $("<ul>").attr("class", "list-group")
         indics.forEach(function(indic) {
-            listIndics.append(create_indic_option(layer, indic))
+            if (indic in INDICS) {
+                listIndics.append(create_indic_option(layer, indic))
+            };
         })
         collapsePanel.append(listIndics)
         categoryPanel.append(collapsePanel)
@@ -733,7 +742,8 @@ function add_new_row(layer, table, idRow, row) {
     };
 
     // build clickable interface
-    var dropdown = $('<a data-toggle="dropdown" class="dropdown-toggle">{}<b class="caret"></b></a>'.format(row[0]))
+    var dropdown = $('<a data-hover="tooltip" data-placement="left" title="' + INDICS[indic]["long"] + '" data-toggle="dropdown" class="dropdown-toggle table-row">{}<b class="caret"></b></a>'.format(row[0]))
+    $("[data-hover='tooltip']").tooltip()
     var options = $('<ul class="dropdown-menu"></ul>')
 
     var divs = $('<li><a href="#">Divisiones</a></li>')
@@ -748,12 +758,12 @@ function add_new_row(layer, table, idRow, row) {
     })
 
     // if (g_divisions["displayLgd"]) {
-        // debugger
+    // debugger
     options.append(divs)
-    // };
-    // if (g_buffers["displayLgd"]) {
+        // };
+        // if (g_buffers["displayLgd"]) {
     options.append(buffers)
-    // };
+        // };
     td.text("").append(dropdown)
     td.append(options)
 }
@@ -981,6 +991,8 @@ function create_indic_changer(layer, indic) {
             recalculate_buffers_indicator(layer, indic)
         };
     })
+    a.attr("data-hover", "tooltip").attr("data-placement", "right")
+    a.attr("title", INDICS[indic]["long"])
     return li.append(a)
 }
 
@@ -1016,13 +1028,14 @@ function set_row_color(rowNode, visIndic) {
 function create_indic_option(layer, indic) {
     var li = $('<li>').attr("class", "list-group-item")
     li.append($("<input type='checkbox'>").attr("name", indic))
-    li.append("  " + INDICS[indic]["short"])
+    var span = $("<span>").text("   " + INDICS[indic]["short"])
+    span.attr("data-hover", "tooltip").attr("data-placement", "right")
+    span.attr("title", INDICS[indic]["long"])
+    li.append(span)
 
-    if ($.inArray(indic, DEFAULT_SELECTED_INDICSATORS) != -1) {
-        // debugger
+    if ($.inArray(indic, DEFAULT_SELECTED_INDICATORS) != -1) {
         $(li.find("input")[0]).prop("checked", true)
     };
-
     return li
 }
 
@@ -1085,6 +1098,7 @@ function create_legends_hide_btn() {
 }
 
 function create_legend(indic, legendType, min, max) {
+    // debugger
     var legend = get_legend(legendType)
     $(legend).attr("id", "legend-" + legendType)
 
@@ -1108,6 +1122,16 @@ function create_legend(indic, legendType, min, max) {
         $(legend).css("display", "none")
         set_legend_container_hidden()
     };
+
+    show_hide_legend_indic_change_btn()
+}
+
+function show_hide_legend_indic_change_btn() {
+    if ($("#close-indicators-table").css("display") == "none") {
+        $(".legend-indic-change-button").show("fast")
+    } else {
+        $(".legend-indic-change-button").hide("fast")
+    };
 }
 
 function set_legend_container_hidden() {
@@ -1122,6 +1146,7 @@ function build_legend_indicator(indic, legendType) {
         $("#panel-indicators").css("display", "block")
         $("#panel-indicators").attr("legend-type", legendType)
     })
+    change.attr("class", "legend-indic-change-button")
     var text = LEGEND_NAME[legendType] + ": " + INDICS[indic]["short"] + "  "
     var p = $("<p>").attr("id", "current-" + legendType + "-indic")
     return p.append(text).append(change).attr("class", "legend-indic")
