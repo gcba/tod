@@ -294,6 +294,7 @@ DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
 ]
 
 INDIC_SELECTED_COLOR = {
-    "divisions": "#66C2A4",
-    "buffers": "#FD8D3C"
+    "divisions": "rgba(35, 139, 69, 0.6)",
+    "buffers": "rgba(252, 78, 42, 0.6)",
+    "both": "rgba(139, 85, 208, 0.6)"
 }

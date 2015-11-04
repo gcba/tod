@@ -790,6 +790,10 @@ function query_indic_mixed(layer, indics, table) {
                                 add_new_row(layer, table, "table-" + indic, row)
                             })
                             table.draw()
+                            set_table_indic_color(g_divisions["indicator"],
+                                "divisions")
+                            set_table_indic_color(g_buffers["indicator"],
+                                "buffers")
                         })
                 })
         })
@@ -806,12 +810,14 @@ function draw_indics_in_table(layer, table, indics, result) {
 }
 
 function rebuild_table() {
-    // var data = $("#indicators-seleccionados").DataTable().data()
     var height = calc_data_table_height(0.95)
     g_tbl_options["sScrollY"] = height
     var table = $("#indicators-seleccionados").DataTable(g_tbl_options)
     show_or_hide_cols()
     table.draw()
+
+    set_table_indic_color(g_divisions["indicator"], "divisions")
+    set_table_indic_color(g_buffers["indicator"], "buffers")
 }
 
 function format_val(indic, value) {
@@ -1000,26 +1006,46 @@ function set_table_indic_color(indic, legendType) {
     var table = $("#indicators-seleccionados").DataTable()
 
     table.rows().iterator('row', function(context, index) {
-        var visIndic = $(this.row(index).node()).attr("visualize-indic")
-        var idRow = $(this.row(index).node()).attr("id")
-        var indicRow = idRow.split("-")[1]
         var rowNode = $(this.row(index).node())
+        var visIndic = $(rowNode).attr("visualize-indic")
+        var idRow = $(rowNode).attr("id")
+        var indicRow = idRow.split("-")[1]
 
-        if (visIndic == legendType & indicRow != indic) {
-            set_row_color(rowNode, "none")
-        } else if (indicRow == indic & globals[legendType]["displayLgd"]) {
-            set_row_color(rowNode, legendType)
+        if (indicRow == indic) {
+            if (visIndic == "none" & globals[legendType]["displayLgd"]) {
+                set_row_color(rowNode, legendType)
+            } else if (visIndic != legendType & globals[legendType]["displayLgd"]) {
+                set_row_color(rowNode, "both")
+            }
+
+        } else {
+            if (visIndic == legendType) {
+                set_row_color(rowNode, "none")
+            } else if (visIndic == "both") {
+                if (legendType == "divisions") {
+                    set_row_color(rowNode, "buffers")
+                } else {
+                    set_row_color(rowNode, "divisions")
+                }
+            };
         };
-    });
+    })
 }
 
 function set_row_color(rowNode, visIndic) {
+
     if (visIndic == "none") {
         $(rowNode).attr("visualize-indic", "none")
         $(rowNode).css("background-color", "#fff")
+
+    } else if (visIndic == "both") {
+        $(rowNode).attr("visualize-indic", "both")
+        $(rowNode).css("background-color", INDIC_SELECTED_COLOR["both"])
+
     } else if (visIndic == "divisions" | visIndic == "buffers") {
         $(rowNode).attr("visualize-indic", visIndic)
         $(rowNode).css("background-color", INDIC_SELECTED_COLOR[visIndic])
+
     } else {
         console.log("set_row_color case not implemented.")
     }
@@ -1205,24 +1231,6 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
 // descargar mapa
 function create_download_image(layers) {
     $("#button-download-image").click(function() {
-        // var w = window.open();
-        // $(w.document.body).width(3000)
-        // $(w.document.body).height(3000)
-        // $(w.document.body).css("top", "0")
-        // $(w.document.body).css("left", "0")
-        // $(w.document.body).css("margin", "0 0 0 0")
-        // $(w.document.body).append($("<img>"))
-
-        // var img = cartodb.Image(CARTODB_JSON_URL, {})
-        //     .size(600, 600)
-        //     // .bbox(BBOX)
-        //     .center(CENTER)
-        //     .zoom(ZOOM)
-        //     .write({
-        //         class: "thumb",
-        //         id: "AwesomeMap"
-        //     });
-
         var sublayers = [{
             type: "http",
             options: {
