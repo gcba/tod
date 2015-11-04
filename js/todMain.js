@@ -29,8 +29,8 @@ function main() {
             description: false,
             search: true,
             tiles_loader: true,
-            center_lat: -34.615753,
-            center_lon: -58.4,
+            center_lat: CENTER[0],
+            center_lon: CENTER[1],
             zoom: 12,
             legends: true
         })
@@ -73,7 +73,7 @@ function main() {
             create_legend(g_divisions["indicator"], "divisions")
             create_legend(g_buffers["indicator"], "buffers")
             set_legend_container_hidden()
-            create_download_image(layers[1])
+            create_download_image(layers)
         })
         .error(function(err) {
             console.log(err);
@@ -1203,7 +1203,7 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
 }
 
 // descargar mapa
-function create_download_image(layer) {
+function create_download_image(layers) {
     $("#button-download-image").click(function() {
         // var w = window.open();
         // $(w.document.body).width(3000)
@@ -1211,23 +1211,65 @@ function create_download_image(layer) {
         // $(w.document.body).css("top", "0")
         // $(w.document.body).css("left", "0")
         // $(w.document.body).css("margin", "0 0 0 0")
+        // $(w.document.body).append($("<img>"))
 
+        // var img = cartodb.Image(CARTODB_JSON_URL, {})
+        //     .size(600, 600)
+        //     // .bbox(BBOX)
+        //     .center(CENTER)
+        //     .zoom(ZOOM)
+        //     .write({
+        //         class: "thumb",
+        //         id: "AwesomeMap"
+        //     });
 
-        // $(w.document.body).append($("#map").get())
-        // w.onload = main;
+        var sublayers = [{
+            type: "http",
+            options: {
+                urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+                subdomains: ["a", "b", "c"],
+            },
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+        }]
+        for (var i in [0, 1, 2, 3]) {
+            if (layers[1].getSubLayer(i).isVisible()) {
+                sublayers.push({
+                    type: "cartodb",
+                    options: {
+                        sql: layers[1].getSubLayer(i).getSQL(),
+                        cartocss: layers[1].getSubLayer(i).getCartoCSS(),
+                        cartocss_version: "2.1.1"
+                    }
+                })
+            }
+        }
 
-        // html2canvas($(w.document.body), {
-        //     onrendered: function(canvas) {
-        //         var w2 = window.open();
-        //         $(w2.document.body).css("top", "0")
-        //         $(w2.document.body).css("left", "0")
-        //         $(w2.document.body).css("margin", "0 0 0 0")
-        //         $(w2.document.body).append(canvas)
-        //     },
-        //     useCORS: true,
-        //     allowTaint: true,
-        //     letterRendering: true
-        // });
+        var layer_definition = {
+            user_name: "agustinbenassi",
+            tiler_domain: "cartodb.com",
+            tiler_port: "80",
+            tiler_protocol: "http",
+            layers: sublayers
+        };
+
+        var sql = new cartodb.SQL({
+            user: USER
+        });
+
+        sql.getBounds("SELECT * FROM divisiones")
+            .done(function(bounds) {
+                var bbox = [bounds[1][1], bounds[1][0], bounds[0][1],
+                    bounds[0][0]
+                ]
+                var img = cartodb.Image(layer_definition)
+                    .size(2500, 2500)
+                    .bbox(BBOX)
+                    // .into($(w.document.body).find("img")[0])
+                    .getUrl(function(err, url) {
+                        console.log(url)
+                        var w = window.open(url)
+                    })
+            })
     })
 }
 
