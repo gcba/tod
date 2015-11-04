@@ -81,6 +81,7 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
 
     sf_first = shapefile.Reader(shp_paths.values()[0])
     w = shapefile.Writer(sf_first.shapeType)
+    # print(sf_first.shapeType)
     copy_prj(shp_paths.values()[0], output_path)
 
     # write all the fields first
@@ -89,14 +90,16 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
     # now write shapes and records
     new_fields = [new_field[0] for new_field in w.fields]
     for id_sf, sf_path in shp_paths.iteritems():
-        print("Merging", id_sf.ljust(15), os.path.basename(sf_path))
         sf = shapefile.Reader(sf_path)
+        print("Merging", sf.shapeType, id_sf.ljust(
+            15), os.path.basename(sf_path))
         orig_fields = [f[0] for f in sf.fields if f[0] != "DeletionFlag"]
 
+        # extend writing shapefile with all new shapes
+        w._shapes.extend(sf.shapes())
         for sr in sf.iterShapeRecords():
             record = sr.record
-            shape = sr.shape
-            w.poly(shapeType=sf.shapeType, parts=[shape.points])
+            # shape = sr.shape
 
             dict_record = {orig_field: value for orig_field, value in
                            zip(orig_fields, record)}

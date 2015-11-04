@@ -24,8 +24,8 @@ class RecalculateIndicatorsTestCase(unittest.TestCase):
                     total = sum([i["buffer"] for i in buffer_values.values()])
 
                     print total, buffer_id, weights_path
-                    self.assertGreater(total, 0.98)
-                    self.assertLessEqual(total, 1.01)
+                    self.assertGreater(total, 0.999)
+                    self.assertLessEqual(total, 1.001)
 
 if __name__ == '__main__':
     nose.run(defaultTest=__name__)

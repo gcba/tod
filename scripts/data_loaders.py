@@ -13,9 +13,10 @@ from __future__ import with_statement
 import os
 import pandas as pd
 import json
+from simpledbf import Dbf5
 
 from path_finders import get_weights_path, get_indicators_path
-from path_finders import iter_weights_paths
+from path_finders import iter_weights_paths, find_shp_path
 
 AREA_LEVEL_NAMES = {"FRAC": "fracciones", "RADIO": "radios"}
 
@@ -34,3 +35,11 @@ def iterate_weights():
     for weight_path in iter_weights_paths():
         with open(weight_path, "rb") as f:
             yield os.path.basename(weight_path), json.load(f)
+
+
+def read_dbf(shp_dir_or_dbf_path):
+    if os.path.isdir(shp_dir_or_dbf_path):
+        dbf_path = find_shp_path(shp_dir_or_dbf_path) + ".dbf"
+    else:
+        dbf_path = shp_dir_or_dbf_path
+    dbf = Dbf5()

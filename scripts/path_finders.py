@@ -12,6 +12,7 @@ from __future__ import print_function
 from __future__ import with_statement
 import os
 import sys
+from global_vars import AREA_LEVEL_SHP_NAME
 
 BUFFERS_DIR = os.path.join("shp", "transporte", "buffers")
 DIVISIONS_DIR = os.path.join("shp", "divisiones")
@@ -86,6 +87,10 @@ def get_division_dir(division, divisions_dir=None):
 
 def get_division_path(division):
     return find_shp_path(get_division_dir(division))
+
+
+def get_area_level_shp_path(area_level):
+    return get_division_path(AREA_LEVEL_SHP_NAME[area_level])
 
 
 def get_indicators_path(area_level, format_file=".csv"):

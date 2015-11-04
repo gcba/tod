@@ -21,6 +21,7 @@ import os
 import sys
 from rtree import index
 import json
+from multiprocessing import Process
 
 from path_finders import get_weights_path, iter_buffer_dirs, get_division_dir
 from path_finders import find_shp_path
@@ -92,7 +93,8 @@ def calc_area(shape, empty_shapes, empty_idx):
     return area
 
 
-def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
+def calculate_intersect_weights(division_dir, buffer_dir, weights_path,
+                                empty_dirs=None, force_buffer_sum=True):
     """Calculate perecentage of division_dir shapes intersecting buffer_dir.
 
     Find which shapes in the division shapefile intersect with each shape in
@@ -183,6 +185,14 @@ def calculate_intersect_weights(division_dir, buffer_dir, empty_dirs=None):
                 "buffer": round(intersect_area / buffer_area, 30)
             }
 
+        if force_buffer_sum:
+            total_w = sum([i["buffer"] for i in
+                           weighted_intersections[id_buffer].itervalues()])
+            for id_division in weighted_intersections[id_buffer]:
+                weighted_intersections[id_buffer][
+                    id_division]["buffer"] /= total_w
+
+    save_to_json(weighted_intersections, weights_path)
     return weighted_intersections
 
 
@@ -191,24 +201,26 @@ def main(buffers_dir=None, divisions=DIVISIONS,
          empty_shps_dir=EMPTY_SHPS_DIR,
          recalculate=False):
 
+    p_counter = 0
     for buffer_dir in iter_buffer_dirs(buffers_dir):
         for division, division_name in zip(divisions, division_names):
             weights_path = get_weights_path(buffer_dir, division_name)
 
-            print("Calculating intersections between",
-                  os.path.basename(division), "and",
-                  os.path.basename(buffer_dir))
-            sys.stdout.flush()
-
             if not os.path.isfile(weights_path) or recalculate:
                 division_dir = get_division_dir(division, divisions_dir)
 
-                divisions_weights = calculate_intersect_weights(
-                    division_dir,
-                    buffer_dir,
-                    empty_shps_dir)
+                p = Process(target=calculate_intersect_weights,
+                            args=(division_dir, buffer_dir,
+                                  weights_path, empty_shps_dir))
 
-                save_to_json(divisions_weights, weights_path)
+                print("Start process of calculating intersections between",
+                      os.path.basename(division_dir), "and",
+                      os.path.basename(buffer_dir), "...")
+                p.start()
+
+                if p_counter % 5 == 0:
+                    p.join()
+
 
 if __name__ == '__main__':
     main()

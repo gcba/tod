@@ -3,7 +3,7 @@ nose
 pyshp
 rtree
 shapely
-pandas
+pandas>=0.17.0
 lxml
 pyproj
 pycrs

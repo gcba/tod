@@ -12,10 +12,12 @@ from __future__ import print_function
 from __future__ import with_statement
 import os
 import pandas as pd
+from simpledbf import Dbf5
 
 import pyredatam
 from pyredatam import cpv2010arg
 from path_finders import get_data_path, get_indicators_path
+from path_finders import get_context_shp_path
 from global_vars import IDS_GCBA
 
 AREAS_LENIDS = {"PROV": 2, "DPTO": 5, "FRAC": 7, "RADIO": 9}
@@ -87,9 +89,6 @@ def get_data(area_level, variable, universe_filter=None, redownload=False):
 
 def replace_index(df, id_len=7):
     """Create GCBA shp ids and replace index with Census ids."""
-    if "Unnamed: 0" in df.columns:
-        df = df.drop("Unnamed: 0", 1)
-
     code_kw = df.columns[0]
     df[code_kw] = df[code_kw].astype(int)
     df[code_kw] = df[code_kw].astype(str)
@@ -124,6 +123,22 @@ def add_indicator(area_level, indic_name, indicator):
             IDS_GCBA[area_level]].map(indicator)
     else:
         raise Exception("Indicator must be dict or ")
+    indicators.to_csv(get_indicators_path(area_level), encoding="utf-8")
+
+    return indicators
+
+
+def add_dbf_indicator_by_id(area_level, context_shp_name, context_id_field,
+                            context_indic_field):
+    indicators = get_or_create_indicators_df(area_level)
+    indicators.drop(context_indic_field, 1, inplace=True)
+
+    dbf = Dbf5(get_context_shp_path(context_shp_name) + ".dbf")
+    context_df = dbf.to_dataframe()
+    context_df.drop_duplicates(context_id_field, inplace=True)
+    context_df.set_index(context_id_field, inplace=True)
+
+    indicators = indicators.join(context_df[context_indic_field])
     indicators.to_csv(get_indicators_path(area_level), encoding="utf-8")
 
     return indicators

@@ -43,7 +43,8 @@ def _calc_total_poulation(weights, population, skip):
     assert divisions[0] in population, msg
 
     return sum([(population[division] * weights[division]["division"])
-                for division in divisions if division not in skip])
+                for division in divisions if
+                division not in skip and division in population])
 
 
 def _calc_indicator(series, weights, population, skip=None,
@@ -60,14 +61,15 @@ def _calc_indicator(series, weights, population, skip=None,
         # weight can be intersecting area or population
         if use_area_only:
             weight = weights[division]["buffer"]
-        elif division not in skip:
+        elif division not in skip and division in population:
             division_population = (population[division] *
                                    weights[division]["division"])
             weight = division_population / total_population
         else:
             weight = 0.0
 
-        if division in skip or pd.isnull(series[division]):
+        if (division in skip or division not in series.index or
+                pd.isnull(series[division])):
             not_used_divs_weights[division] = weight
         else:
             used_divs_weights[division] = weight
