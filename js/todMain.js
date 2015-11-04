@@ -341,34 +341,39 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
 
 }
 
-
-
 // filtros de divisiones
 function get_filter_divs(layer, nameDivs) {
     var divField = DIVS_ID_FIELD[nameDivs]
+    var filterMsg = DIVS_FILTER_MSG[nameDivs]
+    var filterLevels = DIVS_FILTER_LEVELS[nameDivs]
+
     if (divField) {
-        var sql = new cartodb.SQL({
-            user: 'agustinbenassi'
-        });
-        var query = "SELECT Distinct(" + divField + ") FROM divisiones"
-        var filterDivs = []
-        sql.execute("SELECT Distinct({{divField}}) FROM divisiones", {
-                "divField": divField
-            })
-            .done(function(data) {
-                filterDivs = data.rows.map(function(row) {
-                    return String(row[divField])
-                });
-                create_divs_filter(layer, filterDivs, nameDivs)
-            })
-            .error(function(errors) {
-                // errors contains a list of errors
-                console.log("errors:" + errors);
-            })
+        query_distinct_cases(divField, "divisiones", function(data) {
+            filterDivs = data.rows.map(function(row) {
+                return String(row[divField])
+            });
+            create_divs_filter(layer, filterDivs, nameDivs, filterMsg)
+        })
     }
 }
 
-function create_divs_filter(layer, filterDivs, nameDivs) {
+function query_distinct_cases(divField, table, res_manager) {
+    var query = "SELECT Distinct(" + divField + ") FROM " + table
+    var filterDivs = []
+    var sql = new cartodb.SQL({
+        user: 'agustinbenassi'
+    });
+    sql.execute("SELECT Distinct({{divField}}) FROM " + table, {
+            "divField": divField
+        })
+        .done(res_manager)
+        .error(function(errors) {
+            // errors contains a list of errors
+            console.log("errors:" + errors);
+        })
+}
+
+function create_divs_filter(layer, filterDivs, nameDivs, filterMsg) {
     // If using Bootstrap 2, be sure to include:
     // Tags.bootstrapVersion = "2";
     var filter = $('<div>').attr("class", "tag-list")
@@ -380,7 +385,7 @@ function create_divs_filter(layer, filterDivs, nameDivs) {
         tagSize: "sm",
         caseInsensitive: true,
         restrictTo: filterDivs,
-        promptText: "Filtrar por divisiones...",
+        promptText: filterMsg,
         afterAddingTag: update_queries_with_divs_filter,
         afterDeletingTag: update_queries_with_divs_filter
     });

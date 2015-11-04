@@ -259,6 +259,20 @@ DIVS_ID_FIELD = {
     "DPTO": "comunas"
 }
 
+DIVS_FILTER_MSG = {
+    "RADIO": "Filtrar por radios, fracciones o comunas...",
+    "FRAC": "Filtrar por fracciones o comunas...",
+    "BARRIO": "Filtrar por barrios...",
+    "DPTO": "Filtrar por comunas..."
+}
+
+DIVS_FILTER_LEVELS = {
+    "RADIO": ["RADIO", "FRAC", "DPTO"],
+    "FRAC": ["FRAC", "DPTO"],
+    "BARRIO": ["BARRIO"],
+    "DPTO": ["DPTO"]
+}
+
 DIVS_NAME = {
     "None": "Ninguna",
     "RADIO": "Radios",
