@@ -17,7 +17,7 @@ from path_finders import find_shp_path
 from utils import copy_prj
 
 
-def translate(field, group_fields=None):
+def translate(field, group_fields=None, group_fields_by_sf=None):
     """Return the grouped field name, when field is inside a group."""
     name = field[0]
 
@@ -26,18 +26,27 @@ def translate(field, group_fields=None):
             if name.upper() in map(str.upper, fields_group):
                 name = group_field.upper()
 
+    if group_fields_by_sf:
+        group_fields_by_sf = {key.upper(): value for key, value in
+                              group_fields_by_sf.iteritems()}
+        if name.upper() in group_fields_by_sf:
+            name = group_fields_by_sf[name.upper()].upper()
+
     if field[1] == "C":
         return (name, field[1], 255, 0)
 
     if field[2] < 4:
         return (name, field[1], 255, field[3])
 
+    field[0] = name
     return field
 
 
-def write_fields(w, shp_paths, merging_field, group_fields=None):
+def write_fields(w, shp_paths, merging_field, group_fields=None,
+                 group_fields_by_sf=None):
     """Write all the fields of merging shape files, without repeating."""
     gf = group_fields
+    gfsf = group_fields_by_sf
 
     w.field(str(merging_field), str("C"), 255, 0)
     for id_sf, sf_path in shp_paths.iteritems():
@@ -46,7 +55,8 @@ def write_fields(w, shp_paths, merging_field, group_fields=None):
         # only write fields that are new
         new_fields = [new_field[0] for new_field in w.fields]
         for old_field in sf.fields:
-            translated_field = translate(old_field, gf)
+            translated_field = translate(old_field, gf,
+                                         gfsf[id_sf] if gfsf else None)
             if (translated_field[0] not in new_fields and
                     translated_field[0] != "DeletionFlag"):
                 w.field(*translated_field)
@@ -74,7 +84,8 @@ def create_shp_paths_dict(shps_dir, replacements=None):
 
 # MAIN
 def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
-                     replacements=None, group_fields=None):
+                     replacements=None, group_fields=None,
+                     group_fields_by_sf=None):
     """Merge shapefiles in a single shapefile.
 
     There is a merging_field retaining the name of the original field taken
@@ -102,16 +113,21 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
     copy_prj(shp_paths.values()[0], output_path)
 
     # write all the fields first
-    write_fields(w, shp_paths, merging_field, group_fields)
+    write_fields(w, shp_paths, merging_field, group_fields, group_fields_by_sf)
 
     # now write shapes and records
     new_fields = [new_field[0] for new_field in w.fields]
+    # print(new_fields)
     for id_sf, sf_path in shp_paths.iteritems():
         sf = shapefile.Reader(sf_path)
         print("Merging", sf.shapeType, id_sf.ljust(15),
               os.path.basename(sf_path))
-        orig_fields = [translate(f, group_fields)[0] for f in sf.fields
-                       if f[0] != "DeletionFlag"]
+
+        gfsf = group_fields_by_sf
+        orig_fields = [translate(f, group_fields,
+                                 gfsf[id_sf] if gfsf else None)[0]
+                       for f in sf.fields if f[0] != "DeletionFlag"]
+        # print(orig_fields)
 
         # extend writing shapefile with all new shapes
         w._shapes.extend(sf.shapes())
