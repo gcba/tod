@@ -20,7 +20,9 @@ globals = {
     "buffers": g_buffers
 }
 g_tbl_options = {}
+g_divs_ids = {}
 cartodb_vis = null
+g_pending_actions = {}
 
 function main() {
     cartodb.createVis('map', CARTODB_JSON_URL, {
@@ -60,6 +62,7 @@ function main() {
             do_map_query(layers[1].getSubLayer(2), "")
             do_map_query(layers[1].getSubLayer(3), "")
 
+            retrieve_divs_ids()
             relocate_cartodb_overlays()
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
@@ -86,6 +89,17 @@ function relocate_cartodb_overlays() {
     $(".cartodb-layer-selector-box").prependTo($(".cartodb-header .content"))
     $(".cartodb-searchbox").prependTo($(".cartodb-header .content"))
     $(".cartodb-share").prependTo($(".cartodb-header .content"))
+}
+
+function retrieve_divs_ids() {
+    $.each(DIVS_FILTER_LEVELS, function(areaLevel, value) {
+        query_distinct_cases(DIVS_ID_FIELD, "divisiones", [areaLevel], function(data) {
+            var filterDivs = data.rows.map(function(row) {
+                return String(row[DIVS_ID_FIELD])
+            });
+            g_divs_ids[areaLevel] = filterDivs
+        })
+    })
 }
 
 // panel de capas de transporte (puntos y líneas)
@@ -212,7 +226,7 @@ function update_tooltip(layer, legendType) {
 function update_divisions_infobox(layer, legendType) {
     // no funciona con divisions+buffers activado
     var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
-    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    var id_field = DIVS_ID_FIELD
     var indicator = g_divisions["indicator"]
     var indicator_desc = INDICS[indicator]["short"]
 
@@ -234,7 +248,7 @@ function update_divisions_infobox(layer, legendType) {
 
 function update_divisions_tooltip(layer, legendType) {
     var division = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
-    var id_field = DIVS_ID_FIELD[g_divisions["areaLevel"]]
+    var id_field = DIVS_ID_FIELD
     var indicator = g_divisions["indicator"]
     var indicator_desc = INDICS[indicator]["short"]
 
@@ -282,15 +296,21 @@ function set_universe_totals(layer) {
 
 function set_divisions_universe_totals(mapDivsQuery) {
     var queryPop = mapDivsQuery.replace("divisiones.*", "SUM(hab) AS hab")
+    g_pending_actions["divs_pop"] = queryPop
     do_db_query(queryPop, function(data) {
         var pop = format_val("hab", data.rows[0]["hab"])
-        $("#poblacion-total").text(pop)
+        if (g_pending_actions["divs_pop"] == queryPop && !g_buffers["displayLgd"]) {
+            $("#poblacion-total").text(pop)
+        };
     })
 
     var queryArea = mapDivsQuery.replace("divisiones.*", "SUM(area_km2) AS area_km2")
+    g_pending_actions["divs_area"] = queryArea
     do_db_query(queryArea, function(data) {
         var area = format_val("area_km2", data.rows[0]["area_km2"])
-        $("#superficie-total").text(area)
+        if (g_pending_actions["divs_area"] == queryArea && !g_buffers["displayLgd"]) {
+            $("#superficie-total").text(area)
+        };
     })
 }
 
@@ -298,16 +318,22 @@ function set_buffers_universe_totals(mapBuffersQuery) {
 
     // set population universe total
     var queryPop = query_pop_in(mapBuffersQuery)
+    g_pending_actions["buffers_pop"] = queryPop
     do_db_query(queryPop, function(data) {
         var pop = format_val("hab", data.rows[0]["sum"])
-        $("#poblacion-total").text(pop)
+        if (g_pending_actions["buffers_pop"] == queryPop) {
+            $("#poblacion-total").text(pop)
+        };
     })
 
     // set area universe total
     var queryArea = query_area_in(mapBuffersQuery)
+    g_pending_actions["buffers_area"] = queryArea
     do_db_query(queryArea, function(data) {
         var area = format_val("area_km2", data.rows[0]["sum"])
-        $("#superficie-total").text(area)
+        if (g_pending_actions["buffers_area"] == queryArea) {
+            $("#superficie-total").text(area)
+        };
     })
 }
 
@@ -316,6 +342,9 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
     var queryAreaAll = mapDivsQuery.replace("divisiones.*", "SUM(area_km2) AS area_km2")
     var queryPopIn = query_pop_in(mapBuffersQuery)
     var queryAreaIn = query_area_in(mapBuffersQuery)
+
+    var allQueries = queryPopAll + queryAreaAll + queryPopIn + queryAreaIn
+    g_pending_actions["coverage"] = allQueries
 
     do_db_query(queryPopAll, function(dataPopAll) {
         var popAll = format_val("hab", dataPopAll.rows[0]["hab"])
@@ -327,13 +356,15 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
                 do_db_query(queryAreaIn, function(dataAreaIn) {
                     var areaIn = format_val("area_km2", dataAreaIn.rows[0]["sum"])
 
-                    var popCover = format_percent(popIn / popAll) + " ("
-                    popCover += popIn + " / " + popAll + ")"
-                    $("#poblacion-total").text(popCover)
+                    if (g_pending_actions["coverage"] == allQueries) {
+                        var popCover = format_percent(popIn / popAll) + " ("
+                        popCover += popIn + " / " + popAll + ")"
+                        $("#poblacion-total").text(popCover)
 
-                    var areaCover = format_percent(areaIn / areaAll) + " ("
-                    areaCover += areaIn + " / " + areaAll + ")"
-                    $("#superficie-total").text(areaCover)
+                        var areaCover = format_percent(areaIn / areaAll) + " ("
+                        areaCover += areaIn + " / " + areaAll + ")"
+                        $("#superficie-total").text(areaCover)
+                    };
                 })
             })
         })
@@ -342,38 +373,20 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
 }
 
 // filtros de divisiones
-function get_filter_divs(layer, nameDivs) {
-    var divField = DIVS_ID_FIELD[nameDivs]
-    var filterMsg = DIVS_FILTER_MSG[nameDivs]
-    var filterLevels = DIVS_FILTER_LEVELS[nameDivs]
+function get_filter_divs(layer, areaLevel) {
+    var filterMsg = DIVS_FILTER_MSG[areaLevel]
 
-    if (divField) {
-        query_distinct_cases(divField, "divisiones", function(data) {
-            filterDivs = data.rows.map(function(row) {
-                return String(row[divField])
-            });
-            create_divs_filter(layer, filterDivs, nameDivs, filterMsg)
-        })
-    }
-}
-
-function query_distinct_cases(divField, table, res_manager) {
-    var query = "SELECT Distinct(" + divField + ") FROM " + table
     var filterDivs = []
-    var sql = new cartodb.SQL({
-        user: 'agustinbenassi'
-    });
-    sql.execute("SELECT Distinct({{divField}}) FROM " + table, {
-            "divField": divField
-        })
-        .done(res_manager)
-        .error(function(errors) {
-            // errors contains a list of errors
-            console.log("errors:" + errors);
-        })
+    $.each(DIVS_FILTER_LEVELS[areaLevel], function(index, filterArea) {
+        filterDivs = filterDivs.concat(g_divs_ids[filterArea])
+    })
+
+    create_divs_filter(layer, filterDivs, areaLevel, filterMsg)
 }
 
 function create_divs_filter(layer, filterDivs, nameDivs, filterMsg) {
+
+
     // If using Bootstrap 2, be sure to include:
     // Tags.bootstrapVersion = "2";
     var filter = $('<div>').attr("class", "tag-list")
@@ -404,6 +417,7 @@ function do_divisions_map_query(layer) {
     var sublayer = layer.getSubLayer(SUBLAYER_IDX["divisions"])
     var query = gen_divisions_map_query(g_divisions["areaLevel"],
         g_divisions["tags"])
+    g_pending_actions["divs_map"] = query
     do_map_query(sublayer, query)
 }
 
@@ -527,6 +541,7 @@ function do_buffers_map_query(layer) {
         g_buffers["displayLgd"] = false
     };
 
+    g_pending_actions["buffers_map"] = query
     do_map_query(layer.getSubLayer(SUBLAYER_IDX["buffers"]), query)
     $("#panel-indicators").attr("legend-type", "buffers")
     recalculate_buffers_indicator(layer, g_buffers["indicator"])
@@ -784,34 +799,43 @@ function query_indic_mixed(layer, indics, table) {
                     query_divisions_indic_all(layer, indics,
                         table,
                         function(layer, table, indics, divisionsAllResult) {
-                            replace_loading_with_table()
-                            table.rows().remove().draw()
-                            $.each(indics, function(index, indic) {
-                                var row = [INDICS[indic]["short"],
-                                    format_val(indic, bufferInResult[indic]),
-                                    format_val(indic, bufferOutResult[indic]),
-                                    format_val(indic, divisionsAllResult[indic])
-                                ]
-                                add_new_row(layer, table, "table-" + indic, row)
-                            })
-                            table.draw()
-                            set_table_indic_color(g_divisions["indicator"],
-                                "divisions")
-                            set_table_indic_color(g_buffers["indicator"],
-                                "buffers")
+
+                            if (!$.isEmptyObject(bufferInResult) & !$.isEmptyObject(bufferOutResult) & !$.isEmptyObject(divisionsAllResult)) {
+
+                                table.rows().remove().draw()
+                                $.each(indics, function(index, indic) {
+                                    var row = [INDICS[indic]["short"],
+                                        format_val(indic, bufferInResult[indic]),
+                                        format_val(indic, bufferOutResult[indic]),
+                                        format_val(indic, divisionsAllResult[indic])
+                                    ]
+                                    add_new_row(layer, table, "table-" + indic, row)
+                                })
+                                replace_loading_with_table()
+                                table.draw()
+                                set_table_indic_color(g_divisions["indicator"],
+                                    "divisions")
+                                set_table_indic_color(g_buffers["indicator"],
+                                    "buffers")
+                            };
                         })
                 })
         })
 }
 
 function draw_indics_in_table(layer, table, indics, result) {
-    replace_loading_with_table()
-    $.each(indics, function(index, indic) {
-        var row = [INDICS[indic]["short"], "", "", format_val(indic,
-            result[indic])]
-        add_new_row(layer, table, "table-" + indic, row)
-    })
-    rebuild_table()
+    var both = g_divisions["displayLgd"] && g_buffers["displayLgd"]
+    var one_of_them = g_divisions["displayLgd"] || g_buffers["displayLgd"]
+
+    if (!both && one_of_them && result) {
+        $.each(indics, function(index, indic) {
+            var row = [INDICS[indic]["short"], "", "", format_val(indic,
+                result[indic])]
+            add_new_row(layer, table, "table-" + indic, row)
+        })
+        replace_loading_with_table()
+        rebuild_table()
+    }
 }
 
 function rebuild_table() {
@@ -904,9 +928,15 @@ function query_buffers_indic_out(layer, indics, table, res_manager) {
         // debugger
     var query = gen_buffers_out_query(mapDivisionsQuery, mapBuffersQuery, indics)
 
+    // debugger
+    g_pending_actions["buffers_out"] = query
     do_db_query(query, function(data) {
         var averages = calc_aggregated_indics(data.rows, indics)
-        res_manager(layer, table, indics, averages)
+        if (g_pending_actions["buffers_out"] == query) {
+            res_manager(layer, table, indics, averages)
+        } else {
+            res_manager(layer, table, indics, null)
+        };
     })
 }
 
@@ -914,9 +944,14 @@ function query_buffers_indic_in(layer, indics, table, res_manager) {
     var sublayer = layer.getSubLayer(SUBLAYER_IDX["buffers"])
     var query = gen_buffers_in_query(sublayer.getSQL(), indics)
 
+    g_pending_actions["buffers_in"] = query
     do_db_query(query, function(data) {
         var averages = calc_aggregated_indics(data.rows, indics)
-        res_manager(layer, table, indics, averages)
+        if (g_pending_actions["buffers_in"] == query) {
+            res_manager(layer, table, indics, averages)
+        } else {
+            res_manager(layer, table, indics, null)
+        };
     })
 }
 
@@ -950,8 +985,10 @@ function query_divisions_indic_all(layer, indics, table, res_manager) {
         var weightedQuery = ""
     };
 
-    // count query first
+    g_pending_actions["divs_all"] = countQuery + weightedQuery
+        // count query first
     do_db_query(countQuery, function(dataCountQuery) {
+        // then weighted query
         do_db_query(weightedQuery, function(dataWeightedQuery) {
             var sumAreaWeight = 0
             var sumPopWeight = 0
@@ -985,7 +1022,12 @@ function query_divisions_indic_all(layer, indics, table, res_manager) {
             })
 
             result = $.extend(dataCountQuery.rows[0], result)
-            res_manager(layer, table, indics, result)
+
+            if (g_pending_actions["divs_all"] == countQuery + weightedQuery) {
+                res_manager(layer, table, indics, result)
+            } else {
+                res_manager(layer, table, indics, null)
+            };
         })
     })
 }
@@ -1085,6 +1127,7 @@ function recalculate_buffers_indicator(layer, indic) {
 }
 
 function recalculate_indicator(layer, indic, query, legendType) {
+    g_pending_actions[legendType + "_legend"] = query
     do_db_query(query, function(data) {
         var all = data.rows
 
@@ -1101,9 +1144,12 @@ function recalculate_indicator(layer, indic, query, legendType) {
 
         var min = all[0][indic]
         var max = all[all.length - 1][indic]
-        create_legend(indic, legendType, min, max)
-        change_indic(indic, legendType, min, max, all, layer)
-        $("#panel-indicators").css("display", "none")
+
+        if (g_pending_actions[legendType + "_legend"] == query) {
+            create_legend(indic, legendType, min, max)
+            change_indic(indic, legendType, min, max, all, layer)
+            $("#panel-indicators").css("display", "none")
+        }
     })
 }
 
@@ -1222,8 +1268,8 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
     // general settings
     var css = "/** choropleth visualization */ "
     css += table + "{polygon-fill: " + defaultColour + ";"
-    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.3;"
-    css += "line-opacity: 1;} "
+    css += "polygon-opacity: 0.75; line-color: #FFF; line-width: 0.25;"
+    css += "line-opacity: 0.9;} "
 
     // colors segments
     $.each(colors, function(index, color) {
@@ -1275,7 +1321,7 @@ function create_download_image(layers) {
                     bounds[0][0]
                 ]
                 var img = cartodb.Image(layer_definition)
-                    .size(2500, 2500)
+                    .size(4000, 4000)
                     .bbox(BBOX)
                     // .into($(w.document.body).find("img")[0])
                     .getUrl(function(err, url) {

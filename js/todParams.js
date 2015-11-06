@@ -252,23 +252,18 @@ BUFFERS_TAGS = {
     "Metrobus": "est_metrobus",
 }
 
-DIVS_ID_FIELD = {
-    "RADIO": "co_frac_ra",
-    "FRAC": "co_fracc",
-    "BARRIO": "barrios",
-    "DPTO": "comunas"
-}
+DIVS_ID_FIELD = "id_div"
 
 DIVS_FILTER_MSG = {
-    "RADIO": "Filtrar por radios, fracciones o comunas...",
-    "FRAC": "Filtrar por fracciones o comunas...",
+    "RADIO": "Filtrar por radios, fracciones, barrios o comunas...",
+    "FRAC": "Filtrar por fracciones, barrios o comunas...",
     "BARRIO": "Filtrar por barrios...",
     "DPTO": "Filtrar por comunas..."
 }
 
 DIVS_FILTER_LEVELS = {
-    "RADIO": ["RADIO", "FRAC", "DPTO"],
-    "FRAC": ["FRAC", "DPTO"],
+    "RADIO": ["RADIO", "FRAC", "BARRIO", "DPTO"],
+    "FRAC": ["FRAC", "BARRIO", "DPTO"],
     "BARRIO": ["BARRIO"],
     "DPTO": ["DPTO"]
 }

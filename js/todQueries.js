@@ -1,6 +1,26 @@
-POLYS_UNION_SELECT = "1 AS cartodb_id, ST_Buffer(ST_Union(buffers_estaciones.the_geom), 0) AS the_geom"
-POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
-SELECT_BUFFERS = "ST_Intersection(buffers_estaciones.the_geom_webmercator, divs.the_geom_webmercator) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
+POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(ST_MakeValid(ST_Buffer(buffers_estaciones.the_geom, 0.00000001)), ST_MakeValid(ST_Buffer(divs.the_geom, 0.00000001))))) AS the_geom"
+POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
+SELECT_BUFFERS = "ST_Intersection(ST_MakeValid(buffers_estaciones.the_geom_webmercator), ST_MakeValid(divs.the_geom_webmercator)) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
+
+SAFE_INTERSECTION = " \
+CREATE OR REPLACE FUNCTION safe_isect(geom_a geometry, geom_b geometry) \
+RETURNS geometry AS \
+$$ \
+BEGIN \
+    RETURN ST_Intersection(geom_a, geom_b); \
+    EXCEPTION \
+        WHEN OTHERS THEN \
+            BEGIN \
+                RETURN ST_Intersection(ST_Buffer(geom_a, 0.00000001), ST_Buffer( geom_b, 0.00000001)); \
+                EXCEPTION \
+                    WHEN OTHERS THEN \
+                        RETURN ST_GeomFromText('POLYGON EMPTY'); \
+    END; \
+END \
+$$ \
+LANGUAGE 'plpgsql' STABLE STRICT; "
+
+
 $(document).ready(function() {
     $.each(INDICS, function(indic, indicParams) {
         SELECT_BUFFERS += ", buffers_estaciones.{}".format(indic)
@@ -40,18 +60,36 @@ function do_db_query(query, fnCallback) {
 // DIVISIONES mapa
 function gen_divisions_map_query(areaLevel, areasFilter) {
     var query = "SELECT divisiones.* FROM divisiones WHERE divisiones.orig_sf = '{}'".format(areaLevel)
-    var areaLevelField = "divisiones." + DIVS_ID_FIELD[areaLevel]
 
     if (areasFilter.length == 1) {
-        query += " AND {} = '{}'".format(areaLevelField, areasFilter[0])
+        query += " AND " + div_filter(areaLevel, areasFilter[0])
     } else if (areasFilter.length > 1) {
-        query += " AND ({} = '{}'".format(areaLevelField, areasFilter[0])
-        areasFilter.slice(1).forEach(function(area) {
-            query += " OR {} = '{}'".format(areaLevelField, area)
+        query += " AND (" + div_filter(areaLevel, areasFilter[0])
+        areasFilter.slice(1).forEach(function(areaFilter) {
+            query += " OR " + div_filter(areaLevel, areaFilter)
         })
         query += ")"
     }
 
+    return query
+}
+
+function div_filter(areaLevel, areaFilter) {
+    var validFilterLevels = DIVS_FILTER_LEVELS[areaLevel]
+    var areaLevelField = "divisiones." + DIVS_ID_FIELD
+    var query = ""
+        // console.log(areaFilter, areaLevel, g_divs_ids[areaLevel])
+        // debugger
+    if ($.inArray(areaFilter, g_divs_ids[areaLevel]) != -1) {
+        query = "{} = '{}'".format(areaLevelField, areaFilter)
+    } else {
+        $.each(validFilterLevels, function(index, filterLevel) {
+            if ($.inArray(areaFilter, g_divs_ids[filterLevel]) != -1) {
+                query = "ST_Intersects(divisiones.the_geom, (SELECT the_geom FROM divisiones WHERE orig_sf = '{}' AND id_div = '{}'))".format(filterLevel, areaFilter)
+            }
+        })
+    }
+    // console.log("entering here", query)
     return query
 }
 
@@ -121,17 +159,21 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
 }
 
 function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
-    var buffers_union = mapBuffersQuery.replace(SELECT_BUFFERS, POLYS_UNION_SELECT)
+    var query = ""
+    // var query = SAFE_INTERSECTION
+
+    var buffers_union = mapBuffersQuery.replace(SELECT_BUFFERS,
+        POLYS_UNION_SELECT)
 
     // detecta si debe construir una query para lo que está dentro o fuera
     if (mapDivsQuery) {
         var buffers_out = mapDivsQuery.replace("divisiones.* FROM divisiones", POLYS_DIFF_UNION_SELECT)
         var big_polygon = "buffers_out"
-        var query = "WITH buffers_union AS ({0}), buffers_out AS ({1}), ".format(buffers_union, buffers_out)
+        query += "WITH buffers_union AS ({0}), buffers_out AS ({1}), ".format(buffers_union, buffers_out)
     } else {
         var buffers_out = undefined
         var big_polygon = "buffers_union"
-        var query = "WITH buffers_union AS ({0}), ".format(buffers_union)
+        query += "WITH buffers_union AS ({0}), ".format(buffers_union)
     };
 
     // agrega las variables usadas como ponderadores
@@ -160,8 +202,8 @@ function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
 
     // construcción de la query
     query += "divs_con_intersect_sups AS (SELECT divisiones.cartodb_id, {0}, \
-        CASE WHEN ST_Within(ST_Buffer(divisiones.the_geom, 0), {4}.the_geom) THEN 1 \
-                ELSE (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), {4}.the_geom)) / ST_Area(divisiones.the_geom)) \
+        CASE WHEN ST_Within(ST_MakeValid(divisiones.the_geom), {4}.the_geom) THEN 1 \
+                ELSE (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid({4}.the_geom) )) / ST_Area(divisiones.the_geom)) \
             END AS intersect_sup \
      FROM divisiones, {4} \
      WHERE ST_Intersects(divisiones.the_geom, {4}.the_geom) \
@@ -196,7 +238,7 @@ function query_pop_in(mapBuffersQuery) {
  \
 divs_con_intersect_sups AS \
     (SELECT divisiones.cartodb_id, divisiones.hab, \
-            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+            (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
          AND divisiones.orig_sf = 'RADIO') \
@@ -214,7 +256,7 @@ function query_area_in(mapBuffersQuery) {
  divs_con_intersect_sups AS \
     (SELECT divisiones.cartodb_id, \
             divisiones.area_km2, \
-            (ST_Area(ST_Intersection(ST_Buffer(divisiones.the_geom, 0), buffers_union.the_geom)) / ST_Area(divisiones.the_geom)) AS intersect_sup \
+            (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
          AND divisiones.orig_sf = 'RADIO') \
@@ -240,4 +282,35 @@ function get_initial_query(table, name) {
 
 function add_orig_sf(query, name) {
     return query += " OR orig_sf = '" + name + "'"
+}
+
+// FILTROS
+function query_distinct_cases(field, table, orig_sfs, res_manager) {
+    var conditions = {
+        "orig_sf": orig_sfs
+    }
+    var query = gen_distinct_cases_query(field, table, conditions)
+    do_db_query(query, res_manager)
+}
+
+function gen_distinct_cases_query(field, table, conditions) {
+    var query = "SELECT Distinct({}) FROM {}".format(field, table)
+        // debugger
+
+    if ($(conditions).size() > 0) {
+        var firstCondition = true
+        query += " WHERE"
+        $.each(conditions, function(key, values) {
+            $.each(values, function(index, value) {
+                if (firstCondition) {
+                    query += " {} = '{}'".format(key, value)
+                    firstCondition = false
+                } else {
+                    query += " AND {} = '{}'".format(key, value)
+                }
+            })
+        })
+    }
+
+    return query
 }
