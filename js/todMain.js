@@ -692,7 +692,7 @@ function create_selected_indicators_table() {
     var table = $("#indicators-seleccionados").DataTable(options)
     $(window).resize(function() {
         var height = calc_data_table_height(0.95)
-        if (height > 5) {
+        if (height > 5 && $(".spinner-loader").css("display") == "none") {
             rebuild_table()
         } else {
             $("#close-indicators-table").click()

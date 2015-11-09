@@ -1,7 +1,7 @@
 POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(ST_MakeValid(ST_Buffer(buffers_estaciones.the_geom, 0.00000001)), ST_MakeValid(ST_Buffer(divs.the_geom, 0.00000001))))) AS the_geom"
 
 // por algún motivo esta opción no funciona
-// POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(buffers_estaciones.the_geom, divs.the_geom, 0.00000001))) AS the_geom"
+// POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(safe_intersection(buffers_estaciones.the_geom, divs.the_geom))) AS the_geom"
 
 POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
 SELECT_BUFFERS = "ST_Intersection(ST_MakeValid(buffers_estaciones.the_geom_webmercator), ST_MakeValid(divs.the_geom_webmercator)) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
