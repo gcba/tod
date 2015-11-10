@@ -107,11 +107,15 @@
                     </div>
                 </div>
                 <div id="tag-list-buffers"></div>
+                <div id="tag-list-stations-and-lines"></div>
             </div>
             <div id="control-filtros">
                 <div id="universe-data" class="well well-sm">
                     <p>Superficie: <span id="superficie-total">0.00</span> km2</p>
                     <p>Población: <span id="poblacion-total">0.00</span> M</p>
+                    <div class="spinner-loader" id="universe-spinner">
+                        Loading…
+                    </div>
                 </div>
             </div>
             <div id="panel-indicators-seleccionados" class="fixed-panel">
@@ -137,7 +141,7 @@
                     <table id="indicators-seleccionados" class="table">
                     </table>
                 </div>
-                <div class="spinner-loader">
+                <div class="spinner-loader" id="table-spinner">
                     Loading…
                 </div>
             </div>

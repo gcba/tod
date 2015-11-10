@@ -12,6 +12,7 @@ g_buffers = {
     "table": "buffers_estaciones",
     "sfField": "orig_sf",
     "tags": [],
+    "filter_tags": [],
     "indicator": "hab_km2",
     "displayLgd": false,
 }
@@ -21,6 +22,8 @@ globals = {
 }
 g_tbl_options = {}
 g_divs_ids = {}
+g_buffers_stations = {}
+g_buffers_lines = {}
 cartodb_vis = null
 g_pending_actions = {}
 
@@ -63,6 +66,7 @@ function main() {
             do_map_query(layers[1].getSubLayer(3), "")
 
             retrieve_divs_ids()
+            retrieve_stations_and_lines()
             relocate_cartodb_overlays()
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
@@ -98,6 +102,28 @@ function retrieve_divs_ids() {
                 return String(row[DIVS_ID_FIELD])
             });
             g_divs_ids[areaLevel] = filterDivs
+        })
+    })
+}
+
+function retrieve_stations_and_lines() {
+    $.each(BUFFERS_TAGS, function(modeName, modeOrigSf) {
+        $.each(BUFFERS_SIZE, function(index, size) {
+            var origSf = modeOrigSf + "-buffer" + size
+
+            query_distinct_cases("estacion", "buffers_estaciones", [origSf], function(data) {
+                var stations = data.rows.map(function(row) {
+                    return String(row["estacion"])
+                });
+                g_buffers_stations[origSf] = stations
+            })
+
+            query_distinct_cases("linea", "buffers_estaciones", [origSf], function(data) {
+                var lines = data.rows.map(function(row) {
+                    return String(row["linea"])
+                });
+                g_buffers_lines[origSf] = lines
+            })
         })
     })
 }
@@ -183,6 +209,7 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
             g_divisions["displayLgd"] = true
             $("#open-legends").hide("fast")
             $("#close-legends").show("fast")
+
         } else {
             $(get_legend("divisions")).css("display", "none")
             g_divisions["displayLgd"] = false
@@ -190,6 +217,9 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         }
 
         do_divisions_map_query(layer)
+        if (g_buffers["displayLgd"]) {
+            do_buffers_map_query(layer)
+        };
 
         $("#panel-indicators").attr("legend-type", "divisions")
         if (g_divisions["areaLevel"] != "None") {
@@ -274,6 +304,7 @@ function update_buffers_tooltip(layer, legendType) {
 
 function set_universe_totals(layer) {
     // remueve resultados anteriores
+    replace_universe_with_loading()
     $("#poblacion-total").text("")
     $("#superficie-total").text("")
 
@@ -291,6 +322,7 @@ function set_universe_totals(layer) {
     } else {
         $("#poblacion-total").text("0.00")
         $("#superficie-total").text("0.00")
+        replace_loading_with_universe()
     };
 }
 
@@ -301,6 +333,9 @@ function set_divisions_universe_totals(mapDivsQuery) {
         var pop = format_val("hab", data.rows[0]["hab"])
         if (g_pending_actions["divs_pop"] == queryPop && !g_buffers["displayLgd"]) {
             $("#poblacion-total").text(pop)
+            if ($("#superficie-total").text() != "") {
+                replace_loading_with_universe()
+            };
         };
     })
 
@@ -310,6 +345,9 @@ function set_divisions_universe_totals(mapDivsQuery) {
         var area = format_val("area_km2", data.rows[0]["area_km2"])
         if (g_pending_actions["divs_area"] == queryArea && !g_buffers["displayLgd"]) {
             $("#superficie-total").text(area)
+            if ($("#poblacion-total").text() != "") {
+                replace_loading_with_universe()
+            };
         };
     })
 }
@@ -323,6 +361,9 @@ function set_buffers_universe_totals(mapBuffersQuery) {
         var pop = format_val("hab", data.rows[0]["sum"])
         if (g_pending_actions["buffers_pop"] == queryPop) {
             $("#poblacion-total").text(pop)
+            if ($("#superficie-total").text() != "") {
+                replace_loading_with_universe()
+            };
         };
     })
 
@@ -333,6 +374,9 @@ function set_buffers_universe_totals(mapBuffersQuery) {
         var area = format_val("area_km2", data.rows[0]["sum"])
         if (g_pending_actions["buffers_area"] == queryArea) {
             $("#superficie-total").text(area)
+            if ($("#poblacion-total").text() != "") {
+                replace_loading_with_universe()
+            };
         };
     })
 }
@@ -364,6 +408,8 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
                         var areaCover = format_percent(areaIn / areaAll) + " ("
                         areaCover += areaIn + " / " + areaAll + ")"
                         $("#superficie-total").text(areaCover)
+
+                        replace_loading_with_universe()
                     };
                 })
             })
@@ -374,6 +420,7 @@ function set_coverage_universe_totals(mapDivsQuery, mapBuffersQuery) {
 
 // filtros de divisiones
 function get_filter_divs(layer, areaLevel) {
+    g_divisions["tags"] = []
     var filterMsg = DIVS_FILTER_MSG[areaLevel]
 
     var filterDivs = []
@@ -406,9 +453,9 @@ function create_divs_filter(layer, filterDivs, nameDivs, filterMsg) {
     function update_queries_with_divs_filter() {
         g_divisions["tags"] = this.getTags()
         do_divisions_map_query(layer)
+        do_buffers_map_query(layer)
         set_universe_totals(layer)
         calculate_indicators(layer)
-        do_buffers_map_query(layer)
         show_or_hide_cols()
     }
 };
@@ -474,7 +521,7 @@ function create_selected_buffers_field(layer) {
         beforeAddingTag: remove_repeated_modes,
         afterAddingTag: add_buffer_tag,
         afterDeletingTag: remove_buffer_tag
-    });
+    })
 
     function remove_repeated_modes(newTag) {
         var tags = this.getTags()
@@ -491,6 +538,8 @@ function create_selected_buffers_field(layer) {
 
     function add_buffer_tag(newTag) {
         $("#tag-list-buffers").css("display", "block")
+        $("#tag-list-stations-and-lines").css("display", "block")
+
         do_buffers_map_query(layer)
         update_capas_transporte(newTag, true)
         g_buffers["displayLgd"] = true
@@ -498,20 +547,29 @@ function create_selected_buffers_field(layer) {
         $("#close-legends").show("fast")
         $("#panel-indicators-seleccionados").css("display", "block")
         calculate_indicators(layer)
+
+        var ms = get_mode_and_size(newTag)
+        var modeToAddLines = ms[0]
+        get_filter_buffers(layer, modeToAddLines)
     }
 
     function remove_buffer_tag(oldTag) {
-        do_buffers_map_query(layer)
-        update_capas_transporte(oldTag, false)
         if (g_buffers["tags"].getTags().length == 0) {
             g_buffers["displayLgd"] = false
+            g_buffers["filter_tags"] = []
+            $("#tag-list-buffers").css("display", "none")
+            $("#tag-list-stations-and-lines").css("display", "none")
+
             if (!g_divisions["displayLgd"]) {
-                $("#tag-list-buffers").css("display", "none")
                 $("#panel-indicators-seleccionados").css("display", "none")
             } else {
                 calculate_indicators(layer)
             };
         };
+        get_filter_buffers(layer)
+
+        update_capas_transporte(oldTag, false)
+        do_buffers_map_query(layer)
     }
 
     function update_capas_transporte(newTag, check) {
@@ -530,10 +588,91 @@ function create_selected_buffers_field(layer) {
     return g_buffers["tags"]
 };
 
+function get_filter_buffers(layer, modeToAddLines) {
+
+    var filterBuffers = []
+    $.each(g_buffers["tags"].getTags(), function(index, tag) {
+        var origSf = get_sf_name(tag)
+        var mode_and_size = get_mode_and_size(tag)
+
+        var stations = jQuery.map(g_buffers_stations[origSf], function(n, i) {
+            return "{} ({})".format(n, mode_and_size[0])
+        });
+        var lines = jQuery.map(g_buffers_lines[origSf], function(n, i) {
+            return "{} ({})".format(n, mode_and_size[0].replace("est", "lin"))
+        });
+
+        filterBuffers = filterBuffers.concat(stations)
+        filterBuffers = filterBuffers.concat(lines)
+    })
+
+    if (modeToAddLines) {
+        $.each(filterBuffers, function(index, filterBuffer) {
+            var nm = get_name_and_mode(filterBuffer)
+
+            var already_filtered = g_buffers["filter_tags"].length > 0
+            var is_line = nm[1].split("_")[0] == "lin"
+            var add_mode = nm[1].split("_")[1] == modeToAddLines.split("_")[1]
+            if (already_filtered && is_line && add_mode) {
+                g_buffers["filter_tags"].push(filterBuffer)
+            };
+        })
+    };
+
+    // remove invalid tags
+    var new_filter_tags = []
+    $.each(g_buffers["filter_tags"], function(index, filterTag) {
+        if ($.inArray(filterTag, filterBuffers) != -1) {
+            new_filter_tags.push(filterTag)
+        };
+    })
+    g_buffers["filter_tags"] = new_filter_tags
+
+    create_buffers_filter(layer, filterBuffers, BUFFERS_FILTER_MSG)
+}
+
+function create_buffers_filter(layer, filterBuffers, filterMsg) {
+
+    // If using Bootstrap 2, be sure to include:
+    // Tags.bootstrapVersion = "2";
+    var filter = $('<div>').attr("class", "tag-list")
+    $('#tag-list-stations-and-lines').empty()
+    update_queries_with_buffers_filter()
+
+    $('#tag-list-stations-and-lines').append(filter)
+    g_buffers["filter_tags"] = filter.tags({
+        tagData: g_buffers["filter_tags"],
+        suggestions: filterBuffers,
+        excludeList: [],
+        tagSize: "sm",
+        caseInsensitive: true,
+        restrictTo: filterBuffers,
+        promptText: filterMsg,
+        afterAddingTag: update_queries_with_buffers_filter,
+        afterDeletingTag: update_queries_with_buffers_filter
+    }).getTags();
+
+    function update_queries_with_buffers_filter(changingTag) {
+        if (changingTag) {
+            g_buffers["filter_tags"] = this.getTags()
+        };
+        do_buffers_map_query(layer)
+        calculate_indicators(layer)
+        show_or_hide_cols()
+    }
+};
+
 function do_buffers_map_query(layer) {
     var tags = g_buffers["tags"].getTags()
-    var divsMapQuery = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
-    var query = gen_buffers_map_query(divsMapQuery, tags)
+
+    if (g_buffers["filter_tags"].length > 0) {
+        var filter_tags = g_buffers["filter_tags"]
+    } else {
+        var filter_tags = []
+    };
+
+    var divsMapQuery = g_pending_actions["divs_map"]
+    var query = gen_buffers_map_query(divsMapQuery, tags, filter_tags)
 
     if (query != "") {
         g_buffers["displayLgd"] = true
@@ -692,7 +831,7 @@ function create_selected_indicators_table() {
     var table = $("#indicators-seleccionados").DataTable(options)
     $(window).resize(function() {
         var height = calc_data_table_height(0.95)
-        if (height > 5 && $(".spinner-loader").css("display") == "none") {
+        if (height > 5 && $("#table-spinner").css("display") == "none") {
             rebuild_table()
         } else {
             $("#close-indicators-table").click()
@@ -724,12 +863,23 @@ function select_indicators(layer, names) {
 
 function replace_table_with_loading() {
     $("#indicators-seleccionados_wrapper").css("display", "none")
-    $(".spinner-loader").css("display", "block")
+    $("#table-spinner").css("display", "block")
 }
 
 function replace_loading_with_table() {
     $("#indicators-seleccionados_wrapper").css("display", "block")
-    $(".spinner-loader").css("display", "none")
+    $("#table-spinner").css("display", "none")
+        // rebuild_table()
+}
+
+function replace_universe_with_loading() {
+    $("#universe-data p").css("display", "none")
+    $("#universe-spinner").css("display", "block")
+}
+
+function replace_loading_with_universe() {
+    $("#universe-data p").css("display", "block")
+    $("#universe-spinner").css("display", "none")
         // rebuild_table()
 }
 
@@ -778,7 +928,6 @@ function add_new_row(layer, table, idRow, row) {
     })
 
     // if (g_divisions["displayLgd"]) {
-    // debugger
     options.append(divs)
         // };
         // if (g_buffers["displayLgd"]) {
@@ -789,7 +938,6 @@ function add_new_row(layer, table, idRow, row) {
 }
 
 function query_indic_mixed(layer, indics, table) {
-    // debugger
     query_buffers_indic_in(layer, indics, table,
         function(layer, table, indics, bufferInResult) {
 
@@ -925,10 +1073,8 @@ function calc_indic_weighted_avg(rows, indic, weight) {
 function query_buffers_indic_out(layer, indics, table, res_manager) {
     var mapDivisionsQuery = layer.getSubLayer(SUBLAYER_IDX["divisions"]).getSQL()
     var mapBuffersQuery = layer.getSubLayer(SUBLAYER_IDX["buffers"]).getSQL()
-        // debugger
     var query = gen_buffers_out_query(mapDivisionsQuery, mapBuffersQuery, indics)
 
-    // debugger
     g_pending_actions["buffers_out"] = query
     do_db_query(query, function(data) {
         var averages = calc_aggregated_indics(data.rows, indics)
@@ -1163,7 +1309,6 @@ function get_legend(legendType) {
 function create_legends_hide_btn() {
     $("#close-legends").click(function() {
         $(".cartodb-legend-stack").hide("fast")
-            // debugger
         $("#close-legends").hide("fast")
         $("#open-legends").show("fast")
     })
@@ -1175,7 +1320,6 @@ function create_legends_hide_btn() {
 }
 
 function create_legend(indic, legendType, min, max) {
-    // debugger
     var legend = get_legend(legendType)
     $(legend).attr("id", "legend-" + legendType)
 
@@ -1232,23 +1376,25 @@ function build_legend_indicator(indic, legendType) {
 function change_indic(indic, legendType, min, max, all, layer) {
     globals[legendType]["indicator"] = indic
 
-    var step = Math.round(all.length / (COLORS[legendType].length))
-        // console.log(step)
-
-    var positions = _.range(all.length, 0, -step)
-        // console.log(positions)
-
+    if (all.length > COLORS[legendType].length) {
+        var step = Math.round(all.length / (COLORS[legendType].length))
+        var positions = _.range(all.length, 0, -step)
+        while (positions.length < COLORS[legendType].length) {
+            positions.push(positions[positions.length - 1])
+        }
+    } else {
+        var positions = _.range(all.length, 0, -1)
+    };
     var thresholds = $.map(positions, function(pos, index) {
-            return all[pos - 1][indic]
-        })
-        // console.log(thresholds)
+        return all[pos - 1][indic]
+    })
 
     var css = create_css(indic, COLORS[legendType], thresholds,
         TBL_NAMES[legendType], DEFAULT_COLORS[legendType])
 
     var sublayer = layer.getSubLayer(SUBLAYER_IDX[legendType])
     sublayer.setCartoCSS(css)
-    update_tooltip(layer, legendType)
+        // update_tooltip(layer, legendType)
 }
 
 function get_tooltip(legendType) {
@@ -1268,14 +1414,16 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
     // general settings
     var css = "/** choropleth visualization */ "
     css += table + "{polygon-fill: " + defaultColour + ";"
-    css += "polygon-opacity: 0.75; line-color: #FFF; line-width: 0.25;"
-    css += "line-opacity: 0.9;} "
+    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.25;"
+    css += "line-opacity: 0.8;} "
 
     // colors segments
-    $.each(colors, function(index, color) {
-        css += table + "[" + indic + "<=" + thresholds[index] + "]{"
-        css += "polygon-fill:" + color + "} "
-    })
+    $.each(thresholds, function(index, threshold) {
+            if (index < colors.length) {
+                css += table + "[" + indic + "<=" + threshold + "]{"
+                css += "polygon-fill:" + colors[index] + "} "
+            }
+        })
     return css
 }
 

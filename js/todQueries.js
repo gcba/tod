@@ -3,8 +3,8 @@ POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(ST_
 // por algún motivo esta opción no funciona
 // POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(safe_intersection(buffers_estaciones.the_geom, divs.the_geom))) AS the_geom"
 
-POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)) AS the_geom FROM divisiones, buffers_union"
-SELECT_BUFFERS = "ST_Intersection(ST_MakeValid(buffers_estaciones.the_geom_webmercator), ST_MakeValid(divs.the_geom_webmercator)) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
+POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Buffer(ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)), 0.00000001)) AS the_geom FROM divisiones, buffers_union"
+SELECT_BUFFERS = "ST_MakeValid(ST_Intersection(ST_MakeValid(ST_Buffer(buffers_estaciones.the_geom_webmercator, 0.00000001)), ST_MakeValid(divs.the_geom_webmercator))) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
 
 // no logré que esto funcione, queda sólo para tratar de hacerlo en el futuro
 // http://gis.stackexchange.com/questions/50399/how-best-to-fix-a-non-noded-intersection-problem-in-postgis
@@ -40,12 +40,12 @@ function do_map_query(sublayer, query) {
     } else {
         sublayer.show()
         sublayer.setSQL(query)
-        console.log(query)
+        console.debug(query)
     };
 }
 
 function do_db_query(query, fnCallback) {
-    console.log("\n", query, "\n")
+    console.debug("\n", query, "\n")
     var sql = new cartodb.SQL({
         user: USER
     });
@@ -58,13 +58,17 @@ function do_db_query(query, fnCallback) {
             .done(fnCallback)
             .error(function(errors) {
                 // errors contains a list of errors
-                console.log("errors:" + errors);
+                console.debug("errors:" + errors);
             })
     };
 }
 
 // DIVISIONES mapa
 function gen_divisions_map_query(areaLevel, areasFilter) {
+    if (areaLevel == "None") {
+        return ""
+    };
+
     var query = "SELECT divisiones.* FROM divisiones WHERE divisiones.orig_sf = '{}'".format(areaLevel)
 
     if (areasFilter.length == 1) {
@@ -107,7 +111,11 @@ function gen_divs_legend_query(indic, divsMapQuery) {
 }
 
 // BUFFERS mapa
-function gen_buffers_map_query(divsMapQuery, tags) {
+function gen_buffers_map_query(divsMapQuery, tags, filter_tags) {
+    if (!divsMapQuery) {
+        divsMapQuery = "SELECT divisiones.* FROM divisiones WHERE orig_sf = '{}'".format("DPTO")
+    };
+
     var query = ""
     if (tags.length >= 1) {
         query += "WITH divs AS ({}) SELECT {} FROM buffers_estaciones, divs \
@@ -124,15 +132,36 @@ function gen_buffers_map_query(divsMapQuery, tags) {
         tags.slice(1).forEach(function(tag) {
             query += " OR buffers_estaciones.orig_sf = '" + get_sf_name(tag) + "'"
         })
+        query += ")"
     }
+
+    if (filter_tags.length == 1) {
+        query += " AND " + get_buffer_filter_condition(filter_tags[0])
+    }
+    if (filter_tags.length > 1) {
+        query += " AND ("
+        query += filter_tags.map(get_buffer_filter_condition).join(" OR ")
+        query += ")"
+    }
+
     if (query.length > 0) {
-        if (tags.length > 1) {
-            query += ")"
-        }
         query += " AND ST_Intersects(buffers_estaciones.the_geom, divs.the_geom)"
     };
 
     return query
+}
+
+function get_buffer_filter_condition(tag) {
+    var nm = get_name_and_mode(tag)
+    var field = BUFFERS_FIELDS[nm[1].slice(0, 3)]
+    return "buffers_estaciones.{} = '{}'".format(field, nm[0])
+}
+
+function get_name_and_mode(tag) {
+    // debugger
+    var tagPattern = /([^\(\)]+)\s+\(([a-z\_]+)\)/i
+    var regexRes = tagPattern.exec(tag)
+    return [regexRes[1], regexRes[2]]
 }
 
 function get_mode_and_size(tag) {
@@ -166,7 +195,8 @@ function gen_buffers_in_query(mapBuffersQuery, indics) {
 
 function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
     var query = ""
-    // var query = SAFE_INTERSECTION
+        // var query = SAFE_INTERSECTION
+        // debugger
 
     var buffers_union = mapBuffersQuery.replace(SELECT_BUFFERS,
         POLYS_UNION_SELECT)

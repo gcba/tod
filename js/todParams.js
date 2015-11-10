@@ -249,8 +249,15 @@ BUFFERS_TAGS = {
     "Subte": "est_subte",
     "Premetro": "est_sub_prem",
     "FFCC": "est_ffcc",
-    "Metrobus": "est_metrobus",
+    "Metrobus": "est_metrobus"
 }
+
+BUFFERS_FIELDS = {
+    "lin": "linea",
+    "est": "estacion"
+}
+
+BUFFERS_FILTER_MSG = "Filtrar por líneas o estaciones..."
 
 DIVS_ID_FIELD = "id_div"
 
