@@ -149,8 +149,16 @@
             </div>
         </div>
         <div id="download-image">
-            <button id="button-download-image" type="button" class="btn btn-default">Obtener imagen</button>
-            <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
+            <div class="input-group input-group-sm" id="image-parameters">
+                <span class="input-group-addon" id="sizing-addon3">H</span>
+                <input type="text" class="form-control" placeholder="height" aria-describedby="sizing-addon3" id="image-height" value="4000">
+                <span class="input-group-addon" id="sizing-addon3">W</span>
+                <input type="text" class="form-control" placeholder="width" aria-describedby="sizing-addon3" id="image-width" value="4000">
+            </div>
+            <div>
+                <button id="button-download-image" type="button" class="btn btn-default">Obtener imagen</button>
+                <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
+            </div>
         </div>
     </div>
     <!-- JQuery -->

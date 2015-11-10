@@ -166,3 +166,13 @@ div.cartodb-legend ul li {
 .legend-indic-change-button {
     display: none;
 }
+
+#image-parameters {
+    padding: 3px;
+    width: 200px;
+    float: left;
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    margin: 0 0 0 -100px;
+}

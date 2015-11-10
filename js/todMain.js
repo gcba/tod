@@ -1419,65 +1419,71 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
 
     // colors segments
     $.each(thresholds, function(index, threshold) {
-            if (index < colors.length) {
-                css += table + "[" + indic + "<=" + threshold + "]{"
-                css += "polygon-fill:" + colors[index] + "} "
-            }
-        })
+        if (index < colors.length) {
+            css += table + "[" + indic + "<=" + threshold + "]{"
+            css += "polygon-fill:" + colors[index] + "} "
+        }
+    })
     return css
 }
 
 // descargar mapa
 function create_download_image(layers) {
     $("#button-download-image").click(function() {
-        var sublayers = [{
-            type: "http",
-            options: {
-                urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-                subdomains: ["a", "b", "c"],
-            },
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
-        }]
-        for (var i in [0, 1, 2, 3]) {
-            if (layers[1].getSubLayer(i).isVisible()) {
-                sublayers.push({
-                    type: "cartodb",
-                    options: {
-                        sql: layers[1].getSubLayer(i).getSQL(),
-                        cartocss: layers[1].getSubLayer(i).getCartoCSS(),
-                        cartocss_version: "2.1.1"
-                    }
-                })
-            }
-        }
-
-        var layer_definition = {
-            user_name: "agustinbenassi",
-            tiler_domain: "cartodb.com",
-            tiler_port: "80",
-            tiler_protocol: "http",
-            layers: sublayers
-        };
-
-        var sql = new cartodb.SQL({
-            user: USER
-        });
-
-        sql.getBounds("SELECT * FROM divisiones")
-            .done(function(bounds) {
-                var bbox = [bounds[1][1], bounds[1][0], bounds[0][1],
-                    bounds[0][0]
-                ]
-                var img = cartodb.Image(layer_definition)
-                    .size(4000, 4000)
-                    .bbox(BBOX)
-                    // .into($(w.document.body).find("img")[0])
-                    .getUrl(function(err, url) {
-                        console.log(url)
-                        var w = window.open(url)
-                    })
-            })
+        var height = $("#image-height").val()
+        var width = $("#image-width").val()
+        display_image_new_window(layers, height, width)
     })
+}
+
+function display_image_new_window(layers, height, width) {
+    var sublayers = [{
+        type: "http",
+        options: {
+            urlTemplate: "http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+            subdomains: ["a", "b", "c"],
+        },
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+    }]
+    for (var i in [0, 1, 2, 3]) {
+        if (layers[1].getSubLayer(i).isVisible()) {
+            sublayers.push({
+                type: "cartodb",
+                options: {
+                    sql: layers[1].getSubLayer(i).getSQL(),
+                    cartocss: layers[1].getSubLayer(i).getCartoCSS(),
+                    cartocss_version: "2.1.1"
+                }
+            })
+        }
+    }
+
+    var layer_definition = {
+        user_name: "agustinbenassi",
+        tiler_domain: "cartodb.com",
+        tiler_port: "80",
+        tiler_protocol: "http",
+        layers: sublayers
+    };
+
+    var sql = new cartodb.SQL({
+        user: USER
+    });
+
+    sql.getBounds("SELECT * FROM divisiones")
+        .done(function(bounds) {
+            var bbox = [bounds[1][1], bounds[1][0], bounds[0][1],
+                bounds[0][0]
+            ]
+            var img = cartodb.Image(layer_definition)
+                .size(height, width)
+                .bbox(BBOX)
+                // .into($(w.document.body).find("img")[0])
+                .getUrl(function(err, url) {
+                    console.log(url)
+                    var w = window.open(url)
+                })
+        })
 }
 
 function dataURItoBlob(dataURI) {
