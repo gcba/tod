@@ -146,17 +146,17 @@ INDICS = {
         "long": "Proporción de habitantes menores a 18 años que asiste a un establecimiento educativo en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
     "d_ffcc": {
-        "short": "Distancia al ffcc (km)",
+        "short": "Distancia al ffcc (m)",
         "scale": 1,
         "long": "Distancia del centroide de un radio censal a la estación más cercana de ferrocarril o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de ferrocarril georreferenciadas por Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "d_metrobus": {
-        "short": "Distancia al metrobús (km)",
+        "short": "Distancia al metrobús (m)",
         "scale": 1,
         "long": "Distancia del centroide de un radio censal a la estación más cercana de metrobús o promedio ponderado por población de este indicador para otras unidades geográficas en 2014 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de metrobús georreferenciadas por la Subsecretaría de Transporte (GCBA) y Censo Nacional 2010 (INDEC)"
     },
     "d_subte": {
-        "short": "Distancia al subte (km)",
+        "short": "Distancia al subte (m)",
         "scale": 1,
         "long": "Distancia del centroide de un radio censal a la estación más cercana de subte o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de subte georreferenciadas por el Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)"
     },
