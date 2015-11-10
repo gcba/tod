@@ -898,6 +898,9 @@ function add_new_row(layer, table, idRow, row) {
     var indic = idRow.split("-")[1]
     var rowNode = table.row.add(row).draw(true).node()
 
+    $($(rowNode).find("td")[0]).css("font-weight", "bold")
+    $($($(rowNode).find("td")[0]).find("a")[0]).css("color", "black")
+
     // row atributtes
     $(rowNode).attr("id", idRow).css("overflow", "visible")
     $(rowNode).attr("visualize-indic", "none")

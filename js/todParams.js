@@ -217,6 +217,12 @@ COLORS = {
     ]
 }
 
+INDIC_SELECTED_COLOR = {
+    "divisions": COLORS["divisions"][5],
+    "buffers": COLORS["buffers"][5],
+    "both": "rgba(139, 85, 208, 0.6)"
+}
+
 DEFAULT_COLORS = {
     "divisions": "#878787",
     "buffers": "#878787"
@@ -308,9 +314,3 @@ DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
     "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
 ]
-
-INDIC_SELECTED_COLOR = {
-    "divisions": "rgba(35, 139, 69, 0.6)",
-    "buffers": "rgba(252, 78, 42, 0.6)",
-    "both": "rgba(139, 85, 208, 0.6)"
-}
