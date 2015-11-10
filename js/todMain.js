@@ -1306,6 +1306,7 @@ function get_legend(legendType) {
     return $("div .cartodb-legend-stack").children("div")[idx]
 }
 
+
 function create_legends_hide_btn() {
     $("#close-legends").click(function() {
         $(".cartodb-legend-stack").hide("fast")
