@@ -212,8 +212,8 @@ COLORS = {
     "divisions": ["#0098FF", "#17A1FF", "#2DAAFF", "#44B4FF", "#5BBDFF",
         "#71C6FF", "#88CFFF", "#9FD9FF", "#B5E2FF", "#CCEBFF"
     ],
-    "buffers": ["#B10026", "#E31A1C", "#FC4E2A", "#FD8D3C",
-        "#FEB24C", "#FED976", "#FFFFB2"
+    "buffers": ["#ff1f00", "#ff3317", "#ff462d", "#ff5a44", "#ff6f5b",
+        "#ff8271", "#ff9688", "#ffaa9f", "#ffbdb5", "#ffd2cc"
     ]
 }
 
