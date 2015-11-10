@@ -1323,6 +1323,12 @@ function create_legend(indic, legendType, min, max) {
     var legend = get_legend(legendType)
     $(legend).attr("id", "legend-" + legendType)
 
+    var colors = $(legend).find(".colors")[0]
+    $(colors).empty()
+    $.each(COLORS[legendType], function(index, color) {
+        $(colors).prepend(get_lgd_color_div(color))
+    })
+
     // $(legend).attr("indicator", indic)
     globals[legendType]["indicator"] = indic
 
@@ -1345,6 +1351,10 @@ function create_legend(indic, legendType, min, max) {
     };
 
     show_hide_legend_indic_change_btn()
+}
+
+function get_lgd_color_div(color) {
+    return $('<div class="quartile" style="background-color:' + color + '"></div>')
 }
 
 function show_hide_legend_indic_change_btn() {

@@ -209,8 +209,8 @@ INDICS_HIERARCHY = {
 }
 
 COLORS = {
-    "divisions": ["#005824", "#238B45", "#41AE76", "#66C2A4",
-        "#CCECE6", "#D7FAF4", "#EDF8FB"
+    "divisions": ["#0098FF", "#17A1FF", "#2DAAFF", "#44B4FF", "#5BBDFF",
+        "#71C6FF", "#88CFFF", "#9FD9FF", "#B5E2FF", "#CCEBFF"
     ],
     "buffers": ["#B10026", "#E31A1C", "#FC4E2A", "#FD8D3C",
         "#FEB24C", "#FED976", "#FFFFB2"
