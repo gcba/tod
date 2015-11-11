@@ -1429,7 +1429,7 @@ function create_css(indic, colors, thresholds, table, defaultColour) {
     // general settings
     var css = "/** choropleth visualization */ "
     css += table + "{polygon-fill: " + defaultColour + ";"
-    css += "polygon-opacity: 0.8; line-color: #FFF; line-width: 0.25;"
+    css += "polygon-opacity: 0.7; line-color: #FFF; line-width: 0.25;"
     css += "line-opacity: 0.8;} "
 
     // colors segments
@@ -1474,7 +1474,7 @@ function display_image_new_window(layers, height, width) {
     }
 
     var layer_definition = {
-        user_name: "agustinbenassi",
+        user_name: USER,
         tiler_domain: "cartodb.com",
         tiler_port: "80",
         tiler_protocol: "http",
