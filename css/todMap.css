@@ -24,6 +24,7 @@ body,
 
 #capas-transporte {
     width: 220px;
+    z-index: 999;
 }
 
 #main-panel,
@@ -96,10 +97,15 @@ body,
     display: none;
 }
 
+#panel-indicators-seleccionados {
+    z-index: 5;
+}
+
 #download-image {
     position: fixed;
     bottom: 10px;
     left: 50%;
+    z-index: 1;
 }
 
 #button-download-image {
