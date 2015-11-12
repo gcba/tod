@@ -4,6 +4,7 @@ POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(ST_
 // POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(safe_intersection(buffers_estaciones.the_geom, divs.the_geom))) AS the_geom"
 
 POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Buffer(ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)), 0.00000001)) AS the_geom FROM divisiones, buffers_union"
+
 SELECT_BUFFERS = "ST_MakeValid(ST_Intersection(ST_MakeValid(ST_Buffer(buffers_estaciones.the_geom_webmercator, 0.00000001)), ST_MakeValid(divs.the_geom_webmercator))) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
 
 // no logré que esto funcione, queda sólo para tratar de hacerlo en el futuro
@@ -26,6 +27,8 @@ END \
 $$ \
 LANGUAGE 'plpgsql' STABLE STRICT; "
 
+UNIVERSE_CALC_AREA_LEVEL = "FRAC"
+COVERAGE_CALC_AREA_LEVEL = "FRAC"
 
 $(document).ready(function() {
     $.each(INDICS, function(indic, indicParams) {
@@ -243,7 +246,7 @@ function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
             END AS intersect_sup \
      FROM divisiones, {4} \
      WHERE ST_Intersects(divisiones.the_geom, {4}.the_geom) \
-         AND divisiones.orig_sf = 'RADIO' {1}), \
+         AND divisiones.orig_sf = '{5}' {1}), \
  \
      divs_con_habs_y_sups AS \
     (SELECT divs_con_intersect_sups.cartodb_id, {2}, \
@@ -253,16 +256,12 @@ function gen_buffers_db_query(indics, mapBuffersQuery, mapDivsQuery) {
  \
      divs_con_ponds AS \
     (SELECT divs_con_habs_y_sups.cartodb_id, {3}, \
-            (divs_con_habs_y_sups.area_km2 / \
-                 (SELECT SUM(area_km2) \
-                  FROM divs_con_habs_y_sups)) AS pond_sup, \
-            (divs_con_habs_y_sups.hab / \
-                 (SELECT SUM(hab) \
-                  FROM divs_con_habs_y_sups)) AS pond_hab \
+            divs_con_habs_y_sups.area_km2 AS pond_sup, \
+            divs_con_habs_y_sups.hab AS pond_hab \
      FROM divs_con_habs_y_sups) \
  \
 SELECT * FROM divs_con_ponds".format(joined_indics1, joined_indics1b,
-        joined_indics2, joined_indics3, big_polygon)
+        joined_indics2, joined_indics3, big_polygon, COVERAGE_CALC_AREA_LEVEL)
 
     return query
 }
@@ -277,7 +276,7 @@ divs_con_intersect_sups AS \
             (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
-         AND divisiones.orig_sf = 'RADIO') \
+         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL +"') \
  \
 SELECT SUM(divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
@@ -295,7 +294,7 @@ function query_area_in(mapBuffersQuery) {
             (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
-         AND divisiones.orig_sf = 'RADIO') \
+         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL +"') \
  \
 SELECT SUM(divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
