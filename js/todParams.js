@@ -316,8 +316,10 @@ DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
 ]
 
 TIMEOUTS = {
+    "add_buffer_tag": 1800,
+    "remove_buffer_tag": 400,
+    "add_div_filter_tag": 1000,
+    "remove_div_filter_tag": 400,
     "filter_buffers": 1500,
-    "remove_buffer_tag": 500,
-    "add_buffer_tag": 2000,
     "filter_divs": 1000
 }
