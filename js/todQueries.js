@@ -71,7 +71,11 @@ function do_db_query(query, fnCallback) {
             sql.execute(query, {})
                 .done(function(data) {
                     if (typeof(Storage) !== "undefined") {
-                        sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
+                        try {
+                            sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
+                        } catch (e) {
+                            console.log(e)
+                        }
                     } else {
                         g_queries_cache[query] = data.rows.slice()
                     }
