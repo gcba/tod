@@ -63,17 +63,15 @@ function do_db_query(query, fnCallback) {
             fnCallback({
                 "rows": g_queries_cache[query].slice()
             })
-        } else if (typeof(Storage) !== "undefined" && sessionStorage.getItem(query) && false) {
-            console.log(sessionStorage.getItem(query).slice())
+        } else if (typeof(Storage) !== "undefined" && sessionStorage.getItem(query)) {
             fnCallback({
-                "rows": sessionStorage.getItem(query).slice()
+                "rows": JSON.parse(sessionStorage.getItem(query))
             })
         } else {
             sql.execute(query, {})
                 .done(function(data) {
-                    if (typeof(Storage) !== "undefined"  && false) {
-                        console.log(data.rows.slice())
-                        sessionStorage.setItem(query, data.rows.slice())
+                    if (typeof(Storage) !== "undefined") {
+                        sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
                     } else {
                         g_queries_cache[query] = data.rows.slice()
                     }
