@@ -65,6 +65,7 @@ function main() {
             do_map_query(layers[1].getSubLayer(2), "")
             do_map_query(layers[1].getSubLayer(3), "")
 
+            retrieve_cache()
             retrieve_divs_ids()
             retrieve_stations_and_lines()
             relocate_cartodb_overlays()
@@ -87,6 +88,10 @@ function main() {
         });
 }
 window.onload = main;
+
+function retrieve_cache () {
+
+}
 
 // random stuff
 function relocate_cartodb_overlays() {

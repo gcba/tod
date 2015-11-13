@@ -74,7 +74,7 @@ function do_db_query(query, fnCallback) {
                         try {
                             sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
                         } catch (e) {
-                            console.log(e)
+                            g_queries_cache[query] = data.rows.slice()
                         }
                     } else {
                         g_queries_cache[query] = data.rows.slice()
