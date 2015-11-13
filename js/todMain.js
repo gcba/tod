@@ -1242,31 +1242,34 @@ function create_indic_changer(layer, indic) {
 function set_table_indic_color(indic, legendType) {
     var table = $("#indicators-seleccionados").DataTable()
 
-    table.rows().iterator('row', function(context, index) {
-        var rowNode = $(this.row(index).node())
-        var visIndic = $(rowNode).attr("visualize-indic")
-        var idRow = $(rowNode).attr("id")
-        var indicRow = idRow.split("-")[1]
+    if (globals[legendType]["displayLgd"]) {
+        table.rows().iterator('row', function(context, index) {
+            var rowNode = $(this.row(index).node())
+            var visIndic = $(rowNode).attr("visualize-indic")
+            var idRow = $(rowNode).attr("id")
+            var indicRow = idRow.split("-")[1]
 
-        if (indicRow == indic) {
-            if (visIndic == "none" & globals[legendType]["displayLgd"]) {
-                set_row_color(rowNode, legendType)
-            } else if (visIndic != legendType & globals[legendType]["displayLgd"]) {
-                set_row_color(rowNode, "both")
-            }
-
-        } else {
-            if (visIndic == legendType) {
-                set_row_color(rowNode, "none")
-            } else if (visIndic == "both") {
-                if (legendType == "divisions") {
-                    set_row_color(rowNode, "buffers")
-                } else {
-                    set_row_color(rowNode, "divisions")
+            if (indicRow == indic) {
+                if (visIndic == "none" & globals[legendType]["displayLgd"]) {
+                    set_row_color(rowNode, legendType)
+                } else if (visIndic != legendType & globals[legendType]["displayLgd"]) {
+                    set_row_color(rowNode, "both")
                 }
+
+            } else {
+                if (visIndic == legendType) {
+                    set_row_color(rowNode, "none")
+                } else if (visIndic == "both") {
+                    if (legendType == "divisions") {
+                        set_row_color(rowNode, "buffers")
+                    } else {
+                        set_row_color(rowNode, "divisions")
+                    }
+                };
             };
-        };
-    })
+        })
+    };
+
 }
 
 function set_row_color(rowNode, visIndic) {
@@ -1327,7 +1330,7 @@ function recalculate_indicator(layer, indic, query, legendType) {
             // console.log(pos, all.length, all[pos][indic], all[all.length])
         while (!all[pos][indic]) {
             pos -= 1
-            // console.log(pos)
+                // console.log(pos)
         }
         // console.log(all.length - 1, pos)
         all = all.slice(0, pos + 1)
