@@ -28,7 +28,7 @@ from global_vars import IDS_GCBA
 POPULATION = "hab"
 OMIT_FIELDS = ["Código", "CO_FRACC", "CO_FRAC_RA", "area_km2", "AREA",
                "hab_km2"]
-NAN_TOLERANCE = 0.1
+NAN_TOLERANCE = 0.33
 
 
 def _get_indicator_names(df_indicators, omit=OMIT_FIELDS):
@@ -114,8 +114,9 @@ def _calc_indicators(indicators, df_indicators, weights, area_level,
             else:
                 use_area_only = False
 
-            calculated_indicators.append(
-                _calc_indicator(series, weights, pop, skip, use_area_only))
+            calculated_indicator = _calc_indicator(
+                series, weights, pop, skip, use_area_only)
+            calculated_indicators.append(calculated_indicator)
         else:
             calculated_indicators.append(
                 _calc_total_poulation(weights, pop, skip))
@@ -135,12 +136,12 @@ def recalculate_indicators(new_shp_dir, area_level, skip=None,
         omit_fields = OMIT_FIELDS
         omit_fields.extend(omit_fields)
 
-    buffer_shp_path = find_shp_path(new_shp_dir)
-    shp_name = os.path.basename(buffer_shp_path)
+    new_shp_path = find_shp_path(new_shp_dir)
+    shp_name = os.path.basename(new_shp_path)
 
-    sf = shapefile.Reader(buffer_shp_path)
+    sf = shapefile.Reader(new_shp_path)
     df_indicators = get_indicators(area_level)
-    weights = get_weights(buffer_shp_path, area_level)
+    weights = get_weights(new_shp_path, area_level)
 
     w = shapefile.Writer(shapefile.POLYGON)
 
@@ -188,7 +189,7 @@ def recalculate_indicators(new_shp_dir, area_level, skip=None,
     path = get_indicators_shp_path(shp_name, subcategory)
     w.save(path)
 
-    utils.copy_prj(buffer_shp_path.decode("utf-8"), path)
+    utils.copy_prj(new_shp_path.decode("utf-8"), path)
 
 
 def main(buffers_dir=None, skip=None, recalculate=False, area_level="RADIO",

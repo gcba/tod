@@ -15,6 +15,16 @@ import shapefile
 
 from path_finders import find_shp_path
 from utils import copy_prj
+from geo_utils import get_shapely_shape, shapely_to_pyshp
+
+
+def write_curated_shapes(w, sf):
+    if w.shapeType != shapefile.POLYGON:
+        w._shapes.extend(sf.shapes())
+    else:
+        for shape in sf.iterShapes():
+            curated_shape = get_shapely_shape(shape).buffer(0.00000001)
+            w._shapes.append(shapely_to_pyshp(curated_shape))
 
 
 def translate(field, group_fields=None, group_fields_by_sf=None):
@@ -130,7 +140,7 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
         # print(orig_fields)
 
         # extend writing shapefile with all new shapes
-        w._shapes.extend(sf.shapes())
+        write_curated_shapes(w, sf)
         for sr in sf.iterShapeRecords():
             record = sr.record
             # shape = sr.shape

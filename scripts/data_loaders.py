@@ -42,4 +42,5 @@ def read_dbf(shp_dir_or_dbf_path):
         dbf_path = find_shp_path(shp_dir_or_dbf_path) + ".dbf"
     else:
         dbf_path = shp_dir_or_dbf_path
-    dbf = Dbf5()
+    dbf = Dbf5(dbf_path)
+    return dbf.to_dataframe()
