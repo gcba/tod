@@ -319,5 +319,5 @@ TIMEOUTS = {
     "filter_buffers": 1500,
     "remove_buffer_tag": 500,
     "add_buffer_tag": 2000,
-    "filter_divs": 750
+    "filter_divs": 1000
 }

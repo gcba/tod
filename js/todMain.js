@@ -1322,10 +1322,12 @@ function recalculate_indicator(layer, indic, query, legendType) {
         var all = data.rows
 
         // remove nulls
+        // console.log(all)
         var pos = all.length - 1
             // console.log(pos, all.length, all[pos][indic], all[all.length])
         while (!all[pos][indic]) {
             pos -= 1
+            // console.log(pos)
         }
         // console.log(all.length - 1, pos)
         all = all.slice(0, pos + 1)

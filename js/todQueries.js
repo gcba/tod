@@ -30,6 +30,8 @@ LANGUAGE 'plpgsql' STABLE STRICT; "
 UNIVERSE_CALC_AREA_LEVEL = "FRAC"
 COVERAGE_CALC_AREA_LEVEL = "FRAC"
 
+g_queries_cache = {}
+
 $(document).ready(function() {
     $.each(INDICS, function(indic, indicParams) {
         SELECT_BUFFERS += ", buffers_estaciones.{}".format(indic)
@@ -57,12 +59,34 @@ function do_db_query(query, fnCallback) {
             "rows": [{}]
         })
     } else {
-        sql.execute(query, {})
-            .done(fnCallback)
-            .error(function(errors) {
-                // errors contains a list of errors
-                console.debug("errors:" + errors);
+        if (query in g_queries_cache) {
+            fnCallback({
+                "rows": g_queries_cache[query].slice()
             })
+        } else if (typeof(Storage) !== "undefined" && sessionStorage.getItem(query) && false) {
+            console.log(sessionStorage.getItem(query).slice())
+            fnCallback({
+                "rows": sessionStorage.getItem(query).slice()
+            })
+        } else {
+            sql.execute(query, {})
+                .done(function(data) {
+                    if (typeof(Storage) !== "undefined"  && false) {
+                        console.log(data.rows.slice())
+                        sessionStorage.setItem(query, data.rows.slice())
+                    } else {
+                        g_queries_cache[query] = data.rows.slice()
+                    }
+
+                    fnCallback({
+                        "rows": data.rows
+                    })
+                })
+                .error(function(errors) {
+                    // errors contains a list of errors
+                    console.debug("errors:" + errors);
+                })
+        };
     };
 }
 
@@ -276,7 +300,7 @@ divs_con_intersect_sups AS \
             (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
-         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL +"') \
+         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL + "') \
  \
 SELECT SUM(divs_con_intersect_sups.hab * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
@@ -294,7 +318,7 @@ function query_area_in(mapBuffersQuery) {
             (ST_Area(ST_Intersection(ST_MakeValid(divisiones.the_geom), ST_MakeValid(buffers_union.the_geom))) / ST_Area(divisiones.the_geom)) AS intersect_sup \
      FROM divisiones, buffers_union \
      WHERE ST_Intersects(divisiones.the_geom, buffers_union.the_geom) \
-         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL +"') \
+         AND divisiones.orig_sf = '" + UNIVERSE_CALC_AREA_LEVEL + "') \
  \
 SELECT SUM(divs_con_intersect_sups.area_km2 * divs_con_intersect_sups.intersect_sup) \
 FROM divs_con_intersect_sups"
