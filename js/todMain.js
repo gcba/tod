@@ -451,12 +451,20 @@ function create_divs_filter(layer, filterDivs, nameDivs, filterMsg) {
     });
 
     function update_queries_with_divs_filter() {
-        g_divisions["tags"] = this.getTags()
-        do_divisions_map_query(layer)
-        do_buffers_map_query(layer)
-        set_universe_totals(layer)
-        calculate_indicators(layer)
-        show_or_hide_cols()
+        var tags = this.getTags().slice()
+        g_divisions["tags"] = tags.slice()
+
+        setTimeout(function() {
+            if (_.isEqual(g_divisions["tags"], tags)) {
+                do_divisions_map_query(layer)
+                do_buffers_map_query(layer)
+                set_universe_totals(layer)
+                calculate_indicators(layer)
+                show_or_hide_cols()
+            } else {
+                console.log("Filter divisions query avoided.")
+            };
+        }, TIMEOUTS["filter_divs"])
     }
 };
 
@@ -537,39 +545,58 @@ function create_selected_buffers_field(layer) {
     }
 
     function add_buffer_tag(newTag) {
-        $("#tag-list-buffers").css("display", "block")
-        $("#tag-list-stations-and-lines").css("display", "block")
+        var tags = g_buffers["tags"].getTags().slice()
+        if (tags.length == 1) {
+            var timeout = 0
+        } else {
+            var tiemout = TIMEOUTS["add_buffer_tag"]
+        };
 
-        do_buffers_map_query(layer)
-        update_capas_transporte(newTag, true)
-        g_buffers["displayLgd"] = true
-        $("#open-legends").hide("fast")
-        $("#close-legends").show("fast")
-        $("#panel-indicators-seleccionados").css("display", "block")
-        calculate_indicators(layer)
+        setTimeout(function() {
+            if (_.isEqual(tags, g_buffers["tags"].getTags().slice())) {
+                $("#tag-list-buffers").css("display", "block")
+                $("#tag-list-stations-and-lines").css("display", "block")
 
-        var ms = get_mode_and_size(newTag)
-        var modeToAddLines = ms[0]
-        get_filter_buffers(layer, modeToAddLines)
+                do_buffers_map_query(layer)
+                update_capas_transporte(newTag, true)
+                g_buffers["displayLgd"] = true
+                $("#open-legends").hide("fast")
+                $("#close-legends").show("fast")
+                $("#panel-indicators-seleccionados").css("display", "block")
+                calculate_indicators(layer)
+
+                var ms = get_mode_and_size(newTag)
+                var modeToAddLines = ms[0]
+                get_filter_buffers(layer, modeToAddLines)
+            };
+
+        }, timeout)
     }
 
     function remove_buffer_tag(oldTag) {
-        if (g_buffers["tags"].getTags().length == 0) {
-            g_buffers["displayLgd"] = false
-            g_buffers["filter_tags"] = []
-            $("#tag-list-buffers").css("display", "none")
-            $("#tag-list-stations-and-lines").css("display", "none")
+        var tags = g_buffers["tags"].getTags().slice()
 
-            if (!g_divisions["displayLgd"]) {
-                $("#panel-indicators-seleccionados").css("display", "none")
-            } else {
-                calculate_indicators(layer)
+        setTimeout(function() {
+            if (_.isEqual(tags, g_buffers["tags"].getTags().slice())) {
+                if (g_buffers["tags"].getTags().length == 0) {
+                    g_buffers["displayLgd"] = false
+                    g_buffers["filter_tags"] = []
+                    $("#tag-list-buffers").css("display", "none")
+                    $("#tag-list-stations-and-lines").css("display", "none")
+
+                    if (!g_divisions["displayLgd"]) {
+                        $("#panel-indicators-seleccionados").css("display", "none")
+                    } else {
+                        calculate_indicators(layer)
+                    };
+                };
+                get_filter_buffers(layer)
+
+                update_capas_transporte(oldTag, false)
+                do_buffers_map_query(layer)
             };
-        };
-        get_filter_buffers(layer)
 
-        update_capas_transporte(oldTag, false)
-        do_buffers_map_query(layer)
+        }, TIMEOUTS["remove_buffer_tag"])
     }
 
     function update_capas_transporte(newTag, check) {
@@ -654,11 +681,24 @@ function create_buffers_filter(layer, filterBuffers, filterMsg) {
 
     function update_queries_with_buffers_filter(changingTag) {
         if (changingTag) {
-            g_buffers["filter_tags"] = this.getTags()
+            var tags = this.getTags().slice()
+            g_buffers["filter_tags"] = tags.slice()
+
+            setTimeout(function() {
+                if (_.isEqual(g_buffers["filter_tags"], tags)) {
+                    do_buffers_map_query(layer)
+                    calculate_indicators(layer)
+                    show_or_hide_cols()
+                } else {
+                    console.log("Filter buffers query avoided.")
+                };
+            }, TIMEOUTS["filter_buffers"])
+
+        } else {
+            do_buffers_map_query(layer)
+            calculate_indicators(layer)
+            show_or_hide_cols()
         };
-        do_buffers_map_query(layer)
-        calculate_indicators(layer)
-        show_or_hide_cols()
     }
 };
 

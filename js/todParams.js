@@ -314,3 +314,10 @@ DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
     "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
 ]
+
+TIMEOUTS = {
+    "filter_buffers": 1500,
+    "remove_buffer_tag": 500,
+    "add_buffer_tag": 2000,
+    "filter_divs": 750
+}
