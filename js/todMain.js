@@ -65,7 +65,8 @@ function main() {
             do_map_query(layers[1].getSubLayer(2), "")
             do_map_query(layers[1].getSubLayer(3), "")
 
-            retrieve_cache()
+            // retrieve_cache()
+            // post_cache()
             retrieve_divs_ids()
             retrieve_stations_and_lines()
             relocate_cartodb_overlays()
@@ -89,7 +90,30 @@ function main() {
 }
 window.onload = main;
 
-function retrieve_cache () {
+function retrieve_cache() {
+    var url = "https://raw.githubusercontent.com/gcba/tod/master/prueba.json"
+    $.getJSON(url, function(data) {
+        console.log($.parseJSON(data))
+    })
+
+}
+
+function post_cache() {
+    var uploadURL = "https://api.github.com/repos/daniellevass/web-quiz/git/blobs" + accessToken;
+
+    $.ajax({
+            type: "POST",
+            url: uploadURL,
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify({
+                "content": "aGVsbG8=",
+                "encoding": "utf-8"
+            })
+        })
+        .done(function(data) {
+            console.log(data);
+        });
 
 }
 

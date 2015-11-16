@@ -134,7 +134,8 @@ function div_filter(areaLevel, areaFilter) {
 
 function gen_divs_legend_query(indic, divsMapQuery) {
     var indicReference = "divisiones." + indic
-    var query = divsMapQuery.replace("divisiones.*", indicReference)
+    var query = gen_divisions_map_query(g_divisions["areaLevel"], [])
+    query = query.replace("divisiones.*", indicReference)
     query += " ORDER BY " + indicReference
     return query
 }
