@@ -59,11 +59,14 @@ function main() {
             // map.panTo([50.5, 30.5]);
 
             // set the map empty
-            do_map_query(layers[1].getSubLayer(0))
+            // do_map_query(layers[1].getSubLayer(0))
             do_map_query(layers[1].getSubLayer(0), "")
             do_map_query(layers[1].getSubLayer(1), "")
             do_map_query(layers[1].getSubLayer(2), "")
             do_map_query(layers[1].getSubLayer(3), "")
+
+            // set styles
+            // layers[1].getSubLayer(SUBLAYER_IDX["estaciones"])
 
             // retrieve_cache()
             // post_cache()

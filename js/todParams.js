@@ -234,8 +234,8 @@ LEGEND_NAME = {
 }
 
 LEGEND_IDX = {
-    "divisions": 3,
-    "buffers": 2
+    "divisions": 1,
+    "buffers": 0
 }
 
 SUBLAYER_IDX = {

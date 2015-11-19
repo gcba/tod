@@ -1,0 +1,22 @@
+/** category visualization */
+
+#lineas {
+   line-width: 2;
+   line-opacity: 0.7;
+}
+
+#lineas[orig_sf="lin_colectivos"] {
+   line-color: #FF6600;
+}
+#lineas[orig_sf="lin_ffcc"] {
+   line-color: #B40903;
+}
+#lineas[orig_sf="lin_metrobus"] {
+   line-color: #6B0FB2;
+}
+#lineas[orig_sf="lin_sub_prem"] {
+   line-color: #2167AB;
+}
+#lineas[orig_sf="lin_subte"] {
+   line-color: #2167AB;
+}

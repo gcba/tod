@@ -1,0 +1,25 @@
+/** category visualization */
+
+#estaciones {
+   marker-fill-opacity: 0.9;
+   marker-line-color: #FFF;
+   marker-line-width: 1;
+   marker-line-opacity: 1;
+   marker-placement: point;
+   marker-type: ellipse;
+   marker-width: 8;
+   marker-allow-overlap: true;
+}
+
+#estaciones[orig_sf="est_ffcc"] {
+   marker-fill: #B81609;
+}
+#estaciones[orig_sf="est_metrobus"] {
+   marker-fill: #7B00B4;
+}
+#estaciones[orig_sf="est_sub_prem"] {
+   marker-fill: #5CA2D1;
+}
+#estaciones[orig_sf="est_subte"] {
+   marker-fill: #5CA2D1;
+}
