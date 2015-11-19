@@ -256,15 +256,15 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         $("#panel-indicators").attr("legend-type", "divisions")
         if (g_divisions["areaLevel"] != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
-            $("#panel-indicators-seleccionados").show("fast")
-            rebuild_table()
+            $("#panel-indicators-seleccionados").show("fast", function () {
+                rebuild_table()
+            })
             calculate_indicators(layer)
         } else {
             if (!g_buffers["displayLgd"]) {
                 $("#panel-indicators-seleccionados").hide("fast")
             } else {
                 calculate_indicators(layer)
-
             };
         }
         update_tooltip(layer, "divisions")
@@ -596,6 +596,7 @@ function create_selected_buffers_field(layer) {
                 $("#close-legends").show("fast")
                 $("#panel-indicators-seleccionados").css("display", "block")
                 calculate_indicators(layer)
+                rebuild_table()
 
                 var ms = get_mode_and_size(newTag)
                 var modeToAddLines = ms[0]
@@ -620,6 +621,7 @@ function create_selected_buffers_field(layer) {
                         $("#panel-indicators-seleccionados").css("display", "none")
                     } else {
                         calculate_indicators(layer)
+                        rebuild_table()
                     };
                 };
                 get_filter_buffers(layer)
