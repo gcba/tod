@@ -80,7 +80,7 @@
         <div id="main-panel" class="well">
             <div id="panel-filtros">
                 <div id="divisiones" class="dropdown clearfix">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Divisiones <span class="caret"></span>
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuDivisiones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hover="tooltip" data-placement="left" data-original-title="Elige el tipo de divisiones para visualizar la Ciudad">Divisiones <span class="caret"></span>
                     </button>
                     <ul id="selector-divisiones" class="dropdown-menu" aria-labelledby="dropdownMenuDivisiones">
                     </ul>
@@ -91,19 +91,19 @@
                 <div id="tag-list-divisiones"></div>
                 <div id="buffer-selectors">
                     <div id="buffer-modo-transporte" class="dropdown clearfix">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferModoTrans" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Modo transporte <span class="caret"></span>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferModoTrans" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hover="tooltip" data-placement="left" data-original-title="Modo de transporte">Modo transporte <span class="caret"></span>
                         </button>
                         <ul id="selector-modo-transporte" class="dropdown-menu" aria-labelledby="dropdownMenuBufferModoTrans">
                         </ul>
                     </div>
                     <div id="buffer-size" class="dropdown clearfix">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Distancia <span class="caret"></span>
+                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuBufferSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-hover="tooltip" data-placement="top" data-original-title="Radio de cobertura en metros">Distancia <span class="caret"></span>
                         </button>
                         <ul id="selector-buffer-size" class="dropdown-menu" aria-labelledby="dropdownMenuBufferSize" name="None">
                         </ul>
                     </div>
                     <div id="buffer-add">
-                        <button id="button-add-buffer" type="button" class="btn btn-default">Agregar buffer</button>
+                        <button id="button-add-buffer" type="button" class="btn btn-default" data-hover="tooltip" data-placement="top" data-original-title="Agrega un modo de transporte con sus radios de cobertura">Agregar</button>
                     </div>
                 </div>
                 <div id="tag-list-buffers"></div>
@@ -124,16 +124,12 @@
                     <div class="panel-heading">
                         <div id="wrapper">
                             <div class="left">
-                                <p>Indicadores</p>
+                                <span>Indicadores</span>
+                                <span data-hover="tooltip" data-placement="right" data-original-title="Mostrar indicadores" id="open-indicators-table" class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
+                                <span data-hover="tooltip" data-placement="right" data-original-title="Ocultar indicadores" id="close-indicators-table" class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
                             </div>
-                            <div class="right" id="open-indicators-select">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            </div>
-                            <div class="right" id="open-indicators-table">
-                                <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
-                            </div>
-                            <div class="right" id="close-indicators-table">
-                                <span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span>
+                            <div class="right" id="open-indicators-select" data-hover="tooltip" data-placement="left" data-original-title="Agregar/quitar indicadores">
+                                <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
                             </div>
                         </div>
                     </div>
@@ -156,7 +152,7 @@
                 <input type="text" class="form-control" placeholder="height" aria-describedby="sizing-addon3" id="image-width" value="3000">
             </div>
             <div>
-                <button id="button-download-image" type="button" class="btn btn-default">Obtener imagen</button>
+                <button data-hover="tooltip" data-placement="left" data-original-title="Recuerda habilitar los popups!" id="button-download-image" type="button" class="btn btn-default">Obtener imagen</button>
                 <!-- <a class="btn btn-success" href="javascript:void(0);" onclick="generate();">Generate Screenshot »</a> -->
             </div>
         </div>

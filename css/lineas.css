@@ -4,7 +4,15 @@
    line-width: 2;
    line-opacity: 0.7;
 }
-
+#lineas [zoom > 12]{
+   line-width: 3.5;
+}
+#lineas [zoom > 13]{
+   line-width: 4.5;
+}
+#lineas [zoom > 14]{
+   line-width: 5.5;
+}
 #lineas[orig_sf="lin_colectivos"] {
    line-color: #FF6600;
 }
@@ -20,3 +28,6 @@
 #lineas[orig_sf="lin_subte"] {
    line-color: #2167AB;
 }
+
+
+

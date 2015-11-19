@@ -3,14 +3,26 @@
 #estaciones {
    marker-fill-opacity: 0.9;
    marker-line-color: #FFF;
-   marker-line-width: 1;
+   marker-line-width: 0.7;
    marker-line-opacity: 1;
    marker-placement: point;
    marker-type: ellipse;
-   marker-width: 8;
+   marker-width: 5;
    marker-allow-overlap: true;
 }
-
+#estaciones [zoom > 11]{
+	marker-width: 7;
+    marker-line-width: 1;
+}
+#estaciones [zoom > 12]{
+	marker-width: 10;
+}
+#estaciones [zoom > 13]{
+	marker-width: 12;
+}
+#estaciones [zoom > 14]{
+	marker-width: 14;
+}
 #estaciones[orig_sf="est_ffcc"] {
    marker-fill: #B81609;
 }

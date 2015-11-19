@@ -57,6 +57,7 @@ body,
 #open-indicators-table,
 #close-indicators-table {
     margin-right: 10px;
+    margin-left: 10px;
 }
 
 #buffer-size,
