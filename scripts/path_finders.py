@@ -18,7 +18,12 @@ BUFFERS_DIR = os.path.join("shp", "transporte", "buffers")
 DIVISIONS_DIR = os.path.join("shp", "divisiones")
 TRANSPORT_DIR = os.path.join("shp", "transporte")
 CONTEXT_DIR = os.path.join("shp", "contexto")
+EXAMPLES_DIR = os.path.join("examples")
 WEIGHTS_DIR = "intersection_weights"
+
+
+def get_prj(name):
+    return os.path.join(get_project_dir(), "shp", name + ".prj")
 
 
 def get_context_shp_path(shp_name):
@@ -28,6 +33,10 @@ def get_context_shp_path(shp_name):
 
 def get_indicators_dir():
     return os.path.join(get_project_dir(), "indicadores")
+
+
+def get_examples_dir():
+    return os.path.join(get_project_dir(), EXAMPLES_DIR)
 
 
 def get_transport_shp_path(shp_name):

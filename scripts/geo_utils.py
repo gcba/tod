@@ -23,6 +23,7 @@ from shapely.geometry import LineString, Point, Polygon
 from path_finders import get_transport_shp_path, get_division_path
 from path_finders import get_project_dir, find_shp_path
 from global_vars import IDS_GCBA
+from utils import copy_prj
 
 POPULATION = "hab"
 
@@ -264,3 +265,35 @@ def shapely_to_pyshp(shapelygeom):
         record.points = points
         record.parts = parts
     return record
+
+
+def shapely_shapes_to_shapefile(shapely_shapes, shp_path, sf=None,
+                                prj_path=None):
+
+    if sf:
+        w = shapefile.Writer(sf.shapeType)
+        for field in sf.fields:
+            w.field(*field)
+        for record in sf.iterRecords():
+            w.record(*record)
+    else:
+        w = shapefile.Writer()
+        w.field(str("id"), str("N"), 255, 0)
+        for id_shape in xrange(len(shapely_shapes)):
+            w.record(*[id_shape])
+
+    for shape in shapely_shapes:
+        if shape.type == "Polygon":
+            pyshp_shape = shapely_to_pyshp(shape.buffer(0.00000001))
+            w._shapes.append(pyshp_shape)
+        elif shape.type == "Point":
+            coords = shape.coords[0]
+            w.point(coords[0], coords[1])
+        else:
+            pyshp_shape = shapely_to_pyshp(shape)
+            w._shapes.append(pyshp_shape)
+
+    w.save(shp_path)
+
+    if prj_path:
+        copy_prj(prj_path, shp_path)
