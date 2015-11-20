@@ -257,7 +257,9 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         if (g_divisions["areaLevel"] != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
             $("#panel-indicators-seleccionados").show("fast", function () {
-                rebuild_table()
+                if ($("#table-spinner").css("display") == "none") {
+                    rebuild_table()
+                };
             })
             calculate_indicators(layer)
         } else {
@@ -943,7 +945,7 @@ function replace_table_with_loading() {
 function replace_loading_with_table() {
     $("#indicators-seleccionados_wrapper").css("display", "block")
     $("#table-spinner").css("display", "none")
-        // rebuild_table()
+    rebuild_table()
 }
 
 function replace_universe_with_loading() {
