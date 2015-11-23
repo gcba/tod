@@ -122,7 +122,7 @@ INDICS = {
     },
     "nse_mex": {
         "short": "Nivel socioeconómico",
-        "scale": 10,
+        "scale": 1,
         "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de Censo Nacional 2010 (INDEC)"
     },
     "educ_priv": {
