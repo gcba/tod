@@ -120,7 +120,7 @@ INDICS = {
         "scale": 100,
         "long": "Proporción de habitantes inactivos sobre la cantidad de habitantes con 14 años o más en 2010 (%) - Censo Nacional 2010 (INDEC)"
     },
-    "nse_mex_ca": {
+    "nse_mex": {
         "short": "Nivel socioeconómico",
         "scale": 1,
         "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de Censo Nacional 2010 (INDEC)"
@@ -202,7 +202,7 @@ INDICS_HIERARCHY = {
         "serv_insuf", "serv_satis", "hac_149", "hac_150", "ocup_viv",
     ],
     "Mercado de trabajo": ["desocup", "empleo", "inact"],
-    "Nivel socioeconómico": ["nse_alt", "nse_mex_ca"],
+    "Nivel socioeconómico": ["nse_alt", "nse_mex"],
     "Educación": ["educ_priv", "educ_pub", "educ_sup", "escolarida"],
     "Transporte": ["d_ffcc", "d_metrobus", "d_subte", "reach_area", "reach_prop"],
     "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
@@ -312,7 +312,7 @@ AREA_WEIGHTED = ["hab_km2", "comercial", "residencia"]
 NON_WEIGHTED = ["hab", "area_km2"]
 DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
     "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
-    "empleo", "inact", "nse_alt", "nse_mex_ca", "comercial"
+    "empleo", "inact", "nse_alt", "nse_mex", "comercial"
 ]
 
 TIMEOUTS = {
