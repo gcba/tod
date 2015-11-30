@@ -277,7 +277,8 @@ def shapely_shapes_to_shapefile(shapely_shapes, shp_path, sf=None,
         for record in sf.iterRecords():
             w.record(*record)
     else:
-        w = shapefile.Writer()
+        shape_type = shapely_to_pyshp(shapely_shapes[0]).shapeType
+        w = shapefile.Writer(shape_type)
         w.field(str("id"), str("N"), 255, 0)
         for id_shape in xrange(len(shapely_shapes)):
             w.record(*[id_shape])
@@ -293,6 +294,7 @@ def shapely_shapes_to_shapefile(shapely_shapes, shp_path, sf=None,
             pyshp_shape = shapely_to_pyshp(shape)
             w._shapes.append(pyshp_shape)
 
+    # return w
     w.save(shp_path)
 
     if prj_path:

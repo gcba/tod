@@ -33,8 +33,16 @@ def cd(path):
 
 
 def copy_prj(shp_path, buffer_shp_path):
-    src = shp_path + ".prj"
-    dst = buffer_shp_path + ".prj"
+    if shp_path[-4:] != ".prj":
+        src = shp_path + ".prj"
+    else:
+        src = shp_path
+
+    if buffer_shp_path[-4:] != ".prj":
+        dst = buffer_shp_path + ".prj"
+    else:
+        dst = buffer_shp_path
+
     if not os.path.isdir(os.path.dirname(dst)):
         os.makedirs(os.path.dirname(dst))
     shutil.copy(src, dst)
