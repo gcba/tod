@@ -58,8 +58,8 @@ El scope del **master** branch llega hasta este punto: la creación de los shape
 
 ## Agradecimientos
 
-* Pablo Lorenzatto por la idea original y brainstorming posterior sobre el indicador de llegabilidad de servicios de colectivos estándar, y por su ayuda en la optimización de consultas geográficas.
-* Nacho Leguizamon y Mercedes Fiz por la asistencia en el diseño y la usabilidad del mapa.
+* Pablo Lorenzatto ([@plorenzatto](https://github.com/plorenzatto)) por la idea original y brainstorming posterior sobre el indicador de llegabilidad de servicios de colectivos estándar, y por su ayuda en la optimización de consultas geográficas.
+* Nacho Leguizamon ([@dorisphanic](https://github.com/dorisphanic)) y Mercedes Fiz por la asistencia en el diseño y la usabilidad del mapa.
 * Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el armado de mock ups y consejos técnicos varios
 
 
