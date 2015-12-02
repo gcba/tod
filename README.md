@@ -4,7 +4,7 @@ Herramienta de visualización de características poblacionales de la Ciudad Aut
 ## Introducción
 Esta herramienta utiliza datos del Censo Nacional 2010, la cartografía censal de la Ciudad de Buenos Aires y distintos datasets públicos para describir en un mapa interactivo características sociales, económicas y demográficas de la población de la ciudad, dentro y fuera del área de cobertura de las estaciones de 4 sistemas de transporte público masivo: metrobús, ferrocarril, subte y premetro.
 
-El mapa fue desarrollado por @abenassi en el marco del programa de Innovadores Residentes del Laboratorio de Gobierno de la Ciudad de Buenos Aires y constituye un prototipo experimental para uso de la Subsecretaría de Transporte del GCBA.
+El mapa fue desarrollado por [@abenassi](https://github.com/abenassi) en el marco del programa de Innovadores Residentes del Laboratorio de Gobierno de la Ciudad de Buenos Aires y constituye un prototipo experimental para uso de la Subsecretaría de Transporte del GCBA.
 
 El objetivo de este producto es testear el potencial que puede tener el desarrollo de este tipo de herramientas para mejorar y agilizar las tareas de análisis del equipo de transporte.
 
