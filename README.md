@@ -1,17 +1,16 @@
+# TOD (Transport Oriented Development)
+Herramienta de visualización de características poblacionales de la Ciudad Autónoma de Buenos Aires en relación a las zonas de influencia de los distintos sistemas de transporte público.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [TOD (Transport Oriented Development)](#tod-transport-oriented-development)
-  - [Introducción](#introducci%C3%B3n)
-  - [Instalación](#instalaci%C3%B3n)
-  - [De los datos originales a los shapefiles para CartoDB](#de-los-datos-originales-a-los-shapefiles-para-cartodb)
-  - [Agradecimientos](#agradecimientos)
+- [Introducción](#introducci%C3%B3n)
+- [Instalación](#instalaci%C3%B3n)
+- [De los datos originales a los shapefiles para CartoDB](#de-los-datos-originales-a-los-shapefiles-para-cartodb)
+- [Agradecimientos](#agradecimientos)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# TOD (Transport Oriented Development)
-Herramienta de visualización de características poblacionales de la Ciudad Autónoma de Buenos Aires en relación a las zonas de influencia de los distintos sistemas de transporte público.
 
 ## Introducción
 Esta herramienta utiliza datos del Censo Nacional 2010, la cartografía censal de la Ciudad de Buenos Aires y distintos datasets públicos para describir en un mapa interactivo características sociales, económicas y demográficas de la población de la ciudad, dentro y fuera del área de cobertura de las estaciones de 4 sistemas de transporte público masivo: metrobús, ferrocarril, subte y premetro.
