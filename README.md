@@ -46,15 +46,15 @@ Una vez creado un entorno virtual con las dependencias de la herramienta, se pue
 
 ## De los datos originales a los shapefiles para CartoDB
 
-1.**Crear buffers**: toma los shapefiles de estaciones de metrobús, ferrocarril, subte y premetro, y crea los shapefiles de los buffers a 300, 500, 750, 1000, 1500 y 2000 metros de cada uno de ellos.
-2.**Intersectar buffers con radios y fracciones censales**: superpone los buffers creados con radios y fracciones censales para calcular el % de la superficie de cada radio o fracción que intersecta a cada buffer.
-3.**Crear indicadores por radio y fracción censal**: descarga datos del Censo Nacional 2010 y crea indicadores a partir de ellos a nivel de radio censal (RADIO), fracción censal (FRAC) y comuna (DPTO).
+1. **Crear buffers**: toma los shapefiles de estaciones de metrobús, ferrocarril, subte y premetro, y crea los shapefiles de los buffers a 300, 500, 750, 1000, 1500 y 2000 metros de cada uno de ellos.
+2. **Intersectar buffers con radios y fracciones censales**: superpone los buffers creados con radios y fracciones censales para calcular el % de la superficie de cada radio o fracción que intersecta a cada buffer.
+3. **Crear indicadores por radio y fracción censal**: descarga datos del Censo Nacional 2010 y crea indicadores a partir de ellos a nivel de radio censal (RADIO), fracción censal (FRAC) y comuna (DPTO).
     * **3b. Precio de terrenos**: analiza la creación de un promedio de precios de terrenos por fracción censal.
     * **3c. Indice de conectividad de colectivos**: crea un indicador de "llegabilidad" para servicios estándar de colectivos.
     * **3d. Uso del suelo**: crea indicadores de uso porcentual del suelo para radios censales.
     * **3e. Otros indicadores**: crea indicadores de indicencia de espacios verdes, cantidad de escuelas y hospitales, y distancia media de los habitantes a estaciones de los distintos modos de transporte.
-4.**Recalcular indicadores por buffer y otros niveles de agregación**: recalcula todos los indicadores creados a nivel de radio censal para cada uno de los buffers creados en el paso 1 construyendo ponderadores basados en los % de superficie intersectada calculados en el paso 2. Recalcula algunos indicadores para niveles de agregación superiores a los originales (Por ej.: el índice de conectividad de colectivos se crea para radios censales y luego se calcula como un promedio ponderado para fracciones censales, barrios y comunas)
-5. Crear capas para CartoDB: a partir de todos los shapefiles y datos creados en los pasos anteriores, se crean 4 shapefiles para subir a CartoDB haciendo un merge de varios de ellos.
+4. **Recalcular indicadores por buffer y otros niveles de agregación**: recalcula todos los indicadores creados a nivel de radio censal para cada uno de los buffers creados en el paso 1 construyendo ponderadores basados en los % de superficie intersectada calculados en el paso 2. Recalcula algunos indicadores para niveles de agregación superiores a los originales (Por ej.: el índice de conectividad de colectivos se crea para radios censales y luego se calcula como un promedio ponderado para fracciones censales, barrios y comunas)
+5. **Crear capas para CartoDB**: a partir de todos los shapefiles y datos creados en los pasos anteriores, se crean 4 shapefiles para subir a CartoDB haciendo un merge de varios de ellos.
 
 Los 4 shapefiles creados desde los ipython notebooks se encuentran en la carpeta *indicadores*:
 
