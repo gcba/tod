@@ -45,7 +45,7 @@ Una vez creado un entorno virtual con las dependencias de la herramienta, se pue
 3. `ipython notebook`
 
 ## De los datos originales a los shapefiles para CartoDB
-
+0. **Descargar datasets**: descarga todos los datasets del archivo [Links.xlsx](Links.xlsx)
 1. **Crear buffers**: toma los shapefiles de estaciones de metrobús, ferrocarril, subte y premetro, y crea los shapefiles de los buffers a 300, 500, 750, 1000, 1500 y 2000 metros de cada uno de ellos.
 2. **Intersectar buffers con radios y fracciones censales**: superpone los buffers creados con radios y fracciones censales para calcular el % de la superficie de cada radio o fracción que intersecta a cada buffer.
 3. **Crear indicadores por radio y fracción censal**: descarga datos del Censo Nacional 2010 y crea indicadores a partir de ellos a nivel de radio censal (RADIO), fracción censal (FRAC) y comuna (DPTO).
