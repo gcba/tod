@@ -1168,7 +1168,7 @@ MathJax.Hub.Config({
   onReady(function(){convertUML('uml-sequence-diagram', Diagram, {theme: 'simple'});});
 })(window, document)
 </script>
-<title>nota_metologica</title></head><body><article class="markdown-body"><h1 id="mapa-de-desarrollo-orientado-al-transporte-dot"><a name="user-content-mapa-de-desarrollo-orientado-al-transporte-dot" href="#mapa-de-desarrollo-orientado-al-transporte-dot" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Mapa de Desarrollo Orientado al Transporte (DOT)</h1>
+<title>nota_metodologica</title></head><body><article class="markdown-body"><h1 id="mapa-de-desarrollo-orientado-al-transporte-dot"><a name="user-content-mapa-de-desarrollo-orientado-al-transporte-dot" href="#mapa-de-desarrollo-orientado-al-transporte-dot" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Mapa de Desarrollo Orientado al Transporte (DOT)</h1>
 <p><!-- START doctoc generated TOC please keep comment here to allow auto update --><br />
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --></p>
 <ul>
@@ -1387,7 +1387,6 @@ MathJax.Hub.Config({
 <p>Cabe aclarar que las parcelas no siempre están contenidas en su totalidad por un radio censal: 778 parcelas (sobre un total de 318811) pertenecen a más de uno de ellos. En esta versión de indicadores sobre uso del suelo se asignó un solo radio censal a cada una de las parcelas (una futura versión más compleja de este indicador podría incorporar todos los radios a los que pertenecen) de manera tal que en el caso de las parcelas partidas se tomó uno sólo de los radios censales con los que intersectan y se le asignó el área intersectada en lugar del área total de la parcela.</p>
 <p>Este aspecto introduce una distorsión en el cálculo de los porcentajes de uso del suelo de cada radio censal ya que en algunos casos hay radios con &ldquo;áreas ignoradas&rdquo;. El total de superficie ignorada asciende a casi un 7% de la superficie catastral o a menos de un 5% de la superficie total de la CABA. Para esta versión experimental se consideró como un margen de error aceptable, pero cabe resaltar que en algunas áreas de la Ciudad esta distorsión puede ser más importante que en otras.</p>
 <p>Pasos para replicar el cálculo de uso del suelo:</p>
-<p>(<em>tratar de clarificar este tema: más acotado es más claro, se podría hacer mejor preprocesando la capa</em>)</p>
 <ol>
 <li>Se asigna un uso del suelo (residencial, comercial, industrial, servicios u otros) a cada punto del RUS según una <a href="https://github.com/gcba/tod/raw/master/data/RUS_clasif_rama1.xlsx">clasificación</a> desarrollada específicamente para este caso, basada en la agregación de categorías de la variable &ldquo;rama1&rdquo;.</li>
 <li>Se asignan parcelas del Catastro a los puntos del RUS.</li>
