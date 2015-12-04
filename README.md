@@ -20,6 +20,7 @@ El mapa fue desarrollado por Agustín Benassi ([@abenassi](https://github.com/ab
 El objetivo de este producto es testear el potencial que puede tener el desarrollo de este tipo de herramientas para mejorar y agilizar las tareas de análisis del equipo de transporte.
 
 El mapa final puede ser visualizado [acá](http://gcba.github.io/tod).
+
 La documentación metodológica completa puede ser consultada [acá](http://gcba.github.io/tod/nota_metodologica).
 
 El **master** branch contiene una serie de jupyter notebooks escritos en python que toman los datos originales utilizados y construyen una base de datos preprocesada y lista para subir a una cuenta de [CartoDB](https://cartodb.com/). Los notebooks deben ejecutarse en orden (del 1 al 5) y en cada uno pueden especificarse algunos parámetros, agregar o quitar indicadores, modificar aspectos del cálculo de algunos de ellos, etc.
