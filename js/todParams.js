@@ -4,13 +4,39 @@ BBOX = [-58.534235, -34.708906, -58.329524, -34.539576]
 CENTER = [-34.615753, -58.4]
 ZOOM = 12
 
+DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
+    "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
+    "empleo", "inact", "nse_alt", "nse_mex", "comercial"
+]
+
+INDICS_HIERARCHY = {
+    "Generales": ["hab", "area_km2", "hab_km2"],
+    "Edad": ["_0_14", "_15_64", "mas_65"],
+    "Uso del suelo": ["comercial", "residencia", "industrial", "servicios",
+        "otros"
+    ],
+    "Vivienda": ["con_basica", "con_insuf", "con_satisf", "serv_basic",
+        "serv_insuf", "serv_satis", "hac_149", "hac_150", "ocup_viv",
+    ],
+    "Mercado de trabajo": ["desocup", "empleo", "inact"],
+    "Nivel socioeconómico": ["nse_alt", "nse_mex"],
+    "Educación": ["educ_priv", "educ_pub", "educ_sup", "escolarida"],
+    "Transporte": ["d_ffcc", "d_metrobus", "d_subte", "reach_area", "reach_prop"],
+    "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
+}
+
+AREA_WEIGHTED = ["hab_km2", "comercial", "residencia", "industrial",
+                 "servicios", "otros"]
+
+NON_WEIGHTED = ["hab", "area_km2"]
+
 INDICS = {
     "hombres": {
         "short": "Hombres (%)",
         "scale": 1,
         "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
     },
-    "hab": {
+    "extranjeros": {
         "short": "Extranjeros (%)",
         "scale": 1,
         "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
@@ -202,21 +228,7 @@ INDICS = {
     }
 }
 
-INDICS_HIERARCHY = {
-    "Generales": ["hab", "area_km2", "hab_km2"],
-    "Edad": ["_0_14", "_15_64", "mas_65"],
-    "Uso del suelo": ["comercial", "residencia", "industrial", "servicios",
-        "otros"
-    ],
-    "Vivienda": ["con_basica", "con_insuf", "con_satisf", "serv_basic",
-        "serv_insuf", "serv_satis", "hac_149", "hac_150", "ocup_viv",
-    ],
-    "Mercado de trabajo": ["desocup", "empleo", "inact"],
-    "Nivel socioeconómico": ["nse_alt", "nse_mex"],
-    "Educación": ["educ_priv", "educ_pub", "educ_sup", "escolarida"],
-    "Transporte": ["d_ffcc", "d_metrobus", "d_subte", "reach_area", "reach_prop"],
-    "Otros": ["nbi", "compu", "esp_verde", "hospitales"]
-}
+BUFFERS_SIZE = [300, 500, 750, 1000, 1500, 2000]
 
 COLORS = {
     "divisions": ["#0088e6", "#1492e9", "#2b9eeb", "#40a8ed", "#55b1f0",
@@ -260,7 +272,6 @@ TBL_NAMES = {
     "buffers": "buffers_estaciones"
 }
 
-BUFFERS_SIZE = [300, 500, 750, 1000, 1500, 2000]
 BUFFERS_TAGS = {
     "Subte": "est_subte",
     "Premetro": "est_sub_prem",
@@ -317,13 +328,6 @@ PANEL_TRANSPORTE = {
     "lin_metrobus": "Lineas de Metrobus",
     "lin_colectivos": "Lineas de Colectivos"
 }
-
-AREA_WEIGHTED = ["hab_km2", "comercial", "residencia"]
-NON_WEIGHTED = ["hab", "area_km2"]
-DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
-    "d_metrobus", "d_subte", "reach_area", "reach_prop", "desocup",
-    "empleo", "inact", "nse_alt", "nse_mex", "comercial"
-]
 
 TIMEOUTS = {
     "add_buffer_tag": 1800,
