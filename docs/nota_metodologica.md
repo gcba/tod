@@ -296,8 +296,6 @@ Este aspecto introduce una distorsión en el cálculo de los porcentajes de uso 
 
 Pasos para replicar el cálculo de uso del suelo:
 
-(*tratar de clarificar este tema: más acotado es más claro, se podría hacer mejor preprocesando la capa*)
-
 1. Se asigna un uso del suelo (residencial, comercial, industrial, servicios u otros) a cada punto del RUS según una [clasificación](https://github.com/gcba/tod/raw/master/data/RUS_clasif_rama1.xlsx) desarrollada específicamente para este caso, basada en la agregación de categorías de la variable "rama1".
 2. Se asignan parcelas del Catastro a los puntos del RUS.
 3. Se asignan radios censales a parcelas del Catastro.
