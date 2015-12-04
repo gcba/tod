@@ -31,16 +31,16 @@ AREA_WEIGHTED = ["hab_km2", "comercial", "residencia", "industrial",
 NON_WEIGHTED = ["hab", "area_km2"]
 
 INDICS = {
-    "hombres": {
-        "short": "Hombres (%)",
-        "scale": 1,
-        "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
-    },
-    "extranjeros": {
-        "short": "Extranjeros (%)",
-        "scale": 1,
-        "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
-    },
+    // "hombres": {
+    //     "short": "Hombres (%)",
+    //     "scale": 1,
+    //     "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
+    // },
+    // "extranjeros": {
+    //     "short": "Extranjeros (%)",
+    //     "scale": 1,
+    //     "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
+    // },
     "hab": {
         "short": "Población (M)",
         "scale": 1 / 1000000,
