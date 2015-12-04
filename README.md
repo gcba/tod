@@ -1,13 +1,13 @@
-# TOD (Transport Oriented Development)
+# TOD (Transport Oriented Development) - Backend
 Herramienta de visualización de características poblacionales de la Ciudad Autónoma de Buenos Aires en relación a las zonas de influencia de los distintos sistemas de transporte público.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Introducción](#introducci%C3%B3n)
 - [Instalación](#instalaci%C3%B3n)
 - [De los datos originales a los shapefiles para CartoDB](#de-los-datos-originales-a-los-shapefiles-para-cartodb)
+- [Estructura del directorio](#estructura-del-directorio)
 - [Agradecimientos](#agradecimientos)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
