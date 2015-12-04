@@ -19,9 +19,9 @@ El mapa fue desarrollado por Agustín Benassi ([@abenassi](https://github.com/ab
 
 El objetivo de este producto es testear el potencial que puede tener el desarrollo de este tipo de herramientas para mejorar y agilizar las tareas de análisis del equipo de transporte.
 
-El mapa final puede ser visualizado [acá](http://gcba.github.io/tod).
+El **mapa** final puede ser visualizado [acá](http://gcba.github.io/tod).
 
-La documentación metodológica completa puede ser consultada [acá](http://gcba.github.io/tod/nota_metodologica).
+La **documentación metodológica** completa puede ser consultada [acá](http://gcba.github.io/tod/nota_metodologica).
 
 El **master** branch contiene una serie de jupyter notebooks escritos en python que toman los datos originales utilizados y construyen una base de datos preprocesada y lista para subir a una cuenta de [CartoDB](https://cartodb.com/). Los notebooks deben ejecutarse en orden (del 1 al 5) y en cada uno pueden especificarse algunos parámetros, agregar o quitar indicadores, modificar aspectos del cálculo de algunos de ellos, etc.
 
@@ -71,10 +71,31 @@ Estos shapefiles deben subirse a una cuenta de CartoDB y crear un mapa agregánd
 
 El scope del **master** branch llega hasta este punto: la creación de los shapefiles para subir a CartoDB. La puesta a punto del sitio web que utiliza este mapa de CartoDB se cubre en el README del branch **gh-pages**.
 
+## Estructura del directorio
+
+* *data*: contiene las bases de datos que no sean shapefiles
+* *shp*: contiene todos los shapefiles originales utilizados
+    - *prjs*: prjs con las proyecciones de Gauss Krueguer Buenos Aires, WGS84 (4326) y Gauss Kruegues Buenos Aires con el centro corregido para coincidir mejor con los basemap de CartoDB
+    - *divisiones*: shapefiles de divisiones geográficas de la Ciudad de Buenos Aires
+    - *transporte*: shapefiles originales de líneas y estaciones, y shapefiles de estaciones convertidas en buffers
+    - *contexto*: shapefiles con información adicional como espacios verdes, hospitales, etc.
+* *indicadores*: contiene los resultados del procesamiento de shapefiles y bases de datos
+    - *csvs*: un csv por nivel de agregación geográfica del Censo Nacional 2010 con todos los indicadores construidos (para radios censales, fracciones censales y comunas)
+    - *radios_censo_2010*, *fracciones_censo_2010*, *barrios_censo_2010* y *comunas_censo_2010*: carpetas que contienen los shapefiles de los 4 niveles de agregación geográfica con los indicadores calculados
+    - *buffers*: reúne a las carpetas que contienen todos los shapefiles de los buffers de estaciones con sus indicadores calculados
+    - **divisiones**: shapefile que contiene al merge de los 4 niveles de agregación geográficos
+    - **buffers_estaciones**: shapefile que contiene al merge de todos los buffers
+    - **lineas**: shapefile que contiene al merge de todas las líneas
+    - **estaciones**: shapefile que contiene al merge de todas las estaciones
+* *intersection_weights*: archivos json con los porcentajes de intersección de cada buffer con radios censales expresados como % de la superficie del buffer y como % de la superficie del radio censal
+* *scripts*: módulos escritos en python con métodos utilizados por los ipython notebooks para procesar los datos
+* *Links.xlsx*: lista de links con los recursos a descargar necesarios para construir el mapa
+
 ## Agradecimientos
 
 * Pablo Lorenzatto ([@plorenzatto](https://github.com/plorenzatto)) por la idea original y brainstorming posterior sobre el indicador de llegabilidad de servicios de colectivos estándar, y por su ayuda en la optimización de consultas geográficas.
 * Nacho Leguizamon ([@dorisphanic](https://twitter.com/dorisphanic)) y Mercedes Fiz ([@mechafiz](https://twitter.com/mechafiz)) por la asistencia en el diseño y la usabilidad del mapa.
-* Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el armado de mock ups y consejos técnicos varios
+* Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el armado de mock ups e innumerables consejos técnicos.
+* Natalia Sampietro ([@nsampi](https://github.com/nsampi)) por el brainstorming sobre construcción de indicadores, la enriquecedora discusión metodológica y mucho más.
 
 
