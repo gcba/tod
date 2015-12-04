@@ -1,4 +1,3 @@
-
 Mapa de Desarrollo Orientado al Transporte (DOT)
 ===
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -6,17 +5,17 @@ Mapa de Desarrollo Orientado al Transporte (DOT)
 
 - [A. Introducción](#a-introducci%C3%B3n)
 - [B. Uso y características de la herramienta](#b-uso-y-caracter%C3%ADsticas-de-la-herramienta)
-  - [1. Cómo usar el mapa](#1-c%C3%B3mo-usar-el-mapa)
-  - [2. Divisiones de la Ciudad Autónoma de Buenos Aires](#2-divisiones-de-la-ciudad-aut%C3%B3noma-de-buenos-aires)
-  - [3. Radios de cobertura](#3-radios-de-cobertura)
-  - [4. Indicadores disponibles](#4-indicadores-disponibles)
+    - [1. Cómo usar el mapa](#1-c%C3%B3mo-usar-el-mapa)
+    - [2. Divisiones de la Ciudad Autónoma de Buenos Aires](#2-divisiones-de-la-ciudad-aut%C3%B3noma-de-buenos-aires)
+    - [3. Radios de cobertura](#3-radios-de-cobertura)
+    - [4. Indicadores disponibles](#4-indicadores-disponibles)
 - [C. Metodología](#c-metodolog%C3%ADa)
-  - [1. Estimación de indicadores basados en el Censo Nacional 2010](#1-estimaci%C3%B3n-de-indicadores-basados-en-el-censo-nacional-2010)
-  - [2. Estimación del nivel socioeconómico de un radio censal](#2-estimaci%C3%B3n-del-nivel-socioecon%C3%B3mico-de-un-radio-censal)
-  - [3. Estimación de indicadores relacionados con el transporte](#3-estimaci%C3%B3n-de-indicadores-relacionados-con-el-transporte)
-  - [4. Estimación de indicadores sobre el uso del suelo](#4-estimaci%C3%B3n-de-indicadores-sobre-el-uso-del-suelo)
-  - [5. Recálculo de indicadores para radios de cobertura de estaciones (buffers) y distintos niveles de agregación geográfica (divisiones)](#5-rec%C3%A1lculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregaci%C3%B3n-geogr%C3%A1fica-divisiones)
-  - [6. Recálculo de indicadores para conjuntos de buffers y para el área total fuera de los mismos](#6-rec%C3%A1lculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-%C3%A1rea-total-fuera-de-los-mismos)
+    - [1. Estimación de indicadores basados en el Censo Nacional 2010](#1-estimaci%C3%B3n-de-indicadores-basados-en-el-censo-nacional-2010)
+    - [2. Estimación del nivel socioeconómico de un radio censal](#2-estimaci%C3%B3n-del-nivel-socioecon%C3%B3mico-de-un-radio-censal)
+    - [3. Estimación de indicadores relacionados con el transporte](#3-estimaci%C3%B3n-de-indicadores-relacionados-con-el-transporte)
+    - [4. Estimación de indicadores sobre el uso del suelo](#4-estimaci%C3%B3n-de-indicadores-sobre-el-uso-del-suelo)
+    - [5. Recálculo de indicadores para radios de cobertura de estaciones (buffers) y distintos niveles de agregación geográfica (divisiones)](#5-rec%C3%A1lculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregaci%C3%B3n-geogr%C3%A1fica-divisiones)
+    - [6. Recálculo de indicadores para conjuntos de buffers y para el área total fuera de los mismos](#6-rec%C3%A1lculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-%C3%A1rea-total-fuera-de-los-mismos)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -208,7 +207,8 @@ $IndiceEducSuperior = \frac{MayoresDe25Universitarios}{MayoresDe25}$
 Calcula el porcentaje de habitantes mayores a 25 años que tiene nivel universitario completo.
 
 **Cuadro 1:** *Matriz de correlaciones*
-| ******          |   educ_sup |   escolaridad |    compu |
+
+| *               |   educ_sup |   escolaridad |    compu |
 |:----------------|-----------:|--------------:|---------:|
 | **educ_sup**    |   1        |      0.496032 | 0.792191 |
 | **escolaridad** |   0.496032 |      1        | 0.64806  |
@@ -222,7 +222,7 @@ El análisis de los tres primeros componentes principales arrojó los siguientes
 
 Utilizando este método, se reduce la dimensionalidad de la información que aporta cada uno de los índices aprovechando las variaciones conjuntas entre ellos. El primer componente principal es una combinación lineal de los tres índices según la siguiente ecuación:
 
-$PC1 = 0.76120783 * IndiceEducSup + 0.10759338 * IndiceEscolaridad + 0.63952037 * IndiceCompu$
+\\[PC1 = 0.76120783 * IndiceEducSup + 0.10759338 * IndiceEscolaridad + 0.63952037 * IndiceCompu\\]
 
 Utilizaremos a este primer componente principal como una estimación del nivel socioeconómico de los radios censales. Pero siendo que el PC1 arroja un rango de valores entre 0 y 1.32 (aproximadamente) se procede a una normalización para facilitar la lectura de los valores.
 
