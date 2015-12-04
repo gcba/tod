@@ -5,6 +5,16 @@ CENTER = [-34.615753, -58.4]
 ZOOM = 12
 
 INDICS = {
+    "hombres": {
+        "short": "Hombres (%)",
+        "scale": 1,
+        "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
+    },
+    "hab": {
+        "short": "Extranjeros (%)",
+        "scale": 1,
+        "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
+    },
     "hab": {
         "short": "Población (M)",
         "scale": 1 / 1000000,
@@ -209,11 +219,11 @@ INDICS_HIERARCHY = {
 }
 
 COLORS = {
-    "divisions": ["#0098FF", "#17A1FF", "#2DAAFF", "#44B4FF", "#5BBDFF",
-        "#71C6FF", "#88CFFF", "#9FD9FF", "#B5E2FF", "#CCEBFF"
+    "divisions": ["#0088e6", "#1492e9", "#2b9eeb", "#40a8ed", "#55b1f0",
+        "#6bbcf3", "#81c6f6", "#95d1f8", "#acdcfa", "#c1e6fd"
     ],
-    "buffers": ["#ff1f00", "#ff3317", "#ff462d", "#ff5a44", "#ff6f5b",
-        "#ff8271", "#ff9688", "#ffaa9f", "#ffbdb5", "#ffd2cc"
+    "buffers": ["#e61100", "#e92414", "#eb382b", "#ed4b40", "#f06155",
+        "#f3756b", "#f68a81", "#f89b95", "#fab0ac", "#fdc4c1"
     ]
 }
 

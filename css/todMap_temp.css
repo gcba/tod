@@ -1,0 +1,192 @@
+html,
+body,
+#map {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#show-hide-legends {
+    display: none;
+    margin: 5px;
+}
+
+#container-panel-transporte {
+    position: fixed;
+    bottom: 40px;
+    left: 5px;
+    z-index: 5;
+}
+
+#panel-transporte {
+    margin: 5px;
+}
+
+#capas-transporte {
+    width: 220px;
+    z-index: 999;
+}
+
+#main-panel,
+#main-panel-container {
+    top: 50px;
+    right: 10px;
+    position: fixed;
+}
+
+#main-panel {
+    max-height: calc(97% - 50px);
+    width: 400px;
+    /*max-width: 30%*/
+}
+
+#open-main-panel {
+    display: none;
+}
+
+.cartodb-fullscreen,
+.cartodb-zoom {
+    z-index: 4
+}
+
+#open-legends,
+#open-indicators-table {
+    display: none;
+}
+
+#open-indicators-table,
+#close-indicators-table {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+#buffer-size,
+#buffer-modo-transporte {
+    float: left;
+}
+
+#tag-list-buffers {
+    display: none;
+}
+
+#panel-indicators,
+#panel-indicators-select {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    margin: 0 auto;
+    width: 400px;
+    height: 500px;
+    margin: -250px 0 0 -200px;
+    z-index: 3;
+}
+
+#main-panel {
+    z-index: 2;
+}
+
+.panel-body {
+    height: 450px;
+}
+
+.fixed-panel {
+    overflow-y: scroll;
+}
+
+.div-infowindow {
+    display: none;
+}
+
+#panel-indicators-seleccionados {
+    z-index: 5;
+}
+
+#download-image {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    z-index: 1;
+}
+
+#button-download-image {
+    width: 130px;
+    margin: 0 0 0 -65px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+#wrapper {
+    height: 20px;
+}
+
+#indicators-seleccionados {
+    margin-top: 0px!important;
+}
+
+#panel-indicators-seleccionados {
+    display: none;
+}
+
+div.cartodb-legend,
+div.cartodb-legend ul li {
+    color: #D3D3D3;
+}
+
+#map .cartodb-legend-stack {
+    display: none;
+    position: absolute;
+    left: 5px;
+    max-width: 275px;
+    bottom: 90px;
+    background: rgba(58, 58, 48, 0.4);
+    padding: 2px;
+    z-index: 1;
+}
+
+.cartodb-layer-selector-box,
+.cartodb-searchbox,
+.cartodb-share {
+    float: right;
+    display: inline-block;
+    margin: 0 5px 4px 5px!important;
+    position: relative;
+}
+
+#table-spinner,
+#universe-spinner {
+    display: none;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.tooltip {
+    position: fixed;
+}
+
+.legend-indic-change-button {
+    display: none;
+}
+
+#image-parameters {
+    padding: 3px;
+    width: 200px;
+    float: left;
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    margin: 0 0 0 -100px;
+}
+
+.cartodb-legend-stack,
+.cartodb-zoom,
+.cartodb-fullscreen,
+.content {
+    display: none!important;
+}

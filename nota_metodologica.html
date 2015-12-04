@@ -1,0 +1,1466 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>body {
+  width: 45em;
+  border: 1px solid #ddd;
+  outline: 1300px solid #fff;
+  margin: 16px auto;
+}
+
+body .markdown-body
+{
+  padding: 30px;
+}
+
+@font-face {
+  font-family: fontawesome-mini;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,d09GRgABAAAAAAYcAA0AAAAACjQAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAABMAAAABwAAAAca8vGTk9TLzIAAAFMAAAARAAAAFZG1VHVY21hcAAAAZAAAAA+AAABQgAP9AdjdnQgAAAB0AAAAAQAAAAEACICiGdhc3AAAAHUAAAACAAAAAj//wADZ2x5ZgAAAdwAAADRAAABEKyikaNoZWFkAAACsAAAAC0AAAA2AtXoA2hoZWEAAALgAAAAHAAAACQHngNFaG10eAAAAvwAAAAQAAAAEAwAACJsb2NhAAADDAAAAAoAAAAKALIAVG1heHAAAAMYAAAAHwAAACABEAB2bmFtZQAAAzgAAALBAAAFu3I9x/Nwb3N0AAAF/AAAAB0AAAAvaoFvbwAAAAEAAAAAzBdyYwAAAADP2IQvAAAAAM/bz7t4nGNgZGFgnMDAysDB1Ml0hoGBoR9CM75mMGLkYGBgYmBlZsAKAtJcUxgcPsR8iGF2+O/AEMPsznAYKMwIkgMA5REMOXicY2BgYGaAYBkGRgYQsAHyGMF8FgYFIM0ChED+h5j//yEk/3KoSgZGNgYYk4GRCUgwMaACRoZhDwCs7QgGAAAAIgKIAAAAAf//AAJ4nHWMMQrCQBBF/0zWrCCIKUQsTDCL2EXMohYGSSmorScInsRGL2DOYJe0Ntp7BK+gJ1BxF1stZvjz/v8DRghQzEc4kIgKwiAppcA9LtzKLSkdNhKFY3HF4lK69ExKslx7Xa+vPRVS43G98vG1DnkDMIBUgFN0MDXflU8tbaZOUkXUH0+U27RoRpOIyCKjbMCVejwypzJJG4jIwb43rfl6wbwanocrJm9XFYfskuVC5K/TPyczNU7b84CXcbxks1Un6H6tLH9vf2LRnn8Ax7A5WQAAAHicY2BkYGAA4teL1+yI57f5ysDNwgAC529f0kOmWRiYVgEpDgYmEA8AUzEKsQAAAHicY2BkYGB2+O/AEMPCAAJAkpEBFbAAADgKAe0EAAAiAAAAAAQAAAAEAAAAAAAAKgAqACoAiAAAeJxjYGRgYGBhsGFgYgABEMkFhAwM/xn0QAIAD6YBhwB4nI1Ty07cMBS9QwKlQapQW3VXySvEqDCZGbGaHULiIQ1FKgjWMxknMfLEke2A+IJu+wntrt/QbVf9gG75jK577Lg8K1qQPCfnnnt8fX1NRC/pmjrk/zprC+8D7tBy9DHgBXoWfQ44Av8t4Bj4Z8CLtBL9CniJluPXASf0Lm4CXqFX8Q84dOLnMB17N4c7tBo1AS/Qi+hTwBH4rwHHwN8DXqQ30XXAS7QaLwSc0Gn8NuAVWou/gFmnjLrEaEh9GmDdDGgL3B4JsrRPDU2hTOiMSuJUIdKQQayiAth69r6akSSFqIJuA19TrzCIaY8sIoxyrNIrL//pw7A2iMygkX5vDj+G+kuoLdX4GlGK/8Lnlz6/h9MpmoO9rafrz7ILXEHHaAx95s9lsI7AHNMBWEZHULnfAXwG9/ZqdzLI08iuwRloXE8kfhXYAvE23+23DU3t626rbs8/8adv+9DWknsHp3E17oCf+Z48rvEQNZ78paYM38qfk3v/u3l3u3GXN2Dmvmvpf1Srwk3pB/VSsp512bA/GG5i2WJ7wu430yQ5K3nFGiOqgtmSB5pJVSizwaacmUZzZhXLlZTq8qGGFY2YcSkqbth6aW1tRmlaCFs2016m5qn36SbJrqosG4uMV4aP2PHBmB3tjtmgN2izkGQyLWprekbIntJFing32a5rKWCN/SdSoga45EJykyQ7asZvHQ8PTm6cslIpwyeyjbVltNikc2HTR7YKh9LBl9DADC0U/jLcBZDKrMhUBfQBvXRzLtFtjU9eNHKin0x5InTqb8lNpfKv1s1xHzTXRqgKzek/mb7nB8RZTCDhGEX3kK/8Q75AmUM/eLkfA+0Hi908Kx4eNsMgudg5GLdRD7a84npi+YxNr5i5KIbW5izXas7cHXIMAau1OueZhfj+cOcP3P8MNIWLyYOBuxL6DRylJ4cAAAB4nGNgYoAALjDJyIAOWMCiTIxMLDmZedkABtIBygAAAA==) format('woff');
+}
+
+.markdown-body {
+  font-family: sans-serif;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.markdown-body a {
+  background: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body b,
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body mark {
+  background: #ff0;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body sub,
+.markdown-body sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+.markdown-body sup {
+  top: -0.5em;
+}
+.markdown-body sub {
+  bottom: -0.25em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body .codehilitetable {
+  border: 0;
+  border-spacing: 0;
+}
+
+.markdown-body .codehilitetable tr {
+  border: 0;
+}
+
+.markdown-body .codehilitetable pre,
+.markdown-body .codehilitetable div.codehilite {
+  margin: 0;
+}
+
+.markdown-body .linenos,
+.markdown-body .code,
+.markdown-body .codehilitetable td {
+  border: 0;
+  padding: 0;
+}
+
+.markdown-body td:not(.linenos) .linenodiv {
+  padding: 0 !important;
+}
+
+.markdown-body .code {
+  width: 100%;
+}
+
+.markdown-body .linenos div pre,
+.markdown-body .linenodiv pre,
+.markdown-body .linenodiv {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-left-radius: 3px;
+  -webkit-border-bottom-left-radius: 3px;
+  -moz-border-radius-topleft: 3px;
+  -moz-border-radius-bottomleft: 3px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.markdown-body .code div pre,
+.markdown-body .code div {
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-border-top-right-radius: 3px;
+  -webkit-border-bottom-right-radius: 3px;
+  -moz-border-radius-topright: 3px;
+  -moz-border-radius-bottomright: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.markdown-body * {
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body input {
+  font: 13px Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  line-height: 1.4;
+}
+
+.markdown-body a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:focus,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before,
+.markdown-body hr:after {
+  display: table;
+  content: " ";
+}
+
+.markdown-body hr:after {
+  clear: both;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code,
+.markdown-body pre,
+.markdown-body samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body kbd {
+  background-color: #e7e7e7;
+  background-image: -moz-linear-gradient(#fefefe, #e7e7e7);
+  background-image: -webkit-linear-gradient(#fefefe, #e7e7e7);
+  background-image: linear-gradient(#fefefe, #e7e7e7);
+  background-repeat: repeat-x;
+  border-radius: 2px;
+  border: 1px solid #cfcfcf;
+  color: #000;
+  padding: 3px 5px;
+  line-height: 10px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  display: inline-block;
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body .headeranchor-link {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.markdown-body .headeranchor-link:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .headeranchor,
+.markdown-body h2 .headeranchor,
+.markdown-body h3 .headeranchor,
+.markdown-body h4 .headeranchor,
+.markdown-body h5 .headeranchor,
+.markdown-body h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.markdown-body h1:hover .headeranchor-link,
+.markdown-body h2:hover .headeranchor-link,
+.markdown-body h3:hover .headeranchor-link,
+.markdown-body h4:hover .headeranchor-link,
+.markdown-body h5:hover .headeranchor-link,
+.markdown-body h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .headeranchor-link .headeranchor,
+.markdown-body h2:hover .headeranchor-link .headeranchor,
+.markdown-body h3:hover .headeranchor-link .headeranchor,
+.markdown-body h4:hover .headeranchor-link .headeranchor,
+.markdown-body h5:hover .headeranchor-link .headeranchor,
+.markdown-body h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre,
+.markdown-body .admonition {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.markdown-body code,
+.markdown-body samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .codehilite {
+  margin-bottom: 16px;
+}
+
+.markdown-body .codehilite pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .codehilite pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+/* Admonition */
+.markdown-body .admonition {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  border-left: 6px solid #333;
+  padding: 10px 10px 10px 30px;
+}
+
+.markdown-body .admonition table {
+  color: #333;
+}
+
+.markdown-body .admonition p {
+  padding: 0;
+}
+
+.markdown-body .admonition-title {
+  font-weight: bold;
+  margin: 0;
+}
+
+.markdown-body .admonition>.admonition-title {
+  color: #333;
+}
+
+.markdown-body .attention>.admonition-title {
+  color: #a6d796;
+}
+
+.markdown-body .caution>.admonition-title {
+  color: #d7a796;
+}
+
+.markdown-body .hint>.admonition-title {
+  color: #96c6d7;
+}
+
+.markdown-body .danger>.admonition-title {
+  color: #c25f77;
+}
+
+.markdown-body .question>.admonition-title {
+  color: #96a6d7;
+}
+
+.markdown-body .note>.admonition-title {
+  color: #d7c896;
+}
+
+.markdown-body .admonition:before,
+.markdown-body .attention:before,
+.markdown-body .caution:before,
+.markdown-body .hint:before,
+.markdown-body .danger:before,
+.markdown-body .question:before,
+.markdown-body .note:before {
+  font: normal normal 16px fontawesome-mini;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  line-height: 1.5;
+  color: #333;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.markdown-body .admonition:before {
+  content: "\f056\00a0";
+  color: 333;
+}
+
+.markdown-body .attention:before {
+  content: "\f058\00a0";
+  color: #a6d796;
+}
+
+.markdown-body .caution:before {
+  content: "\f06a\00a0";
+  color: #d7a796;
+}
+
+.markdown-body .hint:before {
+  content: "\f05a\00a0";
+  color: #96c6d7;
+}
+
+.markdown-body .danger:before {
+  content: "\f057\00a0";
+  color: #c25f77;
+}
+
+.markdown-body .question:before {
+  content: "\f059\00a0";
+  color: #96a6d7;
+}
+
+.markdown-body .note:before {
+  content: "\f040\00a0";
+  color: #d7c896;
+}
+
+.markdown-body .admonition::after {
+  content: normal;
+}
+
+.markdown-body .attention {
+  border-left: 6px solid #a6d796;
+}
+
+.markdown-body .caution {
+  border-left: 6px solid #d7a796;
+}
+
+.markdown-body .hint {
+  border-left: 6px solid #96c6d7;
+}
+
+.markdown-body .danger {
+  border-left: 6px solid #c25f77;
+}
+
+.markdown-body .question {
+  border-left: 6px solid #96a6d7;
+}
+
+.markdown-body .note {
+  border-left: 6px solid #d7c896;
+}
+
+.markdown-body .admonition>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body .admonition>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* progress bar*/
+.markdown-body .progress {
+  display: block;
+  width: 300px;
+  margin: 10px 0;
+  height: 24px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #ededed;
+  position: relative;
+  box-shadow: inset -1px 1px 3px rgba(0, 0, 0, .1);
+}
+
+.markdown-body .progress-label {
+  position: absolute;
+  text-align: center;
+  font-weight: bold;
+  width: 100%; margin: 0;
+  line-height: 24px;
+  color: #333;
+  text-shadow: 1px 1px 0 #fefefe, -1px -1px 0 #fefefe, -1px 1px 0 #fefefe, 1px -1px 0 #fefefe, 0 1px 0 #fefefe, 0 -1px 0 #fefefe, 1px 0 0 #fefefe, -1px 0 0 #fefefe, 1px 1px 2px #000;
+  -webkit-font-smoothing: antialiased !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.markdown-body .progress-bar {
+  height: 24px;
+  float: left;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  background-color: #96c6d7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), inset 0 -1px 0 rgba(0, 0, 0, .1);
+  background-size: 30px 30px;
+  background-image: -webkit-linear-gradient(
+    135deg, rgba(255, 255, 255, .4) 27%,
+    transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%,
+    transparent 77%, transparent
+  );
+  background-image: -moz-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -ms-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: -o-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, .4) 27%, transparent 27%,
+    transparent 52%, rgba(255, 255, 255, .4) 52%,
+    rgba(255, 255, 255, .4) 77%, transparent 77%,
+    transparent
+  );
+}
+
+.markdown-body .progress-100plus .progress-bar {
+  background-color: #a6d796;
+}
+
+.markdown-body .progress-80plus .progress-bar {
+  background-color: #c6d796;
+}
+
+.markdown-body .progress-60plus .progress-bar {
+  background-color: #d7c896;
+}
+
+.markdown-body .progress-40plus .progress-bar {
+  background-color: #d7a796;
+}
+
+.markdown-body .progress-20plus .progress-bar {
+  background-color: #d796a6;
+}
+
+.markdown-body .progress-0plus .progress-bar {
+  background-color: #c25f77;
+}
+
+.markdown-body .candystripe-animate .progress-bar{
+  -webkit-animation: animate-stripes 3s linear infinite;
+  -moz-animation: animate-stripes 3s linear infinite;
+  animation: animate-stripes 3s linear infinite;
+}
+
+@-webkit-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@-moz-keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+@keyframes animate-stripes {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.markdown-body .gloss .progress-bar {
+  box-shadow:
+    inset 0 4px 12px rgba(255, 255, 255, .7),
+    inset 0 -12px 0 rgba(0, 0, 0, .05);
+}
+
+/* Multimarkdown Critic Blocks */
+.markdown-body .critic_mark {
+  background: #ff0;
+}
+
+.markdown-body .critic_delete {
+  color: #c82829;
+  text-decoration: line-through;
+}
+
+.markdown-body .critic_insert {
+  color: #718c00 ;
+  text-decoration: underline;
+}
+
+.markdown-body .critic_comment {
+  color: #8e908c;
+  font-style: italic;
+}
+
+.markdown-body .headeranchor {
+  font: normal normal 16px octicons-anchor;
+  line-height: 1;
+  display: inline-block;
+  text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.headeranchor:before {
+  content: '\f05c';
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 4px 0.25em -20px;
+  vertical-align: middle;
+}
+
+/* Media */
+@media only screen and (min-width: 480px) {
+  .markdown-body {
+    font-size:14px;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .markdown-body {
+    font-size:16px;
+  }
+}
+
+@media print {
+  .markdown-body * {
+    background: transparent !important;
+    color: black !important;
+    filter:none !important;
+    -ms-filter: none !important;
+  }
+
+  .markdown-body {
+    font-size:12pt;
+    max-width:100%;
+    outline:none;
+    border: 0;
+  }
+
+  .markdown-body a,
+  .markdown-body a:visited {
+    text-decoration: underline;
+  }
+
+  .markdown-body .headeranchor-link {
+    display: none;
+  }
+
+  .markdown-body a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
+  .markdown-body abbr[title]:after {
+    content: " (" attr(title) ")";
+  }
+
+  .markdown-body .ir a:after,
+  .markdown-body a[href^="javascript:"]:after,
+  .markdown-body a[href^="#"]:after {
+    content: "";
+  }
+
+  .markdown-body pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .markdown-body pre,
+  .markdown-body blockquote {
+    border: 1px solid #999;
+    padding-right: 1em;
+    page-break-inside: avoid;
+  }
+
+  .markdown-body .progress,
+  .markdown-body .progress-bar {
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+  .markdown-body .progress {
+    border: 1px solid #ddd;
+  }
+
+  .markdown-body .progress-bar {
+    height: 22px;
+    border-right: 1px solid #ddd;
+  }
+
+  .markdown-body tr,
+  .markdown-body img {
+    page-break-inside: avoid;
+  }
+
+  .markdown-body img {
+    max-width: 100% !important;
+  }
+
+  .markdown-body p,
+  .markdown-body h2,
+  .markdown-body h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .markdown-body h2,
+  .markdown-body h3 {
+    page-break-after: avoid;
+  }
+}
+</style><style>.codehilite pre .hll { background-color: #f8eec7 }
+.codehilite pre  { background: #ffffff; color: #333333 }
+.codehilite pre .c { color: #999988; font-style: italic } /* Comment */
+.codehilite pre .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.codehilite pre .k { font-weight: bold } /* Keyword */
+.codehilite pre .n { color: #333333 } /* Name */
+.codehilite pre .o { font-weight: bold } /* Operator */
+.codehilite pre .cm { color: #999988; font-style: italic } /* Comment.Multiline */
+.codehilite pre .cp { color: #999999; font-weight: bold } /* Comment.Preproc */
+.codehilite pre .c1 { color: #999988; font-style: italic } /* Comment.Single */
+.codehilite pre .cs { color: #999988; font-style: italic } /* Comment.Special */
+.codehilite pre .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.codehilite pre .ge { font-style: italic } /* Generic.Emph */
+.codehilite pre .gr { color: #aa0000 } /* Generic.Error */
+.codehilite pre .gh { color: #999999 } /* Generic.Heading */
+.codehilite pre .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.codehilite pre .go { color: #888888 } /* Generic.Output */
+.codehilite pre .gp { color: #555555 } /* Generic.Prompt */
+.codehilite pre .gs { font-weight: bold } /* Generic.Strong */
+.codehilite pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite pre .gt { color: #aa0000 } /* Generic.Traceback */
+.codehilite pre .kc { font-weight: bold } /* Keyword.Constant */
+.codehilite pre .kd { font-weight: bold } /* Keyword.Declaration */
+.codehilite pre .kn { font-weight: bold } /* Keyword.Namespace */
+.codehilite pre .kp { font-weight: bold } /* Keyword.Pseudo */
+.codehilite pre .kr { font-weight: bold } /* Keyword.Reserved */
+.codehilite pre .kt { font-weight: bold } /* Keyword.Type */
+.codehilite pre .m { color: #945277 } /* Literal.Number */
+.codehilite pre .s { color: #df5000 } /* Literal.String */
+.codehilite pre .na { color: #008080 } /* Name.Attribute */
+.codehilite pre .nb { color: #0086b3 } /* Name.Builtin */
+.codehilite pre .nc { color: #445588; font-weight: bold } /* Name.Class */
+.codehilite pre .no { color: #094e99 } /* Name.Constant */
+.codehilite pre .nd { color: #333333 } /* Name.Decorator */
+.codehilite pre .ni { color: #800080 } /* Name.Entity */
+.codehilite pre .ne { color: #990000; font-weight: bold } /* Name.Exception */
+.codehilite pre .nf { color: #945277; font-weight: bold } /* Name.Function */
+.codehilite pre .nl { color: #333333 } /* Name.Label */
+.codehilite pre .nn { color: #555555 } /* Name.Namespace */
+.codehilite pre .nx { color: #333333 } /* Name.Other */
+.codehilite pre .py { color: #333333 } /* Name.Property */
+.codehilite pre .nt { color: #000080 } /* Name.Tag */
+.codehilite pre .nv { color: #008080 } /* Name.Variable */
+.codehilite pre .ow { font-weight: bold } /* Operator.Word */
+.codehilite pre .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite pre .mb { color: #945277 } /* Literal.Number.Bin */
+.codehilite pre .mf { color: #945277 } /* Literal.Number.Float */
+.codehilite pre .mh { color: #945277 } /* Literal.Number.Hex */
+.codehilite pre .mi { color: #945277 } /* Literal.Number.Integer */
+.codehilite pre .mo { color: #945277 } /* Literal.Number.Oct */
+.codehilite pre .sb { color: #df5000 } /* Literal.String.Backtick */
+.codehilite pre .sc { color: #df5000 } /* Literal.String.Char */
+.codehilite pre .sd { color: #df5000 } /* Literal.String.Doc */
+.codehilite pre .s2 { color: #df5000 } /* Literal.String.Double */
+.codehilite pre .se { color: #df5000 } /* Literal.String.Escape */
+.codehilite pre .sh { color: #df5000 } /* Literal.String.Heredoc */
+.codehilite pre .si { color: #df5000 } /* Literal.String.Interpol */
+.codehilite pre .sx { color: #df5000 } /* Literal.String.Other */
+.codehilite pre .sr { color: #017936 } /* Literal.String.Regex */
+.codehilite pre .s1 { color: #df5000 } /* Literal.String.Single */
+.codehilite pre .ss { color: #8b467f } /* Literal.String.Symbol */
+.codehilite pre .bp { color: #999999 } /* Name.Builtin.Pseudo */
+.codehilite pre .vc { color: #008080 } /* Name.Variable.Class */
+.codehilite pre .vg { color: #008080 } /* Name.Variable.Global */
+.codehilite pre .vi { color: #008080 } /* Name.Variable.Instance */
+.codehilite pre .il { color: #945277 } /* Literal.Number.Integer.Long */</style><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX"],
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    processEscapes: false
+  },
+  TeX: {
+    extensions: ["AMSmath.js", "AMSsymbols.js"],
+    TagSide: "right",
+    TagIndent: ".8em",
+    MultLineWidth: "85%",
+    equationNumbers: {
+      autoNumber: "AMS",
+    },
+    unicode: {
+      fonts: "STIXGeneral,'Arial Unicode MS'"
+    }
+  },
+  showProcessingMessages: false
+});
+</script>
+<script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+<script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.4/sequence-diagram-min.js"></script>
+<script type="text/javascript">// flowchart, v1.3.4
+// Copyright (c)2014 Adriano Raiano (adrai).
+// Distributed under MIT license
+// http://adrai.github.io/flowchart.js
+!function(){function a(b,c){if(!b||"function"==typeof b)return c;var d={};for(var e in c)d[e]=c[e];for(e in b)b[e]&&(d[e]="object"==typeof d[e]?a(d[e],b[e]):b[e]);return d}function b(a,b){if("function"==typeof Object.create)a.super_=b,a.prototype=Object.create(b.prototype,{constructor:{value:a,enumerable:!1,writable:!0,configurable:!0}});else{a.super_=b;var c=function(){};c.prototype=b.prototype,a.prototype=new c,a.prototype.constructor=a}}function c(a,b,c){var d,e,f="M{0},{1}";for(d=2,e=2*c.length+2;e>d;d+=2)f+=" L{"+d+"},{"+(d+1)+"}";var g=[b.x,b.y];for(d=0,e=c.length;e>d;d++)g.push(c[d].x),g.push(c[d].y);var h=a.paper.path(f,g);h.attr("stroke",a.options["element-color"]),h.attr("stroke-width",a.options["line-width"]);var i=a.options.font,j=a.options["font-family"],k=a.options["font-weight"];return i&&h.attr({font:i}),j&&h.attr({"font-family":j}),k&&h.attr({"font-weight":k}),h}function d(a,b,c,d){var e,f;"[object Array]"!==Object.prototype.toString.call(c)&&(c=[c]);var g="M{0},{1}";for(e=2,f=2*c.length+2;f>e;e+=2)g+=" L{"+e+"},{"+(e+1)+"}";var h=[b.x,b.y];for(e=0,f=c.length;f>e;e++)h.push(c[e].x),h.push(c[e].y);var i=a.paper.path(g,h);i.attr({stroke:a.options["line-color"],"stroke-width":a.options["line-width"],"arrow-end":a.options["arrow-end"]});var j=a.options.font,k=a.options["font-family"],l=a.options["font-weight"];if(j&&i.attr({font:j}),k&&i.attr({"font-family":k}),l&&i.attr({"font-weight":l}),d){var m=!1,n=a.paper.text(0,0,d),o=!1,p=c[0];b.y===p.y&&(o=!0);var q=0,r=0;m?(q=b.x>p.x?b.x-(b.x-p.x)/2:p.x-(p.x-b.x)/2,r=b.y>p.y?b.y-(b.y-p.y)/2:p.y-(p.y-b.y)/2,o?(q-=n.getBBox().width/2,r-=a.options["text-margin"]):(q+=a.options["text-margin"],r-=n.getBBox().height/2)):(q=b.x,r=b.y,o?(q+=a.options["text-margin"]/2,r-=a.options["text-margin"]):(q+=a.options["text-margin"]/2,r+=a.options["text-margin"])),n.attr({"text-anchor":"start","font-size":a.options["font-size"],fill:a.options["font-color"],x:q,y:r}),j&&n.attr({font:j}),k&&n.attr({"font-family":k}),l&&n.attr({"font-weight":l})}return i}function e(a,b,c,d,e,f,g,h){var i,j,k,l,m,n={x:null,y:null,onLine1:!1,onLine2:!1};return i=(h-f)*(c-a)-(g-e)*(d-b),0===i?n:(j=b-f,k=a-e,l=(g-e)*j-(h-f)*k,m=(c-a)*j-(d-b)*k,j=l/i,k=m/i,n.x=a+j*(c-a),n.y=b+j*(d-b),j>0&&1>j&&(n.onLine1=!0),k>0&&1>k&&(n.onLine2=!0),n)}function f(a,b){b=b||{},this.paper=new Raphael(a),this.options=r.defaults(b,q),this.symbols=[],this.lines=[],this.start=null}function g(a,b,c){this.chart=a,this.group=this.chart.paper.set(),this.symbol=c,this.connectedTo=[],this.symbolType=b.symbolType,this.flowstate=b.flowstate||"future",this.next_direction=b.next&&b.direction_next?b.direction_next:void 0,this.text=this.chart.paper.text(0,0,b.text),b.key&&(this.text.node.id=b.key+"t"),this.text.node.setAttribute("class",this.getAttr("class")+"t"),this.text.attr({"text-anchor":"start",x:this.getAttr("text-margin"),fill:this.getAttr("font-color"),"font-size":this.getAttr("font-size")});var d=this.getAttr("font"),e=this.getAttr("font-family"),f=this.getAttr("font-weight");d&&this.text.attr({font:d}),e&&this.text.attr({"font-family":e}),f&&this.text.attr({"font-weight":f}),b.link&&this.text.attr("href",b.link),b.target&&this.text.attr("target",b.target);var g=this.getAttr("maxWidth");if(g){for(var h=b.text.split(" "),i="",j=0,k=h.length;k>j;j++){var l=h[j];this.text.attr("text",i+" "+l),i+=this.text.getBBox().width>g?"\n"+l:" "+l}this.text.attr("text",i.substring(1))}if(this.group.push(this.text),c){var m=this.getAttr("text-margin");c.attr({fill:this.getAttr("fill"),stroke:this.getAttr("element-color"),"stroke-width":this.getAttr("line-width"),width:this.text.getBBox().width+2*m,height:this.text.getBBox().height+2*m}),c.node.setAttribute("class",this.getAttr("class")),b.link&&c.attr("href",b.link),b.target&&c.attr("target",b.target),b.key&&(c.node.id=b.key),this.group.push(c),c.insertBefore(this.text),this.text.attr({y:c.getBBox().height/2}),this.initialize()}}function h(a,b){var c=a.paper.rect(0,0,0,0,20);b=b||{},b.text=b.text||"Start",g.call(this,a,b,c)}function i(a,b){var c=a.paper.rect(0,0,0,0,20);b=b||{},b.text=b.text||"End",g.call(this,a,b,c)}function j(a,b){var c=a.paper.rect(0,0,0,0);b=b||{},g.call(this,a,b,c)}function k(a,b){var c=a.paper.rect(0,0,0,0);b=b||{},g.call(this,a,b,c),c.attr({width:this.text.getBBox().width+4*this.getAttr("text-margin")}),this.text.attr({x:2*this.getAttr("text-margin")});var d=a.paper.rect(0,0,0,0);d.attr({x:this.getAttr("text-margin"),stroke:this.getAttr("element-color"),"stroke-width":this.getAttr("line-width"),width:this.text.getBBox().width+2*this.getAttr("text-margin"),height:this.text.getBBox().height+2*this.getAttr("text-margin"),fill:this.getAttr("fill")}),b.key&&(d.node.id=b.key+"i");var e=this.getAttr("font"),f=this.getAttr("font-family"),h=this.getAttr("font-weight");e&&d.attr({font:e}),f&&d.attr({"font-family":f}),h&&d.attr({"font-weight":h}),b.link&&d.attr("href",b.link),b.target&&d.attr("target",b.target),this.group.push(d),d.insertBefore(this.text),this.initialize()}function l(a,b){b=b||{},g.call(this,a,b),this.textMargin=this.getAttr("text-margin"),this.text.attr({x:3*this.textMargin});var d=this.text.getBBox().width+4*this.textMargin,e=this.text.getBBox().height+2*this.textMargin,f=this.textMargin,h=e/2,i={x:f,y:h},j=[{x:f-this.textMargin,y:e},{x:f-this.textMargin+d,y:e},{x:f-this.textMargin+d+2*this.textMargin,y:0},{x:f-this.textMargin+2*this.textMargin,y:0},{x:f,y:h}],k=c(a,i,j);k.attr({stroke:this.getAttr("element-color"),"stroke-width":this.getAttr("line-width"),fill:this.getAttr("fill")}),b.link&&k.attr("href",b.link),b.target&&k.attr("target",b.target),b.key&&(k.node.id=b.key),k.node.setAttribute("class",this.getAttr("class")),this.text.attr({y:k.getBBox().height/2}),this.group.push(k),k.insertBefore(this.text),this.initialize()}function m(a,b){b=b||{},g.call(this,a,b),this.textMargin=this.getAttr("text-margin"),this.yes_direction="bottom",this.no_direction="right",b.yes&&b.direction_yes&&b.no&&!b.direction_no?"right"===b.direction_yes?(this.no_direction="bottom",this.yes_direction="right"):(this.no_direction="right",this.yes_direction="bottom"):b.yes&&!b.direction_yes&&b.no&&b.direction_no?"right"===b.direction_no?(this.yes_direction="bottom",this.no_direction="right"):(this.yes_direction="right",this.no_direction="bottom"):(this.yes_direction="bottom",this.no_direction="right"),this.yes_direction=this.yes_direction||"bottom",this.no_direction=this.no_direction||"right",this.text.attr({x:2*this.textMargin});var d=this.text.getBBox().width+3*this.textMargin;d+=d/2;var e=this.text.getBBox().height+2*this.textMargin;e+=e/2,e=Math.max(.5*d,e);var f=d/4,h=e/4;this.text.attr({x:f+this.textMargin/2});var i={x:f,y:h},j=[{x:f-d/4,y:h+e/4},{x:f-d/4+d/2,y:h+e/4+e/2},{x:f-d/4+d,y:h+e/4},{x:f-d/4+d/2,y:h+e/4-e/2},{x:f-d/4,y:h+e/4}],k=c(a,i,j);k.attr({stroke:this.getAttr("element-color"),"stroke-width":this.getAttr("line-width"),fill:this.getAttr("fill")}),b.link&&k.attr("href",b.link),b.target&&k.attr("target",b.target),b.key&&(k.node.id=b.key),k.node.setAttribute("class",this.getAttr("class")),this.text.attr({y:k.getBBox().height/2}),this.group.push(k),k.insertBefore(this.text),this.initialize()}function n(a){function b(a){var b=a.indexOf("(")+1,c=a.indexOf(")");return b>=0&&c>=0?d.symbols[a.substring(0,b-1)]:d.symbols[a]}function c(a){var b="next",c=a.indexOf("(")+1,d=a.indexOf(")");return c>=0&&d>=0&&(b=D.substring(c,d),b.indexOf(",")<0&&"yes"!==b&&"no"!==b&&(b="next, "+b)),b}a=a||"",a=a.trim();for(var d={symbols:{},start:null,drawSVG:function(a,b){function c(a){if(g[a.key])return g[a.key];switch(a.symbolType){case"start":g[a.key]=new h(e,a);break;case"end":g[a.key]=new i(e,a);break;case"operation":g[a.key]=new j(e,a);break;case"inputoutput":g[a.key]=new l(e,a);break;case"subroutine":g[a.key]=new k(e,a);break;case"condition":g[a.key]=new m(e,a);break;default:return new Error("Wrong symbol type!")}return g[a.key]}var d=this;this.diagram&&this.diagram.clean();var e=new f(a,b);this.diagram=e;var g={};!function n(a,b,f){var g=c(a);return d.start===a?e.startWith(g):b&&f&&!b.pathOk&&(b instanceof m?(f.yes===a&&b.yes(g),f.no===a&&b.no(g)):b.then(g)),g.pathOk?g:(g instanceof m?(a.yes&&n(a.yes,g,a),a.no&&n(a.no,g,a)):a.next&&n(a.next,g,a),g)}(this.start),e.render()},clean:function(){this.diagram.clean()}},e=[],g=0,n=1,o=a.length;o>n;n++)if("\n"===a[n]&&"\\"!==a[n-1]){var p=a.substring(g,n);g=n+1,e.push(p.replace(/\\\n/g,"\n"))}g<a.length&&e.push(a.substr(g));for(var q=1,r=e.length;r>q;){var s=e[q];s.indexOf(": ")<0&&s.indexOf("(")<0&&s.indexOf(")")<0&&s.indexOf("->")<0&&s.indexOf("=>")<0?(e[q-1]+="\n"+s,e.splice(q,1),r--):q++}for(;e.length>0;){var t=e.splice(0,1)[0];if(t.indexOf("=>")>=0){var u,v=t.split("=>"),w={key:v[0],symbolType:v[1],text:null,link:null,target:null,flowstate:null};if(w.symbolType.indexOf(": ")>=0&&(u=w.symbolType.split(": "),w.symbolType=u[0],w.text=u[1]),w.text&&w.text.indexOf(":>")>=0?(u=w.text.split(":>"),w.text=u[0],w.link=u[1]):w.symbolType.indexOf(":>")>=0&&(u=w.symbolType.split(":>"),w.symbolType=u[0],w.link=u[1]),w.symbolType.indexOf("\n")>=0&&(w.symbolType=w.symbolType.split("\n")[0]),w.link){var x=w.link.indexOf("[")+1,y=w.link.indexOf("]");x>=0&&y>=0&&(w.target=w.link.substring(x,y),w.link=w.link.substring(0,x-1))}if(w.text&&w.text.indexOf("|")>=0){var z=w.text.split("|");w.text=z[0],w.flowstate=z[1].trim()}d.symbols[w.key]=w}else if(t.indexOf("->")>=0)for(var A=t.split("->"),B=0,C=A.length;C>B;B++){var D=A[B],E=b(D),F=c(D),G=null;if(F.indexOf(",")>=0){var H=F.split(",");F=H[0],G=H[1].trim()}if(d.start||(d.start=E),C>B+1){var I=A[B+1];E[F]=b(I),E["direction_"+F]=G,G=null}}}return d}Array.prototype.indexOf||(Array.prototype.indexOf=function(a){"use strict";if(null===this)throw new TypeError;var b=Object(this),c=b.length>>>0;if(0===c)return-1;var d=0;if(arguments.length>0&&(d=Number(arguments[1]),d!=d?d=0:0!==d&&1/0!=d&&d!=-1/0&&(d=(d>0||-1)*Math.floor(Math.abs(d)))),d>=c)return-1;for(var e=d>=0?d:Math.max(c-Math.abs(d),0);c>e;e++)if(e in b&&b[e]===a)return e;return-1}),Array.prototype.lastIndexOf||(Array.prototype.lastIndexOf=function(a){"use strict";if(null===this)throw new TypeError;var b=Object(this),c=b.length>>>0;if(0===c)return-1;var d=c;arguments.length>1&&(d=Number(arguments[1]),d!=d?d=0:0!==d&&d!=1/0&&d!=-(1/0)&&(d=(d>0||-1)*Math.floor(Math.abs(d))));for(var e=d>=0?Math.min(d,c-1):c-Math.abs(d);e>=0;e--)if(e in b&&b[e]===a)return e;return-1}),String.prototype.trim||(String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g,"")});var o=this,p={};"undefined"!=typeof module&&module.exports?module.exports=p:o.flowchart=o.flowchart||p;var q={x:0,y:0,"line-width":3,"line-length":50,"text-margin":10,"font-size":14,"font-color":"black","line-color":"black","element-color":"black",fill:"white","yes-text":"yes","no-text":"no","arrow-end":"block","class":"flowchart",symbols:{start:{},end:{},condition:{},inputoutput:{},operation:{},subroutine:{}}},r={defaults:a,inherits:b};f.prototype.handle=function(a){this.symbols.indexOf(a)<=-1&&this.symbols.push(a);var b=this;return a instanceof m?(a.yes=function(c){return a.yes_symbol=c,a.no_symbol&&(a.pathOk=!0),b.handle(c)},a.no=function(c){return a.no_symbol=c,a.yes_symbol&&(a.pathOk=!0),b.handle(c)}):a.then=function(c){return a.next=c,a.pathOk=!0,b.handle(c)},a},f.prototype.startWith=function(a){return this.start=a,this.handle(a)},f.prototype.render=function(){var a,b=0,c=0,d=0,e=0,f=0,g=0;for(d=0,e=this.symbols.length;e>d;d++)a=this.symbols[d],a.width>b&&(b=a.width),a.height>c&&(c=a.height);for(d=0,e=this.symbols.length;e>d;d++)a=this.symbols[d],a.shiftX(this.options.x+(b-a.width)/2+this.options["line-width"]),a.shiftY(this.options.y+(c-a.height)/2+this.options["line-width"]);for(this.start.render(),d=0,e=this.symbols.length;e>d;d++)a=this.symbols[d],a.renderLines();for(f=this.maxXFromLine,d=0,e=this.symbols.length;e>d;d++){a=this.symbols[d];var h=a.getX()+a.width,i=a.getY()+a.height;h>f&&(f=h),i>g&&(g=i)}this.paper.setSize(f+this.options["line-width"],g+this.options["line-width"])},f.prototype.clean=function(){if(this.paper){var a=this.paper.canvas;a.parentNode.removeChild(a)}},g.prototype.getAttr=function(a){if(!this.chart)return void 0;var b,c=this.chart.options?this.chart.options[a]:void 0,d=this.chart.options.symbols?this.chart.options.symbols[this.symbolType][a]:void 0;return this.chart.options.flowstate&&this.chart.options.flowstate[this.flowstate]&&(b=this.chart.options.flowstate[this.flowstate][a]),b||d||c},g.prototype.initialize=function(){this.group.transform("t"+this.getAttr("line-width")+","+this.getAttr("line-width")),this.width=this.group.getBBox().width,this.height=this.group.getBBox().height},g.prototype.getCenter=function(){return{x:this.getX()+this.width/2,y:this.getY()+this.height/2}},g.prototype.getX=function(){return this.group.getBBox().x},g.prototype.getY=function(){return this.group.getBBox().y},g.prototype.shiftX=function(a){this.group.transform("t"+(this.getX()+a)+","+this.getY())},g.prototype.setX=function(a){this.group.transform("t"+a+","+this.getY())},g.prototype.shiftY=function(a){this.group.transform("t"+this.getX()+","+(this.getY()+a))},g.prototype.setY=function(a){this.group.transform("t"+this.getX()+","+a)},g.prototype.getTop=function(){var a=this.getY(),b=this.getX()+this.width/2;return{x:b,y:a}},g.prototype.getBottom=function(){var a=this.getY()+this.height,b=this.getX()+this.width/2;return{x:b,y:a}},g.prototype.getLeft=function(){var a=this.getY()+this.group.getBBox().height/2,b=this.getX();return{x:b,y:a}},g.prototype.getRight=function(){var a=this.getY()+this.group.getBBox().height/2,b=this.getX()+this.group.getBBox().width;return{x:b,y:a}},g.prototype.render=function(){if(this.next){var a=this.getAttr("line-length");if("right"===this.next_direction){var b=this.getRight();if(this.next.getLeft(),!this.next.isPositioned){this.next.setY(b.y-this.next.height/2),this.next.shiftX(this.group.getBBox().x+this.width+a);var c=this;!function e(){for(var b,d=!1,f=0,g=c.chart.symbols.length;g>f;f++){b=c.chart.symbols[f];var h=Math.abs(b.getCenter().x-c.next.getCenter().x);if(b.getCenter().y>c.next.getCenter().y&&h<=c.next.width/2){d=!0;break}}d&&(c.next.setX(b.getX()+b.width+a),e())}(),this.next.isPositioned=!0,this.next.render()}}else{var d=this.getBottom();this.next.getTop(),this.next.isPositioned||(this.next.shiftY(this.getY()+this.height+a),this.next.setX(d.x-this.next.width/2),this.next.isPositioned=!0,this.next.render())}}},g.prototype.renderLines=function(){this.next&&(this.next_direction?this.drawLineTo(this.next,"",this.next_direction):this.drawLineTo(this.next))},g.prototype.drawLineTo=function(a,b,c){this.connectedTo.indexOf(a)<0&&this.connectedTo.push(a);var f,g=this.getCenter().x,h=this.getCenter().y,i=(this.getTop(),this.getRight()),j=this.getBottom(),k=this.getLeft(),l=a.getCenter().x,m=a.getCenter().y,n=a.getTop(),o=a.getRight(),p=(a.getBottom(),a.getLeft()),q=g===l,r=h===m,s=m>h,t=h>m,u=g>l,v=l>g,w=0,x=this.getAttr("line-length"),y=this.getAttr("line-width");if(c&&"bottom"!==c||!q||!s)if(c&&"right"!==c||!r||!v)if(c&&"left"!==c||!r||!u)if(c&&"right"!==c||!q||!t)if(c&&"right"!==c||!q||!s)if(c&&"bottom"!==c||!u)if(c&&"bottom"!==c||!v)if(c&&"right"===c&&u)f=d(this.chart,i,[{x:i.x+x/2,y:i.y},{x:i.x+x/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.rightStart=!0,a.topEnd=!0,w=i.x+x/2;else if(c&&"right"===c&&v)f=d(this.chart,i,[{x:n.x,y:i.y},{x:n.x,y:n.y}],b),this.rightStart=!0,a.topEnd=!0,w=i.x+x/2;else if(c&&"bottom"===c&&q&&t)f=d(this.chart,j,[{x:j.x,y:j.y+x/2},{x:i.x+x/2,y:j.y+x/2},{x:i.x+x/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.bottomStart=!0,a.topEnd=!0,w=j.x+x/2;else if("left"===c&&q&&t){var z=k.x-x/2;p.x<k.x&&(z=p.x-x/2),f=d(this.chart,k,[{x:z,y:k.y},{x:z,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.leftStart=!0,a.topEnd=!0,w=k.x}else"left"===c&&(f=d(this.chart,k,[{x:n.x+(k.x-n.x)/2,y:k.y},{x:n.x+(k.x-n.x)/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.leftStart=!0,a.topEnd=!0,w=k.x);else f=d(this.chart,j,[{x:j.x,y:j.y+x/2},{x:j.x+(j.x-n.x)/2,y:j.y+x/2},{x:j.x+(j.x-n.x)/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.bottomStart=!0,a.topEnd=!0,w=j.x+(j.x-n.x)/2;else f=this.leftEnd&&t?d(this.chart,j,[{x:j.x,y:j.y+x/2},{x:j.x+(j.x-n.x)/2,y:j.y+x/2},{x:j.x+(j.x-n.x)/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b):d(this.chart,j,[{x:j.x,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.bottomStart=!0,a.topEnd=!0,w=j.x+(j.x-n.x)/2;else f=d(this.chart,i,[{x:i.x+x/2,y:i.y},{x:i.x+x/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.rightStart=!0,a.topEnd=!0,w=i.x+x/2;else f=d(this.chart,i,[{x:i.x+x/2,y:i.y},{x:i.x+x/2,y:n.y-x/2},{x:n.x,y:n.y-x/2},{x:n.x,y:n.y}],b),this.rightStart=!0,a.topEnd=!0,w=i.x+x/2;else f=d(this.chart,k,o,b),this.leftStart=!0,a.rightEnd=!0,w=o.x;else f=d(this.chart,i,p,b),this.rightStart=!0,a.leftEnd=!0,w=p.x;else f=d(this.chart,j,n,b),this.bottomStart=!0,a.topEnd=!0,w=j.x;if(f){for(var A=0,B=this.chart.lines.length;B>A;A++)for(var C,D=this.chart.lines[A],E=D.attr("path"),F=f.attr("path"),G=0,H=E.length-1;H>G;G++){var I=[];I.push(["M",E[G][1],E[G][2]]),I.push(["L",E[G+1][1],E[G+1][2]]);for(var J=I[0][1],K=I[0][2],L=I[1][1],M=I[1][2],N=0,O=F.length-1;O>N;N++){var P=[];P.push(["M",F[N][1],F[N][2]]),P.push(["L",F[N+1][1],F[N+1][2]]);var Q=P[0][1],R=P[0][2],S=P[1][1],T=P[1][2],U=e(J,K,L,M,Q,R,S,T);if(U.onLine1&&U.onLine2){var V;R===T?Q>S?(V=["L",U.x+2*y,R],F.splice(N+1,0,V),V=["C",U.x+2*y,R,U.x,R-4*y,U.x-2*y,R],F.splice(N+2,0,V),f.attr("path",F)):(V=["L",U.x-2*y,R],F.splice(N+1,0,V),V=["C",U.x-2*y,R,U.x,R-4*y,U.x+2*y,R],F.splice(N+2,0,V),f.attr("path",F)):R>T?(V=["L",Q,U.y+2*y],F.splice(N+1,0,V),V=["C",Q,U.y+2*y,Q+4*y,U.y,Q,U.y-2*y],F.splice(N+2,0,V),f.attr("path",F)):(V=["L",Q,U.y-2*y],F.splice(N+1,0,V),V=["C",Q,U.y-2*y,Q+4*y,U.y,Q,U.y+2*y],F.splice(N+2,0,V),f.attr("path",F)),N+=2,C+=2}}}this.chart.lines.push(f)}(!this.chart.maxXFromLine||this.chart.maxXFromLine&&w>this.chart.maxXFromLine)&&(this.chart.maxXFromLine=w)},r.inherits(h,g),r.inherits(i,g),r.inherits(j,g),r.inherits(k,g),r.inherits(l,g),l.prototype.getLeft=function(){var a=this.getY()+this.group.getBBox().height/2,b=this.getX()+this.textMargin;return{x:b,y:a}},l.prototype.getRight=function(){var a=this.getY()+this.group.getBBox().height/2,b=this.getX()+this.group.getBBox().width-this.textMargin;return{x:b,y:a}},r.inherits(m,g),m.prototype.render=function(){this.yes_direction&&(this[this.yes_direction+"_symbol"]=this.yes_symbol),this.no_direction&&(this[this.no_direction+"_symbol"]=this.no_symbol);var a=this.getAttr("line-length");if(this.bottom_symbol){var b=this.getBottom();this.bottom_symbol.getTop(),this.bottom_symbol.isPositioned||(this.bottom_symbol.shiftY(this.getY()+this.height+a),this.bottom_symbol.setX(b.x-this.bottom_symbol.width/2),this.bottom_symbol.isPositioned=!0,this.bottom_symbol.render())}if(this.right_symbol){var c=this.getRight();if(this.right_symbol.getLeft(),!this.right_symbol.isPositioned){this.right_symbol.setY(c.y-this.right_symbol.height/2),this.right_symbol.shiftX(this.group.getBBox().x+this.width+a);var d=this;!function e(){for(var b,c=!1,f=0,g=d.chart.symbols.length;g>f;f++){b=d.chart.symbols[f];var h=Math.abs(b.getCenter().x-d.right_symbol.getCenter().x);if(b.getCenter().y>d.right_symbol.getCenter().y&&h<=d.right_symbol.width/2){c=!0;break}}c&&(d.right_symbol.setX(b.getX()+b.width+a),e())}(),this.right_symbol.isPositioned=!0,this.right_symbol.render()}}},m.prototype.renderLines=function(){this.yes_symbol&&this.drawLineTo(this.yes_symbol,this.getAttr("yes-text"),this.yes_direction),this.no_symbol&&this.drawLineTo(this.no_symbol,this.getAttr("no-text"),this.no_direction)},p.parse=n}();
+</script>
+<script type="text/javascript">
+(function (win, doc) {
+  function onReady(fn) {
+    if (doc.addEventListener) {
+      doc.addEventListener('DOMContentLoaded', fn);
+    } else {
+      doc.attachEvent('onreadystatechange', function() {
+        if (doc.readyState === 'interactive')
+          fn();
+      });
+    }
+  }
+
+  win.convertUML = function(className, converter, settings) {
+    var charts = doc.querySelectorAll("pre." + className),
+        arr = [],
+        i, j, maxItem, diagaram, text, curNode;
+
+    // Is there a settings object?
+    if (settings === void 0) {
+        settings = {};
+    }
+
+    // Make sure we are dealing with an array
+    for(i = 0, maxItem = charts.length; i < maxItem; i++) arr.push(charts[i])
+
+    // Find the UML source element and get the text
+    for (i = 0, maxItem = arr.length; i < maxItem; i++) {
+        childEl = arr[i].firstChild;
+        parentEl = childEl.parentNode;
+        text = "";
+        for (j = 0; j < childEl.childNodes.length; j++) {
+            curNode = childEl.childNodes[j];
+            whitespace = /^\s*$/;
+            if (curNode.nodeName === "#text" && !(whitespace.test(curNode.nodeValue))) {
+                text = curNode.nodeValue;
+                break;
+            }
+        }
+
+        // Do UML conversion and replace source
+        el = doc.createElement('div');
+        el.className = className;
+        parentEl.parentNode.insertBefore(el, parentEl);
+        parentEl.parentNode.removeChild(parentEl);
+        diagram = converter.parse(text);
+        diagram.drawSVG(el, settings);
+    }
+  }
+
+  onReady(function(){convertUML('uml-flowchart', flowchart);});
+  onReady(function(){convertUML('uml-sequence-diagram', Diagram, {theme: 'simple'});});
+})(window, document)
+</script>
+<title>nota_metologica</title></head><body><article class="markdown-body"><h1 id="mapa-de-desarrollo-orientado-al-transporte-dot"><a name="user-content-mapa-de-desarrollo-orientado-al-transporte-dot" href="#mapa-de-desarrollo-orientado-al-transporte-dot" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Mapa de Desarrollo Orientado al Transporte (DOT)</h1>
+<p><!-- START doctoc generated TOC please keep comment here to allow auto update --><br />
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE --></p>
+<ul>
+<li><a href="#a-introducci%C3%B3n">A. Introducción</a></li>
+<li><a href="#b-uso-y-caracter%C3%ADsticas-de-la-herramienta">B. Uso y características de la herramienta</a><ul>
+<li><a href="#1-c%C3%B3mo-usar-el-mapa">1. Cómo usar el mapa</a></li>
+<li><a href="#2-divisiones-de-la-ciudad-aut%C3%B3noma-de-buenos-aires">2. Divisiones de la Ciudad Autónoma de Buenos Aires</a></li>
+<li><a href="#3-radios-de-cobertura">3. Radios de cobertura</a></li>
+<li><a href="#4-indicadores-disponibles">4. Indicadores disponibles</a></li>
+</ul>
+</li>
+<li><a href="#c-metodolog%C3%ADa">C. Metodología</a><ul>
+<li><a href="#1-estimaci%C3%B3n-de-indicadores-basados-en-el-censo-nacional-2010">1. Estimación de indicadores basados en el Censo Nacional 2010</a></li>
+<li><a href="#2-estimaci%C3%B3n-del-nivel-socioecon%C3%B3mico-de-un-radio-censal">2. Estimación del nivel socioeconómico de un radio censal</a></li>
+<li><a href="#3-estimaci%C3%B3n-de-indicadores-relacionados-con-el-transporte">3. Estimación de indicadores relacionados con el transporte</a></li>
+<li><a href="#4-estimaci%C3%B3n-de-indicadores-sobre-el-uso-del-suelo">4. Estimación de indicadores sobre el uso del suelo</a></li>
+<li><a href="#5-rec%C3%A1lculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregaci%C3%B3n-geogr%C3%A1fica-divisiones">5. Recálculo de indicadores para radios de cobertura de estaciones (buffers) y distintos niveles de agregación geográfica (divisiones)</a></li>
+<li><a href="#6-rec%C3%A1lculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-%C3%A1rea-total-fuera-de-los-mismos">6. Recálculo de indicadores para conjuntos de buffers y para el área total fuera de los mismos</a></li>
+</ul>
+</li>
+</ul>
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<h1 id="a-introduccion"><a name="user-content-a-introduccion" href="#a-introduccion" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>A. Introducción</h1>
+<p>El objetivo de esta herramienta es visualizar características de la población de la Ciudad Autónoma de Buenos Aires en relación a las áreas de influencia de los sistemas de transporte público masivo.</p>
+<p>El tipo de preguntas que apunta a responder son:</p>
+<ul>
+<li>¿Cuántos habitantes residen en cercanías de los sistemas de transporte público?</li>
+<li>¿Cómo son esos habitantes?</li>
+<li>¿Cuáles son las características de la población que está más lejos de los sistemas de transporte público?</li>
+</ul>
+<p>Para esto permite realizar mapas de calor de una serie de indicadores sociales, económicos y demográficos filtrables por zonas de la ciudad y modos de transporte.</p>
+<h1 id="b-uso-y-caracteristicas-de-la-herramienta"><a name="user-content-b-uso-y-caracteristicas-de-la-herramienta" href="#b-uso-y-caracteristicas-de-la-herramienta" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>B. Uso y características de la herramienta</h1>
+<h2 id="1-como-usar-el-mapa"><a name="user-content-1-como-usar-el-mapa" href="#1-como-usar-el-mapa" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1. Cómo usar el mapa</h2>
+<h3 id="mapa-de-calor-de-indicadores-por-nivel-de-agregacion-geografica"><a name="user-content-mapa-de-calor-de-indicadores-por-nivel-de-agregacion-geografica" href="#mapa-de-calor-de-indicadores-por-nivel-de-agregacion-geografica" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Mapa de calor de indicadores por nivel de agregación geográfica</h3>
+<p>La primera funcionalidad que ofrece el mapa es la de visualizar indicadores sobre la población de la Ciudad Autónoma de Buenos Aires en distintos niveles de agregación geográfica como un mapa de calor.</p>
+<p>Haciendo click en &ldquo;Divisiones&rdquo; se puede seleccionar un nivel de agregación geográfica (Ej.: &ldquo;Barrios&rdquo; o &ldquo;Radios&rdquo;). A continuación, se muestra un mapa de calor de un indicador default que puede cambiarse en la tabla de indicadores haciendo click en el indicador deseado y luego en &ldquo;Divisiones&rdquo; (para asignarlo a la capa de divisiones).</p>
+<p>Si la tabla de indicadores se oculta, aparecerá en la leyenda un link con el texto &ldquo;cambiar&rdquo; que permite elegir el indicador deseado.</p>
+<p>Debe tenerse en cuenta que la lista de indicadores de la tabla no es completa, son sólo algunos indicadores seleccionados por defecto. Para agregar indicadores a la lista debe hacerse click en el ícono lista a la derecha de la tabla.</p>
+<h4 id="filtro-de-divisiones"><a name="user-content-filtro-de-divisiones" href="#filtro-de-divisiones" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Filtro de divisiones</h4>
+<p>En el recuadro debajo del selector de &ldquo;Divisiones&rdquo; se pueden aplicar filtros para seleccionar distintos conjuntos de divisiones geográficas. Cada nivel de agregación permite, al menos, la selección de unidades geográficas de su mismo nivel de agregación (si se seleccionan &ldquo;Radios&rdquo;, se puede filtrar agregando etiquetas de radios censales según su código geográfico - ver códigos geográficos en <a href="#divisiones_de_la_ciudad_autonoma_de_buenos_aires">Divisiones de la Ciudad Autónoma de Buenos Aires</a>).</p>
+<p>Adicionalmente, algunos niveles de agregación permiten filtrar simultáneamente por conjuntos de divisiones geográficas definidas por unidades de niveles de agregación más elevados. Ejemplo: si se selecciona &ldquo;Radios&rdquo; y se filtra por &ldquo;BELGRANO&rdquo;, el mapa seleccionará todos aquellos radios censales que intersecten al barrio de Belgrano. El nivel de agregación de radios censales también permite filtros por fracción censal y comuna.</p>
+<p>El mapa selecciona conjuntos de divisiones geográficas a partir de la intersección con divisiones de mayor nivel de agregación; debe entonces notarse siempre que no es lo mismo seleccionar &ldquo;BELGRANO&rdquo; desde el nivel de agregación de &ldquo;Barrios&rdquo; que hacer lo propio habiendo seleccionado &ldquo;Radios&rdquo; como unidad de visualización del mapa de calor, en el segundo caso el universo de superficie y población sobre el cual se calcularán los indicadores será más grande.</p>
+<p>Los radios censales, fracciones censales y comunas son unidades geográficas propias del Censo Nacional 2010 y, por lo tanto, son niveles de agregación geográfica consistentes: una comuna es un conjunto de fracciones censales y una fracción censal es un conjunto de radios censales. </p>
+<p>Sin embargo, la cartografía censal disponible no coincide perfectamente. Debe notarse que filtrar por comuna en el nivel de agregación geográfica &ldquo;Radios&rdquo; no arrojará el mismo conjunto de radios censales que si la selección se hiciera mediante los códigos geográficos correspondientes. Esto es una limitación de la herramienta que podría mejorarse mediante la implementación de un mecanismo adicional de filtrado por códigos geográficos (en lugar del actual, que realiza un proceso geográfico para intersectar las distintas unidades).</p>
+<h3 id="mapa-de-calor-de-indicadores-por-modo-de-transporte"><a name="user-content-mapa-de-calor-de-indicadores-por-modo-de-transporte" href="#mapa-de-calor-de-indicadores-por-modo-de-transporte" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Mapa de calor de indicadores por modo de transporte</h3>
+<p>Los indicadores pueden también visualizarse como un mapa de calor de radios de cobertura de estaciones de metrobús, ferrocarril, subte y premetro. Para esto debe elegirse un &ldquo;Modo transporte&rdquo; y una &ldquo;Distancia&rdquo;, luego hacer click en &ldquo;Agregar&rdquo;. Por ejemplo: si se selecciona &ldquo;Subte&rdquo; y &ldquo;500&rdquo; se estará agregando el conjunto de radios de cobertura de 500 metros desde las estaciones de subte.</p>
+<p>Distintos modos de transporte pueden agregarse/quitarse utilizando distintos radios de cobertura para cada uno.</p>
+<h4 id="filtro-de-buffers"><a name="user-content-filtro-de-buffers" href="#filtro-de-buffers" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Filtro de buffers</h4>
+<p>En el recuadro debajo del selector de buffers se pueden filtrar dichos radios de cobertura de estaciones por (a) nombre de la estación y (b) nombre de la línea.</p>
+<p>Por ejemplo: agregar la etiqueta &ldquo;D (lin_subte)&rdquo; provocará la selección de todas las estaciones de la línea D de subte (siempre y cuando se haya agregado el modo de transporte &ldquo;Subte&rdquo; con algún radio de cobertura).</p>
+<p>La ausencia de etiquetas de filtrado es equivalente a la presencia de todas ellas simultáneamente: ambas posibilidades indican a la herramienta que todas las estaciones de los modos de transporte agregados deben ser seleccionadas.</p>
+<p>Si una línea de un modo de transporte está seleccionada (hay un filtro activo) y se agrega un nuevo modo de transporte, se agregarán automáticamente todas las etiquetas de las líneas del modo de transporte agregado. Esta característica puede ser útil si se desea visualizar todas las líneas de un modo de transporte menos una: basta con seleccionar primero cualquier línea de otro modo de transporte, agregar el modo de transporte de interés y, a continuación, remover todas aquellas líneas que no se desee tener en cuenta en el cálculo.</p>
+<h3 id="calculo-de-indicadores-para-la-zona-cubierta-y-no-cubierta-por-modos-de-transporte"><a name="user-content-calculo-de-indicadores-para-la-zona-cubierta-y-no-cubierta-por-modos-de-transporte" href="#calculo-de-indicadores-para-la-zona-cubierta-y-no-cubierta-por-modos-de-transporte" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Cálculo de indicadores para la zona cubierta y no cubierta por modos de transporte</h3>
+<p>Si se seleccionan ambos mapas de calor (divisiones y buffers), la tabla de indicadores ahora muestra las características de la población que queda dentro del área de cobertura de los distintos modos de transporte seleccionados y las de la población que queda fuera de la misma. </p>
+<p>Como se explicó anteriormente, el cálculo se realiza en el momento, de manera que el usuario percibirá una demora mayor en visualizar la tabla que en los otros casos.</p>
+<h2 id="2-divisiones-de-la-ciudad-autonoma-de-buenos-aires"><a name="user-content-2-divisiones-de-la-ciudad-autonoma-de-buenos-aires" href="#2-divisiones-de-la-ciudad-autonoma-de-buenos-aires" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2. Divisiones de la Ciudad Autónoma de Buenos Aires</h2>
+<p>Las divisiones geográficas disponibles de la Ciudad de Buenos Aires son 4:</p>
+<ul>
+<li><strong>Radios censales (&ldquo;Radios&rdquo;):</strong> código de la forma 1_1_1 (comuna_fracción_radio)</li>
+<li><strong>Fracciones censales (&ldquo;Fracciones&rdquo;):</strong> código de la forma 001_1 (comuna_fracción)</li>
+<li><strong>Comunas (&ldquo;Comunas&rdquo;):</strong> código de la forma 1 (número de comuna)</li>
+<li><strong>Barrios (&ldquo;Barrios&rdquo;):</strong> se utiliza el nombre oficial del barrio como en &ldquo;VILLA SOLDATI&rdquo;</li>
+</ul>
+<p>Los códigos geográficos utilizados provienen de la <a href="http://www.estadisticaciudad.gob.ar/eyc/?page_id=827">cartografía censal</a> de la Dirección General de Estadística y Censos del GCBA.</p>
+<h2 id="3-radios-de-cobertura"><a name="user-content-3-radios-de-cobertura" href="#3-radios-de-cobertura" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3. Radios de cobertura</h2>
+<p>Los radios de cobertura disponibles son:</p>
+<ul>
+<li><strong>300</strong> metros</li>
+<li><strong>500</strong> metros</li>
+<li><strong>750</strong> metros</li>
+<li><strong>1000</strong> metros</li>
+<li><strong>1500</strong> metros</li>
+<li><strong>2000</strong> metros</li>
+</ul>
+<h2 id="4-indicadores-disponibles"><a name="user-content-4-indicadores-disponibles" href="#4-indicadores-disponibles" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. Indicadores disponibles</h2>
+<h3 id="demograficos"><a name="user-content-demograficos" href="#demograficos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Demográficos</h3>
+<p><strong>Población (M)</strong>: Población total en 2010 (millones de habitantes) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Superficie (km2)</strong>: Superficie total (kilómetros cuadrados) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA)</p>
+<p><strong>Densidad poblacional (miles hab/km2)</strong>: Densidad poblacional en 2010 (miles de habitantes por kilómetro cuadrado) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y Censo Nacional 2010 (INDEC)</p>
+<p><strong>Hombres (%)</strong>: Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Extranjeros (%)</strong>: Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>0 a 14 años (%)</strong>: Proporción de la población con 14 años de edad o menos en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>15 a 64 años (%)</strong>: Proporción de la población con entre 15 y 64 años de edad en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Más de 65 años (%)</strong>: Proporción de la población con 65 años de edad o más en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<h3 id="socioeconomicos"><a name="user-content-socioeconomicos" href="#socioeconomicos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Socioeconómicos</h3>
+<p><strong>Calidad constructiva básica (%)</strong>: Proporción de viviendas cuya calidad constructiva es básica en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Calidad constructiva insuficiente (%)</strong>: Proporción de viviendas cuya calidad constructiva es  insuficiente en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Calidad constructiva satisfactoria (%)</strong>: Proporción de viviendas cuya calidad constructiva es  satisfactoria en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Conexión a servicios básica (%)</strong>: Proporción de viviendas cuya calidad de conexión a servicios básicos es básica en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Conexión a servicios insuficiente (%)</strong>: Proporción de viviendas cuya calidad de conexión a servicios básicos es insuficiente en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Conexión a servicios satisfactoria (%)</strong>: Proporción de viviendas cuya calidad de conexión a servicios básicos es satisfactoria en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>1.49 habs por cuarto o menos (%)</strong>: Proporción de hogares con 1.49 habitantes por cuarto o menos en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>1.50 habs por cuarto o más (%)</strong>: Proporción de hogares con 1.50 habitantes por cuarto o más en 2010 (%) - Censo Nacional 2010 (INDEC)&rdquo;</p>
+<p><strong>Ocupación de vivienda (%)</strong>: Proporción de viviendas ocupadas en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Desocupación (%)</strong>: Proporción de habitantes desocupados sobre la población económicamente activa, definida como la suma de habitantes ocupados y desocupados en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Empleo (%)</strong>: Proporción de habitantes empleados sobre la cantidad de habitantes con 14 años o más en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Inactividad (%)</strong>: Proporción de habitantes inactivos sobre la cantidad de habitantes con 14 años o más en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Nivel socioeconómico</strong>: Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de Censo Nacional 2010 (INDEC)</p>
+<p><strong>Est. educativos privados (unidades)</strong>: Cantidad de establecimientos educativos privados en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)</p>
+<p><strong>Est. educativos públicos (unidades)</strong>: Cantidad de establecimientos educativos públicos en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)</p>
+<p><strong>Índice de educación superior (%)</strong>: Proporción de habitantes mayores a 25 años con educación universitaria completada en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Índice de escolaridad (%)</strong>: Proporción de habitantes menores a 18 años que asiste a un establecimiento educativo en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>NBI (%)</strong>: Proporción de hogares con al menos una necesidad básica insatisfecha en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Índice de computadora en el hogar (%)</strong>: Proporción de hogares con computadora sobre el total de hogares equipados con al menos uno de los siguientes elementos: heladera, computadora, teléfono celular o teléfono de línea, en 2010 (%) - Censo Nacional 2010 (INDEC)</p>
+<p><strong>Hospitales (unidades)</strong>: Cantidad de hospitales en 2014 (unidades) - Cálculo a partir de hospitales georreferenciados por el Ministerio de Salud (GCBA)</p>
+<h3 id="uso-del-suelo"><a name="user-content-uso-del-suelo" href="#uso-del-suelo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Uso del suelo</h3>
+<p><strong>Zona comercial (%)</strong>: Proporción de la superficie destinada a uso comercial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)</p>
+<p><strong>Zona residencial (%)</strong>: Proporción de la superficie destinada a uso residencial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)</p>
+<p><strong>Zona industrial (%)</strong>: Proporción de la superficie destinada a uso industrial en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)</p>
+<p><strong>Zona de servicios (%)</strong>: Proporción de la superficie destinada a uso de servicios en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)</p>
+<p><strong>Otros usos (%)</strong>: Proporción de la superficie destinada a otros usos en 2011 (%) - Cálculo a partir del Relevamiento de Usos del Suelo del Ministerio de Desarrollo Urbano (GCBA)</p>
+<p><strong>Superficie espacios verdes (%)</strong>: Proporción de espacios verdes sobre la superficie total en 2013 (%) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y espacios verdes georreferenciados por la Unidad de Sistemas de Información Geográfica (GCBA)</p>
+<h3 id="transporte"><a name="user-content-transporte" href="#transporte" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Transporte</h3>
+<p><strong>Distancia al ffcc (m)</strong>: Distancia del centroide de un radio censal a la estación más cercana de ferrocarril o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de ferrocarril georreferenciadas por Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)</p>
+<p><strong>Distancia al metrobús (m)</strong>: Distancia del centroide de un radio censal a la estación más cercana de metrobús o promedio ponderado por población de este indicador para otras unidades geográficas en 2014 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de metrobús georreferenciadas por la Subsecretaría de Transporte (GCBA) y Censo Nacional 2010 (INDEC)</p>
+<p><strong>Distancia al subte (m)</strong>: Distancia del centroide de un radio censal a la estación más cercana de subte o promedio ponderado por población de este indicador para otras unidades geográficas en 2015 (kilómetros) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA), estaciones de subte georreferenciadas por el Ministerio de Desarrollo Urbano (GCBA) y Censo Nacional 2010 (INDEC)</p>
+<p><strong>Sup. alcanzable en 1 colectivo (km2)</strong>: Superficie alcanzable media estimada viajando hasta 10 kilómetros en un solo servicio de colectivos, sin trasbordos, en 2015. Se toma una distancia máxima recorrida a pie de 300 metros, tanto para abordar el servicio desde el punto de origen como para llegar al punto de destino una vez abandonada la unidad (kilómetros cuadrados) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y trazado georreferenciado de recorridos de colectivos por Unidad de Sistemas de Información Geográfica (GCBA)</p>
+<p><strong>Sup. alcanzable en 1 colectivo (% CABA)</strong>: Superficie alcanzable media estimada viajando hasta 10 kilómetros en un solo servicio de colectivos, sin trasbordos, en 2015. Se toma una distancia máxima recorrida a pie de 300 metros, tanto para abordar el servicio desde el punto de origen como para llegar al punto de destino una vez abandonada la unidad (proporción de kilómetros cuadrados sobre la superficie total de la CABA) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y trazado georreferenciado de recorridos de colectivos por Unidad de Sistemas de Información Geográfica (GCBA)</p>
+<h1 id="c-metodologia"><a name="user-content-c-metodologia" href="#c-metodologia" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>C. Metodología</h1>
+<h2 id="1-estimacion-de-indicadores-basados-en-el-censo-nacional-2010"><a name="user-content-1-estimacion-de-indicadores-basados-en-el-censo-nacional-2010" href="#1-estimacion-de-indicadores-basados-en-el-censo-nacional-2010" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>1. Estimación de indicadores basados en el Censo Nacional 2010</h2>
+<p>Una gran parte de los indicadores utilizados en esta herramienta se basan en datos del Censo Nacional 2010.</p>
+<p>Los indicadores relacionados con (a) mercado de trabajo, (b) calidad de la vivienda, (c) nivel educativo, (d) estructura etaria y otros basados en datos del Censo Nacional 2010, respetan las definiciones censales usuales (Ej.: La tasa de inactividad se calcula como los inactivos sobre la población de 14 años o más) o son porcentajes de frecuencias simples sobre el total de casos.</p>
+<p>Al no representar complicaciones metodológicas mayores, se remite al apartado final donde se listan todos los indicadores con sus descripciones.</p>
+<h2 id="2-estimacion-del-nivel-socioeconomico-de-un-radio-censal"><a name="user-content-2-estimacion-del-nivel-socioeconomico-de-un-radio-censal" href="#2-estimacion-del-nivel-socioeconomico-de-un-radio-censal" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>2. Estimación del nivel socioeconómico de un radio censal</h2>
+<p>La siguiente metodología permite obtener una estimación del nivel socioeconómico de un radio censal de la Ciudad Autónoma de Buenos Aires. Esta metodología es una adaptación con modificaciones de la utilizada por el ITDP de México (Instituto de Políticas para el Transporte y el Desarrollo) para la estimación del nivel socioeconómico de un área geoestadística básica (AGEB) de la Zona Metropolitana del Valle de México (ZMVM).</p>
+<p>En líneas generales, consiste en realizar un análisis de componentes principales a partir de tres índices que reflejan diferentes aspectos del nivel socioeconómico de un radio censal de la Ciudad. </p>
+<p>Esta técnica busca encontrar las causas de la variabilidad de un conjunto de datos y ordernarlas por importancia. De esta manera, se construye una lista de componentes principales (que son combinaciones lineales de los índices utilizados) ordenadas por el grado de poder explicativo que tienen sobre la variabilidad de los tres índices.</p>
+<p>El primer componente principal construido a partir de estos tres índices es utilizado después para ordenar los radios censales por nivel socioeconómico.</p>
+<p>Todos los datos utilizados para calcular los índices que componen el nivel socioeconómico provienen de la <a href="http://200.51.91.245/argbin/RpWebEngine.exe/PortalAction?BASE=CPV2010B">base de datos REDATAM del Censo Nacional 2010</a>.</p>
+<p>$IndiceComputadora = \frac{NúmeroDeHogaresConComputadora}{ConComputadora \cup ConHeladera \cup ConCelular \cup ConTeléfono}$</p>
+<p>Calcula el porcentaje de hogares que tienen computadora, dentro de aquellos que tienen al menos una computadora, heladera, celular o teléfono de línea.</p>
+<p>$IndiceEscolaridad = \frac{MenoresDe18Asisten}{MenoresDe18}$</p>
+<p>Calcula el porcentaje de habitantes menores a 18 años que concurre a algún establecimiento educativo.</p>
+<p>$IndiceEducSuperior = \frac{MayoresDe25Universitarios}{MayoresDe25}$</p>
+<p>Calcula el porcentaje de habitantes mayores a 25 años que tiene nivel universitario completo.</p>
+<p><strong>Cuadro 1:</strong> <em>Matriz de correlaciones</em></p>
+<table>
+<thead>
+<tr>
+<th align="left">*</th>
+<th align="right">educ_sup</th>
+<th align="right">escolaridad</th>
+<th align="right">compu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><strong>educ_sup</strong></td>
+<td align="right">1</td>
+<td align="right">0.496032</td>
+<td align="right">0.792191</td>
+</tr>
+<tr>
+<td align="left"><strong>escolaridad</strong></td>
+<td align="right">0.496032</td>
+<td align="right">1</td>
+<td align="right">0.64806</td>
+</tr>
+<tr>
+<td align="left"><strong>compu</strong></td>
+<td align="right">0.792191</td>
+<td align="right">0.64806</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>El análisis de los tres primeros componentes principales arrojó los siguientes porcentajes de varianza explicada:</p>
+<ol>
+<li>88.32%</li>
+<li>10.11%</li>
+<li>1.57%</li>
+</ol>
+<p>Utilizando este método, se reduce la dimensionalidad de la información que aporta cada uno de los índices aprovechando las variaciones conjuntas entre ellos. El primer componente principal es una combinación lineal de los tres índices según la siguiente ecuación:</p>
+<p>\[PC1 = 0.76120783 * IndiceEducSup + 0.10759338 * IndiceEscolaridad + 0.63952037 * IndiceCompu\]</p>
+<p>Utilizaremos a este primer componente principal como una estimación del nivel socioeconómico de los radios censales. Pero siendo que el PC1 arroja un rango de valores entre 0 y 1.32 (aproximadamente) se procede a una normalización para facilitar la lectura de los valores.</p>
+<p>$NSE = \frac{PC1}{PC1Max} * 10$</p>
+<p>De esta manera todos los valores del índice de NSE de radios censales se expresan en una escala del 0 al 10, donde 10 es el máximo valor de NSE alcanzado por el primer radio censal del ranking y 0 es el mínimo.</p>
+<h2 id="3-estimacion-de-indicadores-relacionados-con-el-transporte"><a name="user-content-3-estimacion-de-indicadores-relacionados-con-el-transporte" href="#3-estimacion-de-indicadores-relacionados-con-el-transporte" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>3. Estimación de indicadores relacionados con el transporte</h2>
+<h3 id="distancias"><a name="user-content-distancias" href="#distancias" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Distancias</h3>
+<p>Para cada radio censal se calculó la distancia de su centroide a la estación más cercana (Ej.: la distancia del centroide de un radio censal a la estación de subte más cercana).</p>
+<p>Suponiendo una distribución uniforme de la población dentro del radio censal, esta distancia se aproximaría a la distancia promedio de todos los habitantes hasta la estación más cercana del modo de transporte del que se trate.</p>
+<p>Para los niveles de agregación geográficos superiores se realizó un promedio ponderado de este indicador. Ver <a href="#5-recálculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregación-geográfica-divisiones">cómo se recalculan indicadores</a> para más detalles.</p>
+<h3 id="superficie-alcanzada-por-colectivos"><a name="user-content-superficie-alcanzada-por-colectivos" href="#superficie-alcanzada-por-colectivos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Superficie alcanzada por colectivos</h3>
+<p>Las líneas que proveen servicios estándar de colectivos cubren aproximadamente toda la Ciudad de Buenos Aires, en el sentido de que un habitante usualmente tiene al menos una estación de colectivos a menos de 300 metros de distancia.</p>
+<p>Sin embargo algunas zonas pueden tener mejores frecuencias de servicio que otras, o mayor variedad de destinos alcanzables mediante las líneas disponibles suponiendo una distancia caminada máxima de 300 metros.</p>
+<p>Muchas veces se utiliza la cantidad de líneas de colectivos disponibles en un área determinada como proxy de la variedad de destinos alcanzables, pero este indicador está lejos de ser óptimo. Tener 10 líneas que hacen un recorrido muy similar no es mejor que tener sólo 2 líneas que cubren recorridos diferentes.</p>
+<p>El indicador experimental propuesto en esta herramienta consiste en calcular el total de superficie que un habitante promedio de un área determinada podría alcanzar en un solo viaje en colectivo. </p>
+<p>Para calcular dicho indicador sobre un punto:</p>
+<ol>
+<li>A partir de un punto determinado (lat, lon) se buscan las líneas de colectivo que están a menos de 300 metros de distancia.</li>
+<li>Se siguen las líneas de colectivo encontradas por 10 km desde el borde del radio de 300 metros alrededor del punto original (aproximadamente una hora de viaje en la Ciudad de Buenos Aires)</li>
+<li>Se calcula el buffer de 300 metros de los recorridos detectados. Esto es, la superficie total alcanzable por un viajero que esté dispuesto a caminar 300 metros para tomar un colectivo y otros 300 metros desde la bajada hasta destino.</li>
+</ol>
+<p><em>Líneas de colectivo que intersectan el buffer de 300 metros de un punto y sus propios buffers de 300 metros (zoom in)</em><br />
+<img alt="" src="https://raw.githubusercontent.com/gcba/tod/master/docs/images/reachability%201.png" /></p>
+<p><em>Superficie total alcanzable por las íneas de colectivo que intersectan el buffer de 300 metros de un punto (zoom out)</em><br />
+<img alt="" src="https://raw.githubusercontent.com/gcba/tod/master/docs/images/reachability%202.png" /></p>
+<p>Calcular el indicador de llegabilidad para los habitantes de un área, sin embargo, requiere calcular la superficie alcanzable para distintos puntos del área y realizar un promedio entre ellas. </p>
+<p>No se puede simplemente utilizar las líneas de colectivos que intersectan el área en cuestión, algunas de estas pueden estar a más de 300 metros de algunos habitantes del área (especialmente para radios censales de gran superficie). Para solucionar este aspecto se adoptó un enfoque pragmático en el que se promedia el resultado de calcular el indicador para una serie de puntos equidistantes entre sí que están dentro del área en cuestión. </p>
+<p>Para calcular el indicador sobre un área:</p>
+<p>1 . Se crea una malla de puntos equidistantes a 100 metros que intersecten con el área.</p>
+<p><em>Puntos equidistantes a 100 metros dentro del radio censal 14_1_8</em><br />
+<img alt="" src="https://raw.githubusercontent.com/gcba/tod/master/docs/images/reachability%203.png" /></p>
+<p>2 . Se calcula la superficie alcanzable desde cada uno de los puntos, siguiendo el procedimiento descripto anteriormente.</p>
+<p><em>Buffers de 300 metros de los puntos equidistantes contenidos dentro del radio censal 14_1_8</em><br />
+<img alt="" src="https://raw.githubusercontent.com/gcba/tod/master/docs/images/reachability%204.png" /></p>
+<p><em>Superficie alcanzable total de cada uno de los puntos equidistantes contenidos dentro del radio censal 14_1_8</em><br />
+<img alt="" src="https://raw.githubusercontent.com/gcba/tod/master/docs/images/reachability%205.png" /></p>
+<p>3 . Se realiza un promedio simple entre las superficies alcanzables de cada uno de los puntos de la malla. </p>
+<p>Se considerará a este promedio como aproximadamente representativo de la superficie alcanzable por el habitante medio del área en cuestión. Esta aproximación pierde precisión cuanto más heterogéneamente distribuida esté la población dentro del área (el promedio debería ser ponderado por cantidad de habitantes). </p>
+<p>Por otro lado, el cálculo de este indicador gana en precisión cuando la distancia elegida entre los puntos de la malla se achica. Utilizar una malla de puntos equidistantes a 100 metros en lugar de una de 200 provee más puntos cuya superficie alcanzable es certera. En el límite, si achicáramos la distancia entre los puntos al mínimo posible, se estaría realizando un promedio de las superficies alcanzables desde cada uno de los puntos del área. Esto incrementa la precisión del indicador al costo de una mayor capacidad computacional necesaria.</p>
+<h2 id="4-estimacion-de-indicadores-sobre-el-uso-del-suelo"><a name="user-content-4-estimacion-de-indicadores-sobre-el-uso-del-suelo" href="#4-estimacion-de-indicadores-sobre-el-uso-del-suelo" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>4. Estimación de indicadores sobre el uso del suelo</h2>
+<p>Para estimar los porcentajes de uso del suelo de cada división geográfica de la Ciudad Autónoma de Buenos Aires se utilizó el <a href="http://data.buenosaires.gob.ar/dataset/relevamiento-usos-suelo">Relevamiento de Usos del Suelo</a> de 2011 de la Secretaría de Planeamiento del Ministerio de Desarrollo Urbano del GCBA. </p>
+<p>El RUS toma la forma de un dataset de puntos (lat, lon) donde el uso del suelo fue relevado en el año de referencia. Dicho dataset no cuenta con una indicación de la superficie afectada a ese uso; para asignarles una superficie se utilizaron las parcelas del Registro de Obras y Catastro.</p>
+<p>Cabe aclarar que las parcelas no siempre están contenidas en su totalidad por un radio censal: 778 parcelas (sobre un total de 318811) pertenecen a más de uno de ellos. En esta versión de indicadores sobre uso del suelo se asignó un solo radio censal a cada una de las parcelas (una futura versión más compleja de este indicador podría incorporar todos los radios a los que pertenecen) de manera tal que en el caso de las parcelas partidas se tomó uno sólo de los radios censales con los que intersectan y se le asignó el área intersectada en lugar del área total de la parcela.</p>
+<p>Este aspecto introduce una distorsión en el cálculo de los porcentajes de uso del suelo de cada radio censal ya que en algunos casos hay radios con &ldquo;áreas ignoradas&rdquo;. El total de superficie ignorada asciende a casi un 7% de la superficie catastral o a menos de un 5% de la superficie total de la CABA. Para esta versión experimental se consideró como un margen de error aceptable, pero cabe resaltar que en algunas áreas de la Ciudad esta distorsión puede ser más importante que en otras.</p>
+<p>Pasos para replicar el cálculo de uso del suelo:</p>
+<p>(<em>tratar de clarificar este tema: más acotado es más claro, se podría hacer mejor preprocesando la capa</em>)</p>
+<ol>
+<li>Se asigna un uso del suelo (residencial, comercial, industrial, servicios u otros) a cada punto del RUS según una <a href="https://github.com/gcba/tod/raw/master/data/RUS_clasif_rama1.xlsx">clasificación</a> desarrollada específicamente para este caso, basada en la agregación de categorías de la variable &ldquo;rama1&rdquo;.</li>
+<li>Se asignan parcelas del Catastro a los puntos del RUS.</li>
+<li>Se asignan radios censales a parcelas del Catastro.<ul>
+<li>Primero se asignan radios censales a aquellas parcelas completamente contenidas por un radio censal</li>
+<li>En segundo lugar se asignan radios censales a aquellas parcelas parcialmente contenidas por un radio censal</li>
+</ul>
+</li>
+<li>Se crea una columna en el dataset que contiene el área de la parcela que intersecta con el radio censal asignado (en la mayoría de los casos, esto es igual al área completa de la parcela ya que esta se encuentra contenida por completo en el radio censal).</li>
+<li>Se calcula la cantidad de repeticiones de cada parcela en el dataset, luego se crea una columna adicional donde se divide cada área por la cantidad de veces que esa parcela está repetida. En este paso se asume que el área de una parcela con más de un uso del suelo relevado se divide en partes iguales entre sus distintos usos.</li>
+<li>Se agrupa el dataset por radio censal y uso del suelo. En este punto se calcula el porcentaje de superficie catastral destinado a cada uso del suelo sobre el porcentaje total de superficie catastral de cada radio censal. Se obtiene así una medida de la proporción de uso del suelo de cada radio censal.</li>
+</ol>
+<h2 id="5-recalculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregacion-geografica-divisiones"><a name="user-content-5-recalculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregacion-geografica-divisiones" href="#5-recalculo-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers-y-distintos-niveles-de-agregacion-geografica-divisiones" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>5. Recálculo de indicadores para radios de cobertura de estaciones (buffers) y distintos niveles de agregación geográfica (divisiones)</h2>
+<h3 id="reestimacion-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers"><a name="user-content-reestimacion-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers" href="#reestimacion-de-indicadores-para-radios-de-cobertura-de-estaciones-buffers" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Reestimación de indicadores para radios de cobertura de estaciones (buffers)</h3>
+<p>Todos los indicadores calculados a nivel de radio censal fueron reestimados para las áreas en torno a estaciones de metrobús, ferrocarril, subte y premetro a 300, 500, 750, 1000, 1500 y 2000 metros de distancia en torno al punto de la estación.</p>
+<p>La reestimación de indicadores para áreas de influencia de estaciones (buffers) se realiza como un promedio ponderado por población o superficie (según sea más indicado para el tipo de indicador de que se trate) de los indicadores de cada radio censal contenido dentro del área para la cual se realiza la reestimación.</p>
+<p>La fórmula de cálculo más sencilla para indicadores ponderados por población sería la siguiente:</p>
+<p>$IndicBuffer = \frac{IndicR1 * PoblR1 + IndicR2 * PoblR2 + &hellip; + IndicRN * PoblRN}{PoblR1 + PoblR2 + &hellip; + PoblRN}$</p>
+<ul>
+<li><em>IndicBuffer</em>: Indicador reestimado para el buffer o área de influencia de una estación.</li>
+<li><em>IndicR1</em>: Indicador original del radio censal número 1.</li>
+<li><em>PoblR1</em>: Población del radio censal número 1.</li>
+</ul>
+<p>Sin embargo, el cálculo adquiere complejidad cuando el área en cuestión intersecta radios censales que sólo tienen una porción de su superficie dentro del área. El indicador del radio censal representa a una cantidad de población mayor que la que cae dentro del área de influencia de la estación, de manera que la fórmula anterior estaría sobreponderando a aquellos radios censales cuya superficie no está enteramente contenida por el área alrededor de la estación.</p>
+<p>Para corregir estos casos se multiplicó la población de los radios censales por la proporción de superficie del radio censal que intersecta al área de influencia de la estación. De esta manera, si el radio censal A tiene 300 habitantes pero sólo un 30% de su superficie intersecta el área alrededor de una estación, el ponderador a utilizar para ese radio censal será de 90 personas.</p>
+<p>$IndicBuffer = \frac{IndicR1 * PoblR1 * \frac{SupR1In}{SupR1Total} + &hellip; + IndicRN * PoblRN * \frac{SupRNIn}{SupRNTotal}}{PoblR1 * ProporciónR1In + &hellip; + PoblRN * ProporciónRNIn}$</p>
+<ul>
+<li><em>IndicBuffer</em>: Indicador reestimado para el buffer o área de influencia de una estación.</li>
+<li><em>IndicR1</em>: Indicador original del radio censal número 1.</li>
+<li><em>PoblR1</em>: Población del radio censal número 1.</li>
+<li><em>SupR1</em>: Superficie del radio censal número 1.</li>
+</ul>
+<p>La pertinencia de este procedimiento requiere suponer que la población se distribuye homogéneamente hacia adentro de todos los radios censales. Si el 30% de la superficie de un radio censal con 100 personas intersecta el área de influencia de una estación de subte pero toda la población reside en el 70% restante de la superficie (el caso más extremo) que está fuera, el cálculo se vería distorsionado por considerar que 30 personas de ese radio censal viven dentro del área.</p>
+<p>Las distorsiones más significativas en este sentido se dan cuando grandes superficies de un radio censal tienen un uso alternativo al residencial. Este es el caso, por ejemplo, de la presencia de espacios verdes (en los espacios verdes no reside ningún habitante).</p>
+<p>De esta forma, la ecuación anterior debe corregirse para atenuar la distorsión del supuesto de homogeneidad en la distribución de la población y así evitar ponderar de la misma manera superficies con distintas proporciones de espacios verdes.</p>
+<p>$IndicBuffer = \frac{IndicR1 * PoblR1 * \frac{SupR1In - SupR1VerdeIn}{SupR1Total - SupR1VerdeTotal} + &hellip; + IndicRN * PoblRN * \frac{SupRNIn - SupRNVerdeIn}{SupRNTotal - SupRNVerdeTotal}}{PoblR1 * ProporciónR1NoVerdeIn + &hellip; + PoblRN * ProporciónRNNoVerdeIn}$</p>
+<ul>
+<li><em>IndicBuffer</em>: Indicador reestimado para el buffer o área de influencia de una estación.</li>
+<li><em>IndicR1</em>: Indicador original del radio censal número 1.</li>
+<li><em>PoblR1</em>: Población del radio censal número 1.</li>
+<li><em>SupR1</em>: Superficie del radio censal número 1.</li>
+<li><em>SupR1Verde</em>: Superficie de espacios verdes del radio censal número 1.</li>
+<li><em>ProporciónR1NoVerde</em>: Proporción de la superfice &ldquo;no verde&rdquo; del radio censal número 1 que intersecta al área &ldquo;no verde&rdquo; alrededor de una estación.</li>
+</ul>
+<p>Finalmente, en esta versión del mapa los indicadores reestimados para buffers se calcularon siguiendo esta última ecuación. Cabe mencionar que una versión superadora de esta metodología podría utilizar información del relevamiento de usos del suelo para mejorar la precisión de la ponderación de indicadores de radios censales que intersectan parcialmente el área de influencia de una estación.</p>
+<p>A modo de ejemplo, podrían considerarse únicamente las zonas residenciales para el cálculo del ponderador, de forma tal que la ecuación se vería modificada de la siguiente manera:</p>
+<p>$IndicBuffer = \frac{IndicR1 * PoblR1 * \frac{SupResidencialR1In}{SupResidencialR1Total} + &hellip; + IndicRN * PoblRN * \frac{SupResidencialRNIn}{SupResidencialRNTotal}}{PoblR1 * ProporciónResidencialR1In + &hellip; + PoblRN * ProporciónResidencialRNIn}$</p>
+<ul>
+<li><em>IndicBuffer</em>: Indicador reestimado para el buffer o área de influencia de una estación.</li>
+<li><em>IndicR1</em>: Indicador original del radio censal número 1.</li>
+<li><em>PoblR1</em>: Población del radio censal número 1.</li>
+<li><em>SupResidencialR1</em>: Superficie residencial del radio censal número 1.</li>
+<li><em>ProporciónResidencialR1</em>: Proporción de la superfice residencial del radio censal número 1 que intersecta al área residencial alrededor de una estación.</li>
+</ul>
+<p>La precisión de estas reestimaciones es mayor a medida que (a) el radio elegido del buffer es más grande (un buffer de 300 metros tiene una proproción mayor de casos de intersección parcial sobre la superficie total del buffer que uno de 2000 metros) y (b) la unidad geográfica original a partir de la cual se reestiman los indicadores es más chica (es mejor utilizar radios censales que fracciones censales).</p>
+<h3 id="reestimacion-de-indicadores-para-distintos-niveles-de-agregacion-geografica-divisiones"><a name="user-content-reestimacion-de-indicadores-para-distintos-niveles-de-agregacion-geografica-divisiones" href="#reestimacion-de-indicadores-para-distintos-niveles-de-agregacion-geografica-divisiones" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>Reestimación de indicadores para distintos niveles de agregación geográfica (divisiones)</h3>
+<p>Siempre que fue posible, los indicadores se construyeron a partir de información originalmente publicada en el nivel de agregación geográfico adecuado (se descargaron los datos correspondientes del Censo Nacional a nivel de radio censal, fracción censal y comuna).</p>
+<p>En los casos en que un indicador se construyó a partir de otras fuentes, la estimación original se realizó a nivel de radio censal (la división geográfica más pequeña). La reestimación para niveles mayores de agregación geográfica (fracción censal y comuna) se realizó simplemente como un promedio ponderado por población (casi todos) o superficie (indicadores relacionados con el uso del suelo) de los radios censales que componen las fracciones censales o las comunas. En este caso, una fracción censal o comuna siempre contiene completamente a los radios censales que la intersectan.</p>
+<p>Sin embargo, un nivel de agregación geográfica muy común en la Ciudad de Buenos Aires es la que surge de dividir a la ciudad en &ldquo;barrios&rdquo;. Frecuentemente, un habitante de la ciudad comprenderá mejor el área geográfica de que se trate si se le dice &ldquo;barrio de Palermo&rdquo; en lugar de &ldquo;Comuna 14&rdquo;.</p>
+<p>Los barrios no necesariamente agrupan radios censales y se dan casos en los que parte de la superficie de un radio censal pertenece a un barrio mientras que el resto pertenece a otro u otros. En este caso, la reestimación de indicadores de radios censales para barrios se realizó siguiendo el mismo procedimiento que el descripto anteriormente para el caso de las áreas de influencia de una estación.</p>
+<h2 id="6-recalculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-area-total-fuera-de-los-mismos"><a name="user-content-6-recalculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-area-total-fuera-de-los-mismos" href="#6-recalculo-de-indicadores-para-conjuntos-de-buffers-y-para-el-area-total-fuera-de-los-mismos" class="headeranchor-link" aria-hidden="true"><span class="headeranchor"></span></a>6. Recálculo de indicadores para conjuntos de buffers y para el área total fuera de los mismos</h2>
+<p>Cuando se selecciona tanto un nivel de agregación geográfica de la ciudad (divisiones) con o sin filtros y una o más capas de buffers de distintos modos de transporte, el mapa muestra una lista de indicadores para la población dentro de los buffers (<em>In</em>), fuera de los buffers (<em>Out</em>) y para la población total seleccionada en el filtro de divisiones elegido (<em>All</em>).</p>
+<p>Si los buffers no se superpusieran entre sí, el cálculo de los indicadores para la población dentro de los mismos podría realizarse simplemente mediante un promedio ponderado por población o superficie utilizando los datos ya calculados para cada buffer.</p>
+<p>Este procedimiento debe descartarse cuando los buffers se superponen (la mayor parte de los casos), ya que en varias ocasiones se estaría contabilizando la misma población más de una vez.</p>
+<p>El procedimiento adoptado en este caso es similar al descripto para la reestimación de indicadores por buffer, en su versión más sencilla, y a partir de los datos de fracciones censales en lugar de los de radios censales.</p>
+<p>De esta manera, se computa la unión entre todos los buffers seleccionados y se aplica la siguiente ecuación sobre la figura geográfica resultante:</p>
+<p>$IndicBuffersIn = \frac{IndicF1 * PoblF1 * \frac{SupF1In}{SupF1Total} + &hellip; + IndicFN * PoblFN * \frac{SupFNIn}{SupFNTotal}}{PoblF1 * ProporciónF1In + &hellip; + PoblFN * ProporciónFNIn}$</p>
+<ul>
+<li><em>IndicBuffersIn</em>: Indicador reestimado para un conjunto de buffers o áreas de influencia de distintas estaciones.</li>
+<li><em>IndicF1</em>: Indicador original de la fracción censal número 1.</li>
+<li><em>PoblF1</em>: Población de la fracción censal número 1.</li>
+<li><em>SupF1</em>: Superficie de la fracción censal número 1.</li>
+</ul>
+<p>La reestimaciones de indicadores realizadas con este procedimiento requieren de una capacidad computacional significativa para procesar las operaciones geográficas que dan lugar al cálculo de los ponderadores, cuanto más chicas las unidades geográficas habrá mayor cantidad de ellas y el cálculo tardará más.</p>
+<p>En este caso, el cálculo debe hacerse en el momento ya que depende de la selección particular de buffers y divisiones que haga el usuario. El compromiso entre precisión del resultado y usabilidad requirió que este cálculo se realice sin la corrección por espacios verdes y utilizando unidades de agregación geográfica más grandes (fracciones censales) como insumo primario de información.</p>
+<p>Las distorsiones de este procedimiento, de todas maneras, son menores respecto del caso de cálculo de indicadores para un buffer individual ya que la proporción de divisiones geográficas (en este caso, fracciones censales) en situación de intersección parcial con un conjunto de buffers es menor que en el caso de buffers individuales (una parte importante de los bordes de los buffers se superpone con otros buffers, eliminando casos de intersección parcial).</p></article></body></html>
