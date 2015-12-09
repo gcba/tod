@@ -1,5 +1,5 @@
-USER = 'agustinbenassi'
-CARTODB_JSON_URL = 'https://agustinbenassi.cartodb.com/api/v2/viz/39748176-72ab-11e5-addc-0ecd1babdde5/viz.json'
+USER = 'gopm'
+CARTODB_JSON_URL = 'https://gopm.cartodb.com/api/v2/viz/20612ffc-9e8b-11e5-80cb-0e3ff518bd15/viz.json'
 BBOX = [-58.534235, -34.708906, -58.329524, -34.539576]
 CENTER = [-34.615753, -58.4]
 ZOOM = 12
@@ -337,3 +337,6 @@ TIMEOUTS = {
     "filter_buffers": 1500,
     "filter_divs": 1000
 }
+
+POINTS_CSS_URL = "https://raw.githubusercontent.com/gcba/tod/gh-pages/css/estaciones.css"
+LINES_CSS_URL = "https://raw.githubusercontent.com/gcba/tod/gh-pages/css/lineas.css"

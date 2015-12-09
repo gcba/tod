@@ -72,6 +72,7 @@ function main() {
             // post_cache()
             retrieve_divs_ids()
             retrieve_stations_and_lines()
+            set_css_stations_and_lines(layers[1])
             relocate_docs_links()
             relocate_cartodb_overlays()
             create_trans_list(layers[1])
@@ -166,6 +167,18 @@ function retrieve_stations_and_lines() {
             })
         })
     })
+}
+
+function set_css_stations_and_lines(layer) {
+    var sublayerStations = layer.getSubLayer(SUBLAYER_IDX["points"])
+    var sublayerLines = layer.getSubLayer(SUBLAYER_IDX["lines"])
+
+    $.get(POINTS_CSS_URL, function(css) {
+        sublayerStations.setCartoCSS(css)
+    });
+    $.get(LINES_CSS_URL, function(css) {
+        sublayerLines.setCartoCSS(css)
+    });
 }
 
 // panel de capas de transporte (puntos y líneas)
