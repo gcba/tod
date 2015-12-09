@@ -189,8 +189,9 @@ function get_buffer_filter_condition(tag) {
 
 function get_name_and_mode(tag) {
     // debugger
-    var tagPattern = /([^\(\)]+)\s+\(([a-z\_]+)\)/i
+    var tagPattern = /([^]+)\s+\(([a-z\_]+)\)/i
     var regexRes = tagPattern.exec(tag)
+    // debugger
     return [regexRes[1], regexRes[2]]
 }
 
