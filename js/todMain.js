@@ -889,7 +889,7 @@ function calc_data_table_height(percent) {
     var percent = percent || 0.95
     var position = $("#indicators-seleccionados").offset()
     var height = ($(document).height() - position.top) * percent
-    return (height - 57 - 30)
+    return (height - 57 - 50)
 }
 
 function create_selected_indicators_table() {
