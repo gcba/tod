@@ -10,7 +10,7 @@ DEFAULT_SELECTED_INDICATORS = ["hab", "hab_km2", "area_km2", "d_ffcc",
 ]
 
 INDICS_HIERARCHY = {
-    "Generales": ["hab", "area_km2", "hab_km2"],
+    "Generales": ["hab", "area_km2", "hab_km2", "hombres", "extranjero"],
     "Edad": ["_0_14", "_15_64", "mas_65"],
     "Uso del suelo": ["comercial", "residencia", "industrial", "servicios",
         "otros"
@@ -31,16 +31,16 @@ AREA_WEIGHTED = ["hab_km2", "comercial", "residencia", "industrial",
 NON_WEIGHTED = ["hab", "area_km2"]
 
 INDICS = {
-    // "hombres": {
-    //     "short": "Hombres (%)",
-    //     "scale": 1,
-    //     "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
-    // },
-    // "extranjeros": {
-    //     "short": "Extranjeros (%)",
-    //     "scale": 1,
-    //     "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
-    // },
+    "hombres": {
+        "short": "Hombres (%)",
+        "scale": 100,
+        "long": "Proporción de habitantes de sexo masculino (%) - Censo Nacional 2010 (INDEC)"
+    },
+    "extranjero": {
+        "short": "Extranjeros (%)",
+        "scale": 100,
+        "long": "Proporción de habitantes nacidos en el extranjero (%) - Censo Nacional 2010 (INDEC)"
+    },
     "hab": {
         "short": "Población (M)",
         "scale": 1 / 1000000,
