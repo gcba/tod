@@ -620,6 +620,7 @@ function create_selected_buffers_field(layer) {
                 $("#close-legends").show("fast")
                 $("#panel-indicators-seleccionados").css("display", "block")
                 calculate_indicators(layer)
+                set_universe_totals(layer)
 
                 var ms = get_mode_and_size(newTag)
                 var modeToAddLines = ms[0]
@@ -781,7 +782,7 @@ function do_buffers_map_query(layer) {
     do_map_query(layer.getSubLayer(SUBLAYER_IDX["buffers"]), query)
     $("#panel-indicators").attr("legend-type", "buffers")
     recalculate_buffers_indicator(layer, g_buffers["indicator"])
-    set_universe_totals(layer)
+    // set_universe_totals(layer)
 }
 
 // crear panel de indicators para cambiar las leyendas
@@ -1065,7 +1066,6 @@ function query_indic_mixed(layer, indics, table) {
                                     add_new_row(layer, table, "table-" + indic, row)
                                 })
                                 replace_loading_with_table()
-                                table.draw()
                                 set_table_indic_color(g_divisions["indicator"],
                                     "divisions")
                                 set_table_indic_color(g_buffers["indicator"],
