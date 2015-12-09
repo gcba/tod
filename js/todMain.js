@@ -128,7 +128,7 @@ function relocate_cartodb_overlays() {
     $(".cartodb-share").prependTo($(".cartodb-header .content"))
 }
 
-function relocate_docs_links () {
+function relocate_docs_links() {
     $("#github").prependTo($(".cartodb-header .content"))
     $("#docs").prependTo($(".cartodb-header .content"))
 }
@@ -262,7 +262,7 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
         $("#panel-indicators").attr("legend-type", "divisions")
         if (g_divisions["areaLevel"] != "None") {
             recalculate_divisions_indicator(layer, g_divisions["indicator"])
-            $("#panel-indicators-seleccionados").show("fast", function () {
+            $("#panel-indicators-seleccionados").show("fast", function() {
                 if ($("#table-spinner").css("display") == "none") {
                     rebuild_table()
                 };
@@ -604,7 +604,6 @@ function create_selected_buffers_field(layer) {
                 $("#close-legends").show("fast")
                 $("#panel-indicators-seleccionados").css("display", "block")
                 calculate_indicators(layer)
-                rebuild_table()
 
                 var ms = get_mode_and_size(newTag)
                 var modeToAddLines = ms[0]
@@ -772,17 +771,21 @@ function do_buffers_map_query(layer) {
 // crear panel de indicators para cambiar las leyendas
 function create_panel_indicators_hide_btn() {
     $("#close-indicators-table").click(function() {
-        $("#close-indicators-table").hide("fast")
-        $("#open-indicators-table").show("fast")
-        $(".legend-indic-change-button").show("fast")
-        $("#indicators-seleccionados_wrapper").hide("fast")
+        if ($("#table-spinner").css("display") == "none") {
+            $("#close-indicators-table").hide("fast")
+            $("#open-indicators-table").show("fast")
+            $(".legend-indic-change-button").show("fast")
+            $("#indicators-seleccionados_wrapper").hide("fast")
+        };
     })
     $("#open-indicators-table").click(function() {
-        $("#open-indicators-table").hide("fast")
-        $("#close-indicators-table").show("fast")
-        $(".legend-indic-change-button").hide("fast")
-        $("#indicators-seleccionados_wrapper").show("fast")
-        rebuild_table()
+        if ($("#table-spinner").css("display") == "none") {
+            $("#open-indicators-table").hide("fast")
+            $("#close-indicators-table").show("fast")
+            $(".legend-indic-change-button").hide("fast")
+            $("#indicators-seleccionados_wrapper").show("fast")
+            rebuild_table()
+        };
     })
 }
 
