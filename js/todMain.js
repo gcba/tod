@@ -72,6 +72,7 @@ function main() {
             // post_cache()
             retrieve_divs_ids()
             retrieve_stations_and_lines()
+            relocate_docs_links()
             relocate_cartodb_overlays()
             create_trans_list(layers[1])
             create_divs_selector(layers[1])
@@ -125,6 +126,11 @@ function relocate_cartodb_overlays() {
     $(".cartodb-layer-selector-box").prependTo($(".cartodb-header .content"))
     $(".cartodb-searchbox").prependTo($(".cartodb-header .content"))
     $(".cartodb-share").prependTo($(".cartodb-header .content"))
+}
+
+function relocate_docs_links () {
+    $("#github").prependTo($(".cartodb-header .content"))
+    $("#docs").prependTo($(".cartodb-header .content"))
 }
 
 function retrieve_divs_ids() {
@@ -880,7 +886,7 @@ function calc_data_table_height(percent) {
     var percent = percent || 0.95
     var position = $("#indicators-seleccionados").offset()
     var height = ($(document).height() - position.top) * percent
-    return (height - 57)
+    return (height - 57 - 30)
 }
 
 function create_selected_indicators_table() {
