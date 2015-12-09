@@ -330,10 +330,10 @@ PANEL_TRANSPORTE = {
 }
 
 TIMEOUTS = {
-    "add_buffer_tag": 1800,
-    "remove_buffer_tag": 400,
+    "add_buffer_tag": 3000,
+    "remove_buffer_tag": 600,
     "add_div_filter_tag": 1000,
-    "remove_div_filter_tag": 400,
+    "remove_div_filter_tag": 600,
     "filter_buffers": 1500,
     "filter_divs": 1000
 }

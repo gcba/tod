@@ -45,7 +45,11 @@ function do_map_query(sublayer, query) {
     } else {
         sublayer.show()
         sublayer.setSQL(query)
-        console.debug(query)
+        if (query != "") {
+            console.debug(query)
+        } else {
+            console.debug("Attempt empty query")
+        };
     };
 }
 
@@ -68,26 +72,30 @@ function do_db_query(query, fnCallback) {
                 "rows": JSON.parse(sessionStorage.getItem(query))
             })
         } else {
-            sql.execute(query, {})
-                .done(function(data) {
-                    if (typeof(Storage) !== "undefined") {
-                        try {
-                            sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
-                        } catch (e) {
+            if (query != "") {
+                sql.execute(query, {})
+                    .done(function(data) {
+                        if (typeof(Storage) !== "undefined") {
+                            try {
+                                sessionStorage.setItem(query, JSON.stringify(data.rows.slice()))
+                            } catch (e) {
+                                g_queries_cache[query] = data.rows.slice()
+                            }
+                        } else {
                             g_queries_cache[query] = data.rows.slice()
                         }
-                    } else {
-                        g_queries_cache[query] = data.rows.slice()
-                    }
 
-                    fnCallback({
-                        "rows": data.rows
+                        fnCallback({
+                            "rows": data.rows
+                        })
                     })
-                })
-                .error(function(errors) {
-                    // errors contains a list of errors
-                    console.debug("errors:" + errors);
-                })
+                    .error(function(errors) {
+                        // errors contains a list of errors
+                        console.debug("errors:" + errors);
+                    })
+            } else {
+                console.debug("Attempt empty query")
+            };
         };
     };
 }
@@ -191,7 +199,7 @@ function get_name_and_mode(tag) {
     // debugger
     var tagPattern = /([^]+)\s+\(([a-z\_]+)\)/i
     var regexRes = tagPattern.exec(tag)
-    // debugger
+        // debugger
     return [regexRes[1], regexRes[2]]
 }
 
