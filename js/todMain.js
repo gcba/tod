@@ -131,6 +131,8 @@ function relocate_cartodb_overlays() {
 function relocate_docs_links() {
     $("#github").prependTo($(".cartodb-header .content"))
     $("#docs").prependTo($(".cartodb-header .content"))
+    $("#version").appendTo($(".cartodb-header .content"))
+    $(".title").css("display", "inline-block")
 }
 
 function retrieve_divs_ids() {
@@ -585,6 +587,9 @@ function create_selected_buffers_field(layer) {
     }
 
     function add_buffer_tag(newTag) {
+        $("#tag-list-buffers").css("display", "block")
+        $("#tag-list-stations-and-lines").css("display", "block")
+
         var tags = g_buffers["tags"].getTags().slice()
         if (tags.length == 1) {
             var timeout = 0
@@ -594,8 +599,6 @@ function create_selected_buffers_field(layer) {
 
         setTimeout(function() {
             if (_.isEqual(tags, g_buffers["tags"].getTags().slice())) {
-                $("#tag-list-buffers").css("display", "block")
-                $("#tag-list-stations-and-lines").css("display", "block")
 
                 do_buffers_map_query(layer)
                 update_capas_transporte(newTag, true)
