@@ -91,6 +91,9 @@ El scope del **master** branch llega hasta este punto: la creación de los shape
 * *scripts*: módulos escritos en python con métodos utilizados por los ipython notebooks para procesar los datos
 * *Links.xlsx*: lista de links con los recursos a descargar necesarios para construir el mapa
 
+## Próximos pasos
+El repositorio contiene una serie de ideas para continuar el desarrollo de esta herramienta organizadas en [milestones](https://github.com/gcba/tod/milestones). Algunas de ellas son bastante puntuales y pueden ser implementadas en horas o días; otras son ideas que requieren bastante tiempo de diseño y desarrollo, e incluso pueden significar un replanteo mayor de la herramienta tal como esta es ahora.
+
 ## Agradecimientos
 
 * Pablo Lorenzatto ([@plorenzatto](https://github.com/plorenzatto)) por la idea original y brainstorming posterior sobre el indicador de llegabilidad de servicios de colectivos estándar, y por su ayuda en la optimización de consultas geográficas.
