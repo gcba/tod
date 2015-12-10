@@ -95,7 +95,9 @@ El scope del **master** branch llega hasta este punto: la creación de los shape
 
 * Pablo Lorenzatto ([@plorenzatto](https://github.com/plorenzatto)) por la idea original y brainstorming posterior sobre el indicador de llegabilidad de servicios de colectivos estándar, y por su ayuda en la optimización de consultas geográficas.
 * Nacho Leguizamon ([@dorisphanic](https://twitter.com/dorisphanic)) y Mercedes Fiz ([@mechafiz](https://twitter.com/mechafiz)) por la asistencia en el diseño y la usabilidad del mapa.
-* Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el armado de mock ups e innumerables consejos técnicos.
+* Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el diseño de mock ups y sus innumerables consejos técnicos.
 * Natalia Sampietro ([@nsampi](https://github.com/nsampi)) por el brainstorming sobre construcción de indicadores, la enriquecedora discusión metodológica y mucho más.
+* Sebastián Pellizzeri ([@sebapellizzeri](https://twitter.com/sebapellizzeri)) por el constante aporte metodológico a la gestión del proyecto.
+* Laura Paonessa ([@laurapaonessa](https://twitter.com/laurapaonessa)) por el beta testing y sus consejos acerca de como comunicar el proyecto.
 
 
