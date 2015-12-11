@@ -13,7 +13,7 @@ import nose
 import os
 
 import path_finders
-from path_finders import get_project_dir, get_indicators_shp_path
+from path_finders import get_project_dir, get_indicators_shp_path, get, get_shp
 
 
 class PathFindersTestCase(unittest.TestCase):
@@ -35,6 +35,21 @@ class PathFindersTestCase(unittest.TestCase):
                                 "indicadores/buffers/estaciones/estaciones")
         path = get_indicators_shp_path(shp_name, subcategory)
         self.assertEqual(path, exp_path)
+
+    def test_get(self):
+        path = get("shp/transporte")
+        exp_path = os.path.join(get_project_dir(), "shp/transporte")
+        self.assertEqual(path, exp_path)
+
+    def test_get_shp(self):
+        path = get_shp("subte-estaciones")
+        exp_path = get("shp/transporte/subte-estaciones/estaciones_de_subte")
+        self.assertEqual(path, exp_path)
+
+        path = get_shp("estaciones_de_subte")
+        exp_path = get("shp/transporte/subte-estaciones/estaciones_de_subte")
+        self.assertEqual(path, exp_path)
+
 
 if __name__ == '__main__':
     nose.run(defaultTest=__name__)

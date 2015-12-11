@@ -95,7 +95,7 @@ def create_shp_paths_dict(shps_dir, replacements=None):
 # MAIN
 def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
                      replacements=None, group_fields=None,
-                     group_fields_by_sf=None):
+                     group_fields_by_sf=None, prj_path=None):
     """Merge shapefiles in a single shapefile.
 
     There is a merging_field retaining the name of the original field taken
@@ -112,6 +112,13 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
             short ones, to put in the merging_field. {"long_name": "short"}
         group_fields (dict): Fields with different names that should be grouped
             into the same field (group_field: ["name1", "name2", "name3"])
+        group_fields_by_sf (dict): Field name replacements for each shapefile
+            merged like in
+                {"RADIO": {"co_frac_ra": "id_div"},
+                 "FRAC": {"co_fracc": "id_div"}}
+            where "id_div" is the column gathering all ids.
+        prj_path (str): Path to a prj file to be used. If none is provided, the
+            prj file of the first shapefile to be merged will be used.
     """
 
     if type(shp_paths) == str or type(shp_paths) == unicode:
@@ -119,8 +126,11 @@ def merge_shapefiles(shp_paths, output_path, merging_field="orig_sf",
 
     sf_first = shapefile.Reader(shp_paths.values()[0])
     w = shapefile.Writer(sf_first.shapeType)
-    # print(sf_first.shapeType)
-    copy_prj(shp_paths.values()[0], output_path)
+
+    if not prj_path:
+        copy_prj(shp_paths.values()[0], output_path)
+    else:
+        copy_prj(prj_path, output_path)
 
     # write all the fields first
     write_fields(w, shp_paths, merging_field, group_fields, group_fields_by_sf)

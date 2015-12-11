@@ -20,12 +20,83 @@ TRANSPORT_DIR = os.path.join("shp", "transporte")
 CONTEXT_DIR = os.path.join("shp", "contexto")
 EXAMPLES_DIR = os.path.join("examples")
 WEIGHTS_DIR = "intersection_weights"
+PROJECT_NAME = "tod"
+
+INDICATORS_DIR = "indicadores"
+
+AREA_LEVEL_SHP_NAME = {
+    "BARRIO": "barrios_censo_2010",
+    "DPTO": "comunas_caba_censo_2010",
+    "FRAC": "fracciones_caba_censo_2010",
+    "RADIO": "radios_censo_2010"
+}
+
+
+def get(relative_path):
+    """Get absolute path to a relative_path from the project root folder.
+
+    Args:
+        relative_path (str): Path expressed like Mac OS (shp/transporte)
+
+    Returns:
+        str: Absolute path to a file or directory in the project folder.
+    """
+    return os.path.join(get_project_dir(),
+                        relative_path.replace("/", os.path.sep))
+
+
+def get_shp(name, directory=None):
+    """Find a shapefile recursively in the shp project directory."""
+    directory = directory or get("shp")
+
+    for dir_item in os.listdir(directory):
+        abs_path = os.path.join(directory, dir_item)
+
+        # item found!
+        if (dir_item.split(".")[0] == name or
+            (name in AREA_LEVEL_SHP_NAME and
+                dir_item.split(".")[0] == AREA_LEVEL_SHP_NAME[name])):
+            return find_shp_path(abs_path.split(".")[0])
+
+        # search recursively if item is directory
+        elif os.path.isdir(abs_path):
+            recursive_result = get_shp(name, abs_path)
+            if recursive_result:
+                return recursive_result
+
+    return None
+
+
+def get_indic(area_level_or_shp, file_format="csv"):
+    """Find calculated indicators in csv or shp format.
+
+    Args:
+        area_level_or_shp (str): Code of area level (RADIO, FRAC, DPTO,
+            BARRIO) or shapefile name.
+        file_format (str): "csv" for indicators table or "shp" for the same
+            table, with shapes.
+    """
+    if area_level_or_shp in AREA_LEVEL_SHP_NAME:
+        if file_format == "csv":
+            filename = INDICATORS_DIR + "_" + area_level_or_shp + "." + \
+                file_format
+            return get(os.path.join(INDICATORS_DIR, filename))
+
+        elif file_format == "shp":
+            return get_shp(area_level_or_shp, get(INDICATORS_DIR))
+
+        else:
+            raise Exception(file_format + " is a non recognized file format.")
+
+    else:
+        return get_shp(area_level_or_shp, get(INDICATORS_DIR))
 
 
 def get_prj(name):
-    return os.path.join(get_project_dir(), "shp", name + ".prj")
+    return get("shp/" + name + ".prj")
 
 
+# OLD PF METHODS
 def get_context_shp_path(shp_name):
     context_dir = os.path.join(get_project_dir(), CONTEXT_DIR)
     return find_shp_path(os.path.join(context_dir, shp_name))
@@ -147,7 +218,7 @@ def find_shp_path(directory):
     return shp_dir
 
 
-def get_project_dir(project_name="tod", inside_path=__file__):
+def get_project_dir(project_name=PROJECT_NAME, inside_path=__file__):
     """Get the directory of a package given an inside path.
 
     Recursively get parent directories until project_name is reached.
