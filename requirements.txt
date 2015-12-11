@@ -1,7 +1,6 @@
 pyredatam
 nose
 pyshp
-rtree
 shapely
 pandas>=0.17.0
 lxml
