@@ -5,7 +5,6 @@ shapely
 pandas>=0.17.0
 lxml
 pyproj
-pycrs
 statsmodels
 descartes
 simpledbf
