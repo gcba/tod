@@ -8,6 +8,7 @@ matrix:
   - python: '3.4'
   - python: pypy
 install:
+- sudo apt-get install gfortran libopenblas-dev liblapack-dev
 - pip install -r requirements.txt
 - pip install coveralls
 - pip install nose
@@ -15,5 +16,5 @@ script:
 - nosetests
 after_success: coveralls
 os:
-- osx
+# - osx
 - linux
