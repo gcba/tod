@@ -9,6 +9,7 @@ matrix:
   - python: '2.6'
   - python: '3.4'
   - python: pypy
+  - os: osx
 addons:
   apt:
     packages:
@@ -35,5 +36,5 @@ script:
 - nosetests
 after_success: coveralls
 os:
-# - osx
 - linux
+- osx
