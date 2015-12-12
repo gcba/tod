@@ -4,11 +4,10 @@ pyshp
 shapely
 pandas>=0.17.0
 lxml
-pyproj
-statsmodels
-descartes
 simpledbf
 openpyxl
 xlrd
 dataset
+pyproj
+descartes
 psycopg2
