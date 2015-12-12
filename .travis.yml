@@ -12,6 +12,9 @@ matrix:
 addons:
   apt:
     packages:
+    - libgdal-dev
+    - libgdal1h
+    - libgdal1-dev
     - gdal-bin
     - python-gdal
     - python-numpy
