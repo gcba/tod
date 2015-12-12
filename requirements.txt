@@ -12,4 +12,4 @@ pyproj
 statsmodels
 descartes
 psycopg2
-pycrs
+fiona
