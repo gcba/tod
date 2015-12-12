@@ -11,3 +11,4 @@ dataset
 pyproj
 descartes
 psycopg2
+cartopy
