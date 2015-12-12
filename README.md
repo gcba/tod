@@ -1,4 +1,7 @@
 # TOD (Transport Oriented Development) - Backend
+
+[![Build Status](https://travis-ci.org/gcba/tod.svg)](https://travis-ci.org/gcba/tod)
+
 Herramienta de visualización de características poblacionales de la Ciudad Autónoma de Buenos Aires en relación a las zonas de influencia de los distintos sistemas de transporte público.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
