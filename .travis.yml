@@ -10,6 +10,7 @@ matrix:
 addons:
   apt:
     packages:
+    - gdal
     - gdal-bin
     - python-numpy
     - python-scipy
