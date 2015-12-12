@@ -1,5 +1,5 @@
 language: python
-sudo: required
+sudo: false
 python:
 - '2.7'
 matrix:
@@ -7,8 +7,12 @@ matrix:
   - python: '2.6'
   - python: '3.4'
   - python: pypy
-before_install:
-- sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-s
+addons:
+  apt:
+    packages:
+    - python-numpy
+    - python-scipy
+    - python-matplotlib
 install:
 - pip install -r requirements.txt
 - pip install coveralls
