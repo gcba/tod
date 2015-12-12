@@ -10,10 +10,10 @@ matrix:
 addons:
   apt:
     packages:
+    # - gdal
     - python-numpy
     - python-scipy
     - python-matplotlib
-    - gdal-bin
 install:
 - pip install -r requirements.txt
 - pip install coveralls

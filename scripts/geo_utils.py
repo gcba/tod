@@ -13,7 +13,7 @@ from __future__ import with_statement
 import os
 import shapefile
 import shutil
-import pycrs
+# import pycrs
 import cartopy
 import cartopy.crs as ccrs
 from functools import partial
