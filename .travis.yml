@@ -1,5 +1,5 @@
 language: python
-sudo: false
+sudo: required
 python:
 - '2.7'
 matrix:
@@ -15,5 +15,5 @@ script:
 - nosetests
 after_success: coveralls
 os:
+- osx
 - linux
-# - osx
