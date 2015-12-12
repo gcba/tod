@@ -8,7 +8,7 @@ matrix:
   - python: '3.4'
   - python: pypy
 before_install:
-- sudo apt-get install gfortran libopenblas-dev liblapack-dev
+- sudo apt-get install python-numpy python-scipy python-matplotlib ipython ipython-notebook python-pandas python-s
 install:
 - pip install -r requirements.txt
 - pip install coveralls
