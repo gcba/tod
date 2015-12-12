@@ -9,5 +9,7 @@ openpyxl
 xlrd
 dataset
 pyproj
+statsmodels
 descartes
 psycopg2
+pycrs
