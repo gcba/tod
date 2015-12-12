@@ -10,10 +10,15 @@ matrix:
 addons:
   apt:
     packages:
-    # - gdal
+    - gdal-bin
     - python-numpy
     - python-scipy
     - python-matplotlib
+    - ipython
+    - ipython-notebook
+    - python-pandas
+    - python-sympy
+    - python-nose
 install:
 - pip install -r requirements.txt
 - pip install coveralls
