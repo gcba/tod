@@ -8,7 +8,7 @@ matrix:
   - python: '3.4'
   - python: pypy
 install:
-- sudo apt-get install gfortran libopenblas-dev liblapack-dev
+- apt-get install gfortran libopenblas-dev liblapack-dev
 - pip install -r requirements.txt
 - pip install coveralls
 - pip install nose
