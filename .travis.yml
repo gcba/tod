@@ -10,9 +10,19 @@ matrix:
 addons:
   apt:
     packages:
+    - gdal-bin
     - python-numpy
     - python-scipy
     - python-matplotlib
+    - ipython
+    - ipython-notebook
+    - python-pandas
+    - python-sympy
+    - python-nose
+    - build-essential
+    - python-dev
+    - gfortran
+    - cython
 install:
 - pip install -r requirements.txt
 - pip install coveralls

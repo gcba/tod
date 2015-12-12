@@ -13,33 +13,43 @@ from __future__ import with_statement
 import os
 import shapefile
 import shutil
-import pycrs
+# import pycrs
 import cartopy
 import cartopy.crs as ccrs
 from functools import partial
 from shapely.ops import transform
 import pyproj
+import fiona
+from fiona.crs import to_string
+from fiona.crs import from_epsg
 from shapely.geometry import LineString, Point, Polygon
 
 from path_finders import get_transport_shp_path, get_division_path
 from path_finders import get_project_dir, find_shp_path
 from global_vars import IDS_GCBA
 from utils import copy_prj
+import path_finders as pf
 
 POPULATION = "hab"
 
 
 def reproject_point(lat, lon, shp_path):
+
+    # get projections in proj4 string format
+    with fiona.open(shp_path + ".shp") as source:
+        tocrs_proj4 = to_string(source.crs)
+
+    fromcrs_proj4 = fiona.crs.to_string(from_epsg(4326))
+
+    # wgs84_prj = os.path.join(get_project_dir(), "shp", "4326.prj")
+    # fromcrs = pycrs.loader.from_file(wgs84_prj)
+    # fromcrs_proj4 = fromcrs.to_proj4()
+
+    # tocrs = pycrs.loader.from_file(shp_path + ".prj")
+    # tocrs_proj4 = tocrs.to_proj4()
+
     point_wgs84 = Point(lat, lon)
 
-    wgs84_prj = os.path.join(get_project_dir(), "shp", "4326.prj")
-    fromcrs = pycrs.loader.from_file(wgs84_prj)
-    fromcrs_proj4 = fromcrs.to_proj4()
-
-    tocrs = pycrs.loader.from_file(shp_path + ".prj")
-    tocrs_proj4 = tocrs.to_proj4()
-
-    # print(fromcrs_proj4)
     project = partial(
         pyproj.transform,
         pyproj.Proj(fromcrs_proj4),
