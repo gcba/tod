@@ -12,5 +12,3 @@ openpyxl
 xlrd
 dataset
 psycopg2
-pyrcrs
-rtree
