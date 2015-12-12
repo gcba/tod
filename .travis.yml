@@ -2,6 +2,8 @@ language: python
 sudo: false
 python:
 - '2.7'
+virtualenv:
+  system_site_packages: true
 matrix:
   allow_failures:
   - python: '2.6'
@@ -15,8 +17,6 @@ addons:
     - python-numpy
     - python-scipy
     - python-matplotlib
-    - ipython
-    - ipython-notebook
     - python-pandas
     - python-sympy
     - python-nose
