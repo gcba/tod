@@ -14,8 +14,6 @@ import os
 import shapefile
 import shutil
 # import pycrs
-import cartopy
-import cartopy.crs as ccrs
 from functools import partial
 from shapely.ops import transform
 import pyproj
