@@ -38,6 +38,7 @@ Si bien no es estrictamente necesario, se recomienda instalar la distribución [
 **Luego se deben seguir los siguientes pasos:**
 
 *Instalar dependencias*
+
 Deben instalarse dependencias para *psycopg2* y *GDAL*.
 
 En Mac:
@@ -50,6 +51,7 @@ En Linux:
 * `sudo apt-get install libgdal-dev libgdal1h libgdal1-dev gdal-bin python-gdal python-numpy python-scipy python-matplotlib python-pandas python-sympy python-nose build-essential python-dev gfortran cython`
 
 *Crear entorno virtual en Anaconda*
+
 Esto no es necesario, pero es altamente recomendable. Siguiendo los pasos 2 a 4 se pueden instalar las dependencias del proyecto en la instalación general de python, evitando la creación de un entorno virtual.
 
 1. `conda create -n tod python=2` *Crea un nuevo entorno virtual*
