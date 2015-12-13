@@ -14,15 +14,18 @@ import os
 import sys
 from global_vars import AREA_LEVEL_SHP_NAME
 
-BUFFERS_DIR = os.path.join("shp", "transporte", "buffers")
-DIVISIONS_DIR = os.path.join("shp", "divisiones")
-TRANSPORT_DIR = os.path.join("shp", "transporte")
-CONTEXT_DIR = os.path.join("shp", "contexto")
-EXAMPLES_DIR = os.path.join("examples")
-WEIGHTS_DIR = "intersection_weights"
-PROJECT_NAME = "tod"
+# shapefiles dirs
+CONTEXT_DIR = "shp/contexto"
+DIVISIONS_DIR = "shp/divisiones"
+TRANSPORT_DIR = "shp/transporte"
+BUFFERS_DIR = "shp/transporte/buffers"
 
+# other dirs
+EXAMPLES_DIR = "examples"
+WEIGHTS_DIR = "intersection_weights"
 INDICATORS_DIR = "indicadores"
+
+PROJECT_NAME = "tod"
 
 AREA_LEVEL_SHP_NAME = {
     "BARRIO": "barrios_censo_2010",
@@ -78,9 +81,9 @@ def get_indic(area_level_or_shp, file_format="csv"):
     """
     if area_level_or_shp in AREA_LEVEL_SHP_NAME:
         if file_format == "csv":
-            filename = INDICATORS_DIR + "_" + area_level_or_shp + "." + \
+            filename = get(INDICATORS_DIR) + "_" + area_level_or_shp + "." + \
                 file_format
-            return get(os.path.join(INDICATORS_DIR, filename))
+            return os.path.join(get(INDICATORS_DIR), filename)
 
         elif file_format == "shp":
             return get_shp(area_level_or_shp, get(INDICATORS_DIR))
@@ -96,55 +99,14 @@ def get_prj(name):
     return get("shp/" + name + ".prj")
 
 
-# OLD PF METHODS
-def get_context_shp_path(shp_name):
-    context_dir = os.path.join(get_project_dir(), CONTEXT_DIR)
-    return find_shp_path(os.path.join(context_dir, shp_name))
+def get_weights_path(buffer_dir, division_name, weights_dir=None):
+    """Create weights json file path."""
+    weights_dir = weights_dir or WEIGHTS_DIR
+    filename = "".join([os.path.basename(buffer_dir), "-",
+                        division_name, ".json"])
 
-
-def get_indicators_dir():
-    return os.path.join(get_project_dir(), "indicadores")
-
-
-def get_examples_dir():
-    return os.path.join(get_project_dir(), EXAMPLES_DIR)
-
-
-def get_transport_shp_path(shp_name):
-    transport_dir = os.path.join(get_project_dir(), TRANSPORT_DIR)
-    return find_shp_path(os.path.join(transport_dir, shp_name))
-
-
-def get_indicators_shp_path(shp_name, subcategory=None):
-    if subcategory:
-        buffer_indic_path = os.path.join("indicadores", subcategory,
-                                         shp_name, shp_name)
-    else:
-        buffer_indic_path = os.path.join("indicadores", shp_name, shp_name)
-    return os.path.join(get_project_dir(), buffer_indic_path)
-
-
-def get_data_path(area_level, variable, subcategory=None, tag=None):
-    if tag:
-        filename = area_level + "_" + variable + "_" + tag + ".csv"
-    else:
-        filename = area_level + "_" + variable + ".csv"
-
-    if subcategory:
-        data_path = os.path.join("data", subcategory, filename)
-    else:
-        data_path = os.path.join("data", filename)
-
-    return os.path.join(get_project_dir(), data_path)
-
-
-def get_data_dir(subcategory=None):
-    if subcategory:
-        data_dir = os.path.join("data", subcategory)
-    else:
-        data_dir = os.path.join("data")
-
-    return os.path.join(get_project_dir(), data_dir)
+    weights_path = os.path.join(weights_dir, filename)
+    return get(weights_path)
 
 
 def iter_buffer_dirs(buffers_dir=None):
@@ -157,43 +119,6 @@ def iter_subdirectories(directory):
             for subdirectory in os.listdir(directory)
             if subdirectory[0] != "." and
             os.path.isdir(os.path.join(directory, subdirectory)))
-
-
-def get_division_dir(division, divisions_dir=None):
-    divisions_dir = divisions_dir or DIVISIONS_DIR
-    division_dir = os.path.join(divisions_dir, division)
-    return os.path.join(get_project_dir(), division_dir)
-
-
-def get_division_path(division):
-    return find_shp_path(get_division_dir(division))
-
-
-def get_area_level_shp_path(area_level):
-    return get_division_path(AREA_LEVEL_SHP_NAME[area_level])
-
-
-def get_indicators_path(area_level, format_file=".csv"):
-    indicators_path = os.path.join(
-        "indicadores", "indicadores_" + area_level + format_file)
-    return os.path.join(get_project_dir(), indicators_path)
-
-
-def get_weights_path(buffer_dir, division_name, weights_dir=None):
-    """Create weights json file path."""
-    weights_dir = weights_dir or WEIGHTS_DIR
-    filename = "".join([os.path.basename(buffer_dir), "-",
-                        division_name, ".json"])
-
-    weights_path = os.path.join(weights_dir, filename)
-    return os.path.join(get_project_dir(), weights_path)
-
-
-def iter_weights_paths(weights_dir=None):
-    weights_dir = os.path.join(get_project_dir(), weights_dir or WEIGHTS_DIR)
-    for filename in os.listdir(weights_dir):
-        if filename[0] != ".":
-            yield os.path.join(weights_dir, filename)
 
 
 def find_shp_path(directory):
@@ -245,3 +170,81 @@ def get_project_dir(project_name=PROJECT_NAME, inside_path=__file__):
                 return path
 
         raise Exception(project_name + " dir couldn't be found.")
+
+
+# OLD PF METHODS
+def get_context_shp_path(shp_name):
+    context_dir = os.path.join(get_project_dir(), CONTEXT_DIR)
+    return find_shp_path(os.path.join(context_dir, shp_name))
+
+
+def get_indicators_dir():
+    return os.path.join(get_project_dir(), "indicadores")
+
+
+def get_examples_dir():
+    return os.path.join(get_project_dir(), EXAMPLES_DIR)
+
+
+def get_transport_shp_path(shp_name):
+    transport_dir = os.path.join(get_project_dir(), TRANSPORT_DIR)
+    return find_shp_path(os.path.join(transport_dir, shp_name))
+
+
+def get_indicators_shp_path(shp_name, subcategory=None):
+    if subcategory:
+        buffer_indic_path = os.path.join("indicadores", subcategory,
+                                         shp_name, shp_name)
+    else:
+        buffer_indic_path = os.path.join("indicadores", shp_name, shp_name)
+    return os.path.join(get_project_dir(), buffer_indic_path)
+
+
+def get_data_path(area_level, variable, subcategory=None, tag=None):
+    if tag:
+        filename = area_level + "_" + variable + "_" + tag + ".csv"
+    else:
+        filename = area_level + "_" + variable + ".csv"
+
+    if subcategory:
+        data_path = os.path.join("data", subcategory, filename)
+    else:
+        data_path = os.path.join("data", filename)
+
+    return get(data_path)
+
+
+def get_data_dir(subcategory=None):
+    if subcategory:
+        data_dir = os.path.join("data", subcategory)
+    else:
+        data_dir = os.path.join("data")
+
+    return os.path.join(get_project_dir(), data_dir)
+
+
+def get_division_dir(division, divisions_dir=None):
+    divisions_dir = divisions_dir or DIVISIONS_DIR
+    division_dir = os.path.join(divisions_dir, division)
+    return os.path.join(get_project_dir(), division_dir)
+
+
+def get_division_path(division):
+    return find_shp_path(get_division_dir(division))
+
+
+def get_area_level_shp_path(area_level):
+    return get_division_path(AREA_LEVEL_SHP_NAME[area_level])
+
+
+def get_indicators_path(area_level, format_file=".csv"):
+    indicators_path = os.path.join(
+        "indicadores", "indicadores_" + area_level + format_file)
+    return os.path.join(get_project_dir(), indicators_path)
+
+
+def iter_weights_paths(weights_dir=None):
+    weights_dir = os.path.join(get_project_dir(), weights_dir or WEIGHTS_DIR)
+    for filename in os.listdir(weights_dir):
+        if filename[0] != ".":
+            yield os.path.join(weights_dir, filename)

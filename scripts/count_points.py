@@ -13,12 +13,12 @@ from __future__ import with_statement
 import os
 
 from geo_utils import iter_shp_as_shapely
-from path_finders import find_shp_path
+import path_finders as pf
 
 
 def count_points(points_shp_path, polygons_shp_path):
-    points_shp_path = find_shp_path(points_shp_path)
-    polygons_shp_path = find_shp_path(polygons_shp_path)
+    points_shp_path = pf.find_shp_path(points_shp_path)
+    polygons_shp_path = pf.find_shp_path(polygons_shp_path)
 
     points = dict(iter_shp_as_shapely(points_shp_path))
     polygons = dict(iter_shp_as_shapely(polygons_shp_path))

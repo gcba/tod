@@ -13,7 +13,7 @@ from __future__ import with_statement
 import os
 import shapefile
 
-from path_finders import find_shp_path
+import path_finders as pf
 from utils import copy_prj
 from geo_utils import get_shapely_shape, shapely_to_pyshp
 
@@ -86,7 +86,7 @@ def create_shp_paths_dict(shps_dir, replacements=None):
         if replacements and shp_name in replacements:
             shp_name = replacements[shp_name]
 
-        shp_path = find_shp_path(os.path.join(shps_dir, shp_dir))
+        shp_path = pf.find_shp_path(os.path.join(shps_dir, shp_dir))
         shp_paths_dict[shp_name + "-" + buffer_tag] = shp_path
 
     return shp_paths_dict

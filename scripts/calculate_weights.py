@@ -23,17 +23,15 @@ from rtree import index
 import json
 from multiprocessing import Process
 
-from path_finders import get_weights_path, iter_buffer_dirs, get_division_dir
-from path_finders import find_shp_path
+import path_finders as pf
 import geo_utils
 
 # DIVISIONS = ["fracciones_caba_censo_2010", "radios_censo_2010"]
 DIVISIONS = ["radios_censo_2010"]
 # DIVISION_NAMES = ["fracciones", "radios"]
 DIVISION_NAMES = ["radios"]
-CONTEXT_DIR = os.path.join("shp", "contexto")
-EMPTY_SHPS_DIR = [os.path.join(CONTEXT_DIR, "espacios-verdes-privados"),
-                  os.path.join(CONTEXT_DIR, "espacios-verdes-publicos")]
+EMPTY_SHPS_DIR = [pf.get_shp("espacios-verdes-privados"),
+                  pf.get_shp("espacios-verdes-publicos")]
 
 
 def save_to_json(divisions_weights, json_path):
@@ -112,8 +110,11 @@ def calculate_intersect_weights(division_dir, buffer_dir, weights_path,
             in this case the polygons used to divide the greater shape.
         buffer_dir (str): Directory where shapefile with "container shapes" is,
             in this case the buffers calculated over points or lines.
+        weights_path (str): Json path where calculated weights will be saved.
         empty_dirs (list): Paths to shapefiles with surfaces that shouldn't be
             taken into account in the calculation.
+        force_buffer_sum (bool): Recalculate weights of a buffer so they always
+            sum 1.0.
 
     Returns:
         dict: The perecentage of intersected surface is returned as calculated
@@ -129,10 +130,10 @@ def calculate_intersect_weights(division_dir, buffer_dir, weights_path,
                 },
             }
     """
-    division_path = find_shp_path(division_dir)
-    buffer_path = find_shp_path(buffer_dir)
+    division_path = pf.find_shp_path(division_dir)
+    buffer_path = pf.find_shp_path(buffer_dir)
     if empty_dirs:
-        empty_paths = [find_shp_path(shp) for shp in empty_dirs]
+        empty_paths = [pf.find_shp_path(shp) for shp in empty_dirs]
 
     # create spatial index for divisions
     divisions = list(geo_utils.iter_shp_as_shapely(division_path))
@@ -196,30 +197,36 @@ def calculate_intersect_weights(division_dir, buffer_dir, weights_path,
     return weighted_intersections
 
 
-def main(buffers_dir=None, divisions=DIVISIONS,
-         division_names=DIVISION_NAMES, divisions_dir=None,
-         empty_shps_dir=EMPTY_SHPS_DIR,
+def main(buffers_dir=None, divisions=DIVISIONS, division_names=DIVISION_NAMES,
+         divisions_dir=pf.DIVISIONS_DIR, empty_shps_dir=EMPTY_SHPS_DIR,
          recalculate=False):
 
+    p = None
     p_counter = 0
-    for buffer_dir in iter_buffer_dirs(buffers_dir):
+    for buffer_dir in pf.iter_buffer_dirs(buffers_dir):
         for division, division_name in zip(divisions, division_names):
-            weights_path = get_weights_path(buffer_dir, division_name)
+            weights_path = pf.get_weights_path(buffer_dir, division_name)
 
             if not os.path.isfile(weights_path) or recalculate:
-                division_dir = get_division_dir(division, divisions_dir)
+                division_path = pf.get_shp(division)
 
                 p = Process(target=calculate_intersect_weights,
-                            args=(division_dir, buffer_dir,
+                            args=(division_path, buffer_dir,
                                   weights_path, empty_shps_dir))
 
                 print("Start process of calculating intersections between",
-                      os.path.basename(division_dir), "and",
+                      os.path.basename(division_path), "and",
                       os.path.basename(buffer_dir), "...")
                 p.start()
+                p_counter += 1
 
-                if p_counter % 5 == 0:
+                if p_counter >= 5 and p_counter % 5 == 0:
                     p.join()
+
+    if p:
+        p.join()
+
+    print("Intersections calculation complete.")
 
 
 if __name__ == '__main__':

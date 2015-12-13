@@ -12,8 +12,7 @@ import unittest
 import nose
 import os
 
-import path_finders
-from path_finders import get_project_dir, get_indicators_shp_path, get, get_shp
+import path_finders as pf
 
 
 class PathFindersTestCase(unittest.TestCase):
@@ -21,9 +20,9 @@ class PathFindersTestCase(unittest.TestCase):
     def test_find_shp_path(self):
 
         directory = "shp/transporte/subte-estaciones"
-        shp_path = path_finders.find_shp_path(directory)
+        shp_path = pf.find_shp_path(directory)
         exp_shp_path = os.path.join(
-            get_project_dir(),
+            pf.get_project_dir(),
             "shp/transporte/subte-estaciones/estaciones_de_subte")
 
         self.assertEqual(shp_path, exp_shp_path)
@@ -31,23 +30,29 @@ class PathFindersTestCase(unittest.TestCase):
     def test_get_indicators_path(self):
         shp_name = "estaciones"
         subcategory = "buffers"
-        exp_path = os.path.join(get_project_dir(),
+        exp_path = os.path.join(pf.get_project_dir(),
                                 "indicadores/buffers/estaciones/estaciones")
-        path = get_indicators_shp_path(shp_name, subcategory)
+        path = pf.get_indicators_shp_path(shp_name, subcategory)
         self.assertEqual(path, exp_path)
 
     def test_get(self):
-        path = get("shp/transporte")
-        exp_path = os.path.join(get_project_dir(), "shp/transporte")
+        path = pf.get("shp/transporte")
+        exp_path = os.path.join(pf.get_project_dir(), "shp/transporte")
+        self.assertEqual(path, exp_path)
+
+        path = pf.get("/Users/abenassi/github/tod/shp/transporte")
+        exp_path = "/Users/abenassi/github/tod/shp/transporte"
         self.assertEqual(path, exp_path)
 
     def test_get_shp(self):
-        path = get_shp("subte-estaciones")
-        exp_path = get("shp/transporte/subte-estaciones/estaciones_de_subte")
+        path = pf.get_shp("subte-estaciones")
+        exp_path = pf.get(
+            "shp/transporte/subte-estaciones/estaciones_de_subte")
         self.assertEqual(path, exp_path)
 
-        path = get_shp("estaciones_de_subte")
-        exp_path = get("shp/transporte/subte-estaciones/estaciones_de_subte")
+        path = pf.get_shp("estaciones_de_subte")
+        exp_path = pf.get(
+            "shp/transporte/subte-estaciones/estaciones_de_subte")
         self.assertEqual(path, exp_path)
 
 

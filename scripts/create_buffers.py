@@ -17,15 +17,15 @@ import shapefile
 import glob
 from shapely.ops import cascaded_union
 
-from path_finders import find_shp_path, get_division_path
+import path_finders as pf
 from geo_utils import iter_shp_as_shapely
 import geo_utils
 import utils
 
-BASE_DIR = os.path.join("shp", "transporte")
+BASE_DIR = pf.get("shp/transporte")
 BUFFER_DIR = "buffers"
 BUFFERS = [300, 500, 750, 1000, 1500, 2000]
-CONTEXT_SHP = get_division_path("comunas_caba_censo_2010")
+CONTEXT_SHP = pf.get_shp("comunas_caba_censo_2010")
 
 
 def _create_shp_name(shp_dir, distance):
@@ -83,7 +83,7 @@ def create_buffered_shp(directory, distance, buffer_dir=BUFFER_DIR,
                         context_shp_or_polygon=None):
     context_polygon = create_context_polygon(context_shp_or_polygon)
 
-    shp_path = find_shp_path(directory)
+    shp_path = pf.find_shp_path(directory)
     shp_name = _create_shp_name(shp_path, distance)
     # print("\n".join([directory, shp_name, buffer_dir]))
     buffer_shp_path = _create_shp_path(directory, shp_name, buffer_dir)
