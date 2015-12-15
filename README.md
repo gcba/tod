@@ -44,7 +44,7 @@ Deben instalarse dependencias para *psycopg2* y *GDAL*.
 En Mac:
 
 * `brew install gdal`
-* `brew install psycopg2`
+* `fink install psycopg2-py27` o `sudo port install py27-psycopg2`
 
 En Linux:
 
@@ -65,6 +65,29 @@ Una vez creado un entorno virtual con las dependencias de la herramienta, se pue
 1. `source activate tod`
 2. `cd directorio_del_repositorio`
 3. `ipython notebook`
+
+*Posibles errores y su solución*
+
+Si en Mac ocurre el error:
+```
+django.core.exceptions.ImproperyConfigured: Error loading psycop2 module
+Library not loaded: libssl.1.0.0.dylib
+Referenced from: .../psycopg2/_psycopg.so
+Reason: image not found
+```
+
+Se debe correr en la línea de comandos:
+```
+sudo ln -s /Applications/Postgres.app/Contents/Versions/9.5/lib/libssl.1.0.0.dylib /usr/local/lib/
+
+sudo ln -s /Applications/Postgres.app/Contents/Versions/9.5/lib/libcrypto.1.0.0.dylib /usr/local/lib/
+```
+
+Donde */Applications/Postgres.app/Contents/Versions/9.5* es el path y la versión donde está instalado Postgres; también podría estar en un path como */Library/PosgreSQL/9.4* o en otro lugar.
+
+Para encontrar el path adecuado puede ser útil correr `locate libssl` en la línea de comandos y buscar aquel path donde está instalado Postgres que contiene los archivos **libssl.1.0.0.dylib** y **libcrypto.1.0.0.dylib**
+
+Algunos OS X pueden requerir realizar el symlink en `/usr/lib` pero otros no permiten la operación y debe realizarse en `/usr/local/lib`.
 
 ## De los datos originales a los shapefiles para CartoDB
 
