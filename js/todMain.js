@@ -261,12 +261,18 @@ function add_divisions_li(idItems, idButton, text, name, layer) {
             get_filter_divs(layer, g_divisions["areaLevel"])
             $(get_legend("divisions")).css("display", "block")
             g_divisions["displayLgd"] = true
+            $("#download-data-divisions").show("fast")
+            $("#dropdownMenuDivisiones").css("float", "left")
+
             $("#open-legends").hide("fast")
             $("#close-legends").show("fast")
 
         } else {
             $(get_legend("divisions")).css("display", "none")
             g_divisions["displayLgd"] = false
+            $("#download-data-divisions").hide("fast")
+            $("#dropdownMenuDivisiones").css("float", "")
+
             set_legend_container_hidden()
         }
 
@@ -603,6 +609,9 @@ function create_selected_buffers_field(layer) {
     function add_buffer_tag(newTag) {
         $("#tag-list-buffers").css("display", "block")
         $("#tag-list-stations-and-lines").css("display", "block")
+        $("#download-data-buffers").show("fast")
+        $("#buffer-add").css("float", "left")
+
 
         var tags = g_buffers["tags"].getTags().slice()
         if (tags.length == 1) {
@@ -641,6 +650,8 @@ function create_selected_buffers_field(layer) {
                     g_buffers["filter_tags"] = []
                     $("#tag-list-buffers").css("display", "none")
                     $("#tag-list-stations-and-lines").css("display", "none")
+                    $("#download-data-buffers").hide("fast")
+                    $("#buffer-add").css("float", "")
 
                     if (!g_divisions["displayLgd"]) {
                         $("#panel-indicators-seleccionados").css("display", "none")
@@ -1640,11 +1651,11 @@ function create_download_data(layer) {
             // debugger
             var rows = data.rows.map(function(row) {
                 var clean_row = {}
-                for (var indic in INDICS) {
-                    clean_row[INDICS[indic]["short"]] = row[indic]
-                }
                 var div_name = DIVS_SINGLE_NAME[g_divisions["areaLevel"]]
                 clean_row[div_name] = row[DIVS_ID_FIELD]
+                for (var indic in INDICS) {
+                    clean_row[INDICS[indic]["short"]] = row[indic] * INDICS[indic]["scale"]
+                }
                 return clean_row
             })
 
@@ -1661,11 +1672,11 @@ function create_download_data(layer) {
             // debugger
             var rows = data.rows.map(function(row) {
                 var clean_row = {}
-                for (var indic in INDICS) {
-                    clean_row[INDICS[indic]["short"]] = row[indic]
-                }
                 clean_row["Estación"] = row[BUFFERS_FIELDS["est"]]
                 clean_row["Línea"] = row[BUFFERS_FIELDS["lin"]]
+                for (var indic in INDICS) {
+                    clean_row[INDICS[indic]["short"]] = row[indic] * INDICS[indic]["scale"]
+                }
                 return clean_row
             })
 

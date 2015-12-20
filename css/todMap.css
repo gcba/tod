@@ -62,13 +62,13 @@ body,
 }
 
 #buffer-size,
-#buffer-modo-transporte,
-#dropdownMenuDivisiones,
-#buffer-add {
+#buffer-modo-transporte {
     float: left;
 }
 
-#tag-list-buffers {
+#tag-list-buffers,
+#download-data-buffers,
+#download-data-divisions {
     display: none;
 }
 
