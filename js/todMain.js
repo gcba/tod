@@ -1690,9 +1690,9 @@ function JSONToCSVConvertor(JSONData, ReportTitle, ShowLabel) {
     var arrData = typeof JSONData != 'object' ? JSON.parse(JSONData) : JSONData;
 
     var CSV = '';
-    //Set Report title in first row or line
 
-    CSV += ReportTitle + '\r\n\n';
+    //Set Report title in first row or line
+    // CSV += ReportTitle + '\r\n\n';
 
     //This condition will generate the Label/Header
     if (ShowLabel) {
