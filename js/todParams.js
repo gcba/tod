@@ -161,16 +161,16 @@ INDICS = {
         "scale": 1,
         "long": "Nivel socioeconómico basado en la segmentación del primer componente principal de la variabilidad de los índices de escolaridad, educación superior y computadora en el hogar en 2010 - Cálculo a partir de Censo Nacional 2010 (INDEC)"
     },
-    "educ_priv": {
-        "short": "Est. educativos privados (unidades)",
-        "scale": 1,
-        "long": "Cantidad de establecimientos educativos privados en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
-    },
-    "educ_pub": {
-        "short": "Est. educativos públicos (unidades)",
-        "scale": 1,
-        "long": "Cantidad de establecimientos educativos públicos en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
-    },
+    // "educ_priv": {
+    //     "short": "Est. educativos privados (unidades)",
+    //     "scale": 1,
+    //     "long": "Cantidad de establecimientos educativos privados en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
+    // },
+    // "educ_pub": {
+    //     "short": "Est. educativos públicos (unidades)",
+    //     "scale": 1,
+    //     "long": "Cantidad de establecimientos educativos públicos en 2014 (unidades) - Cálculo a partir de establecimientos educativos georreferenciados por Ministerio de Educación (GCBA)"
+    // },
     "educ_sup": {
         "short": "Índice de educación superior (%)",
         "scale": 100,
@@ -221,11 +221,11 @@ INDICS = {
         "scale": 100,
         "long": "Proporción de espacios verdes sobre la superficie total en 2013 (%) - Cálculo a partir de cartografía censal de la Dir. Gral. de Estadística y Censos (GCBA) y espacios verdes georreferenciados por la Unidad de Sistemas de Información Geográfica (GCBA)"
     },
-    "hospitales": {
-        "short": "Hospitales (unidades)",
-        "scale": 1,
-        "long": "Cantidad de hospitales en 2014 (unidades) - Cálculo a partir de hospitales georreferenciados por el Ministerio de Salud (GCBA)"
-    }
+    // "hospitales": {
+    //     "short": "Hospitales (unidades)",
+    //     "scale": 1,
+    //     "long": "Cantidad de hospitales en 2014 (unidades) - Cálculo a partir de hospitales georreferenciados por el Ministerio de Salud (GCBA)"
+    // }
 }
 
 BUFFERS_SIZE = [300, 500, 750, 1000, 1500, 2000]

@@ -5,7 +5,7 @@ POLYS_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Union(ST_Intersection(buf
 
 POLYS_DIFF_UNION_SELECT = "1 AS cartodb_id, ST_MakeValid(ST_Buffer(ST_Union(ST_Difference(ST_MakeValid(divisiones.the_geom), buffers_union.the_geom)), 0.00000001)) AS the_geom FROM divisiones, buffers_union"
 
-SELECT_BUFFERS = "ST_MakeValid(ST_Intersection(buffers_estaciones.the_geom_webmercator, ST_MakeValid(divs.the_geom_webmercator))) AS the_geom_webmercator, buffers_estaciones.cartodb_id"
+SELECT_BUFFERS = "ST_MakeValid(ST_Intersection(buffers_estaciones.the_geom_webmercator, ST_MakeValid(divs.the_geom_webmercator))) AS the_geom_webmercator, buffers_estaciones.cartodb_id, buffers_estaciones.estacion, buffers_estaciones.linea"
 
 // no logré que esto funcione, queda sólo para tratar de hacerlo en el futuro
 // http://gis.stackexchange.com/questions/50399/how-best-to-fix-a-non-noded-intersection-problem-in-postgis

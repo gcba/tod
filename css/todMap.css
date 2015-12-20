@@ -6,6 +6,7 @@ body,
     margin: 0;
     width: 100%;
 }
+
 #show-hide-legends {
     display: none;
     margin: 5px;
@@ -61,7 +62,9 @@ body,
 }
 
 #buffer-size,
-#buffer-modo-transporte {
+#buffer-modo-transporte,
+#dropdownMenuDivisiones,
+#buffer-add {
     float: left;
 }
 
