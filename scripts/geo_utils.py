@@ -220,18 +220,26 @@ def shapely_to_pyshp(shapelygeom):
         record.points = geoj["coordinates"]
         record.parts = [0]
     elif geoj["type"] in ("Polygon"):
-        record.points = geoj["coordinates"][0]
-        record.parts = [0]
+        # need to consider the holes
+        all_coordinates = geoj["coordinates"];
+        parts_count = len(all_coordinates)
+        # print(parts_count)
+        record.parts = []
+        for i in range(0,parts_count):
+            # record.points = geoj["coordinates"][0]
+            record.parts.append(len(record.points))
+            record.points.extend(all_coordinates[i])
     elif geoj["type"] in ("MultiPolygon", "MultiLineString"):
-        index = 0
-        points = []
-        parts = []
-        for eachmulti in geoj["coordinates"]:
-            points.extend(eachmulti[0])
-            parts.append(index)
-            index += len(eachmulti[0])
-        record.points = points
-        record.parts = parts
+         # need to consider the holes
+        all_polygons_coor = geoj["coordinates"]
+        polygon_count = len(all_polygons_coor)
+        # print(parts_count)
+        record.parts = []
+        for i in range(0, polygon_count):
+            for j in range(0,len(all_polygons_coor[i])):
+                # record.points = geoj["coordinates"][0]
+                record.parts.append(len(record.points))
+                record.points.extend(all_polygons_coor[i][j])
     return record
 
 
