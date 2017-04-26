@@ -87,7 +87,7 @@ Donde */Applications/Postgres.app/Contents/Versions/9.5* es el path y la versió
 
 Para encontrar el path adecuado puede ser útil correr `locate libssl` en la línea de comandos y buscar aquel path donde está instalado Postgres que contiene los archivos **libssl.1.0.0.dylib** y **libcrypto.1.0.0.dylib**
 
-Algunos OS X pueden requerir realizar el symlink en `/usr/lib` pero otros no permiten la operación y debe realizarse en `/usr/local/lib`.
+Algunos sistemas operativos MacOS X pueden requerir realizar el symlink en `/usr/lib` pero otros no permiten la operación y debe realizarse en `/usr/local/lib`.
 
 ## De los datos originales a los shapefiles para CartoDB
 
@@ -99,7 +99,7 @@ Algunos OS X pueden requerir realizar el symlink en `/usr/lib` pero otros no per
     * **3b. Precio de terrenos**: analiza la creación de un promedio de precios de terrenos por fracción censal.
     * **3c. Indice de conectividad de colectivos**: crea un indicador de "llegabilidad" para servicios estándar de colectivos.
     * **3d. Uso del suelo**: crea indicadores de uso porcentual del suelo para radios censales.
-    * **3e. Otros indicadores**: crea indicadores de indicencia de espacios verdes, cantidad de escuelas y hospitales, y distancia media de los habitantes a estaciones de los distintos modos de transporte.
+    * **3e. Otros indicadores**: crea indicadores de cantidad de escuelas y hospitales, de espacios verdes y distancia media de los habitantes a estaciones de los distintos modos de transporte.
 4. **Recalcular indicadores por buffer y otros niveles de agregación**: recalcula todos los indicadores creados a nivel de radio censal para cada uno de los buffers creados en el paso 1 construyendo ponderadores basados en los % de superficie intersectada calculados en el paso 2. Recalcula algunos indicadores para niveles de agregación superiores a los originales (Por ej.: el índice de conectividad de colectivos se crea para radios censales y luego se calcula como un promedio ponderado para fracciones censales, barrios y comunas)
 5. **Crear capas para CartoDB**: a partir de todos los shapefiles y datos creados en los pasos anteriores, se crean 4 shapefiles para subir a CartoDB haciendo un merge de varios de ellos.
 
@@ -110,7 +110,7 @@ Los 4 shapefiles creados desde los ipython notebooks se encuentran en la carpeta
 * **lineas**: contiene los shapes de las líneas de los distintos modos de transporte.
 * **estaciones**: contiene los shapes de las estaciones de los distintos modos de transporte.
 
-Estos shapefiles deben subirse a una cuenta de CartoDB y crear un mapa agregándolos como 4 capas respetando el siguiente orden: la capa más baja debe ser **divisiones**, la siguiente **buffers_estaciones** y la más alta **estaciones**. Las capas de **divisiones** y **buffers_estaciones** deben tener leyendas activadas (los colores y estilos de estas serán modificados programáticamente más adelante) mientras que las de **estaciones** y **lineas** deben tenerlas desactivadas. Estas últimas dos capas, además, pueden tener un infowindow con los campos que se desee (nombre de estación y nombre de línea, por ejemplo).
+Estos shapefiles deben subirse a una cuenta de CartoDB y crear un mapa agregándolos como 4 capas respetando el siguiente orden: la capa más baja debe ser **divisiones**, la siguiente **buffers_estaciones** y la más alta **estaciones**. Las capas de **divisiones** y **buffers_estaciones** deben tener leyendas activadas (los colores y estilos de éstas serán modificados programáticamente más adelante) mientras que las de **estaciones** y **lineas** deben tenerlas desactivadas. Estas últimas dos capas, además, pueden tener un infowindow con los campos que se desee (nombre de estación y nombre de línea, por ejemplo).
 
 El scope del **master** branch llega hasta este punto: la creación de los shapefiles para subir a CartoDB. La puesta a punto del sitio web que utiliza este mapa de CartoDB se cubre en el README del branch **gh-pages**.
 
@@ -135,7 +135,7 @@ El scope del **master** branch llega hasta este punto: la creación de los shape
 * *Links.xlsx*: lista de links con los recursos a descargar necesarios para construir el mapa
 
 ## Próximos pasos
-El repositorio contiene una serie de ideas para continuar el desarrollo de esta herramienta organizadas en [milestones](https://github.com/gcba/tod/milestones). Algunas de ellas son bastante puntuales y pueden ser implementadas en horas o días; otras son ideas que requieren bastante tiempo de diseño y desarrollo, e incluso pueden significar un replanteo mayor de la herramienta tal como esta es ahora.
+El repositorio contiene una serie de ideas para continuar el desarrollo de esta herramienta organizadas en [milestones](https://github.com/gcba/tod/milestones). Algunas de ellas son bastante puntuales y pueden ser implementadas en horas o días; otras son ideas que requieren bastante tiempo de diseño y desarrollo, e incluso pueden significar un replanteo mayor de la herramienta tal como está ahora.
 
 ## Agradecimientos
 
@@ -144,6 +144,6 @@ El repositorio contiene una serie de ideas para continuar el desarrollo de esta 
 * Carolina Hadad ([@chadad](https://github.com/chadad)) por la asistencia en el diseño de mock ups y sus innumerables consejos técnicos.
 * Natalia Sampietro ([@nsampi](https://github.com/nsampi)) por el brainstorming sobre construcción de indicadores, la enriquecedora discusión metodológica y mucho más.
 * Sebastián Pellizzeri ([@sebapellizzeri](https://twitter.com/sebapellizzeri)) por el constante aporte metodológico a la gestión del proyecto.
-* Laura Paonessa ([@laurapaonessa](https://twitter.com/laurapaonessa)) por el beta testing y sus consejos acerca de como comunicar el proyecto.
+* Laura Paonessa ([@laurapaonessa](https://twitter.com/laurapaonessa)) por el beta testing y sus consejos acerca de cómo comunicar el proyecto.
 
 
